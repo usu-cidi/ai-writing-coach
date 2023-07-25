@@ -33,6 +33,10 @@ Emma Lynn
 * Started work-shopping prompts
 * Created git repo for actual project (not just in learning)
 
+## Meeting w/ Neal and Ludo 7.25.23
+* Working on integrating more student effort
+* Nothing much changes on my end
+
 TODO:
 * Start working on backend with Open AI
 
