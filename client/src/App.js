@@ -1,4 +1,4 @@
-import { Button, Heading, TextArea, View, Text, CheckboxGroup, Checkbox, Spinner,
+import { Button, Heading, TextArea, View, Text, CheckboxGroup, Checkbox, Spinner, List,
     InstUISettingsProvider, canvas } from '@instructure/ui';
 
 import { useSelector } from "react-redux";
@@ -91,11 +91,14 @@ function DraftFeedback() {
 
     async function getSampleFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`)
+        /*const response = await fetch(
+            `http://localhost/writing-coach/action.php?task=retrieveFeedback&section=intro&input=${params.intro}&feedbackType=grammatical`);
+        console.log(response);*/
+
         await throttle();
-        return "Here is some sample feedback. " +
-            "Here is some sample feedback. " +
-            "Here is some sample feedback. " +
-            "Here is some sample feedback.";
+        let feedback = '\n\n{"feedback": ["Consider adding a sentence to the introduction that clearly states the thesis statement of the paper.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument."]}';
+        feedback = feedback.replace(/\n|\r/g, "");
+        return feedback;
     }
 
     let buttonText = 'Submit for Feedback';
@@ -186,7 +189,7 @@ function Feedback({feedback}) {
                   borderRadius="large"
                   width="85%"
             >
-                <Heading level="h2" margin="0 0 x-small">Feedback:</Heading>
+                <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
                 <GeneratedFeedback text={feedback}/>
 
             </View>
@@ -205,16 +208,45 @@ function GeneratedFeedback({text}) {
                 <Spinner renderTitle="Feedback Loading." size="x-small" margin="0 0 0 small" />
             </>
         );
+    } else if (text === "Feedback will appear here.") {
+        return (
+            <>
+                <Text
+                    size="medium"
+                    weight="light"
+                >{text}</Text>
+            </>
+        );
     }
 
     return (
         <>
-            <Text
-                size="medium"
-                weight="light"
-            >{text}</Text>
+            <FeedbackSection title={"Introduction"} feedback={text}/>
         </>
     );
+}
+
+function FeedbackSection({title, feedback}) {
+    feedback = JSON.parse(feedback).feedback;
+    console.log(feedback);
+    const listItems = feedback.map((text) =>  <List.Item key={text}>{text}</List.Item>);
+
+    return (
+        <>
+            <Heading level="h3" margin="0 0 small">{title}:</Heading>
+            <List as="ol" margin="0 0 medium">{listItems}</List>
+        </>
+    );
+
+    /*return (
+        <>
+            <Heading level="h3" margin="0 0 small">{title}:</Heading>
+            <List as="ol" margin="0 0 medium">
+                <List.Item>{feedback}</List.Item>
+                <List.Item>helloooo</List.Item>
+            </List>
+        </>
+    );*/
 }
 
 export default App

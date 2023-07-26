@@ -37,6 +37,14 @@ Emma Lynn
 * Working on integrating more student effort
 * Nothing much changes on my end
 
+## 7.26.23
+* Installed https://github.com/openai-php/client with https://getcomposer.org/download/
+  * We're actually not gonna use that at allll
+* Figured out how to use the LTI Template
+* Started writing backend code
+* Tried to connect client and server but got hit with CORS stuff I don't want to deal with rn so I'll do that later I guess
+* 
+
 TODO:
 * Start working on backend with Open AI
 

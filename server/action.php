@@ -1,4 +1,8 @@
 <?php
+
+    include "./backendFunctions.php";
+    include "./sampleText.php";
+
     error_reporting(E_ALL);
     session_start();
     ini_set('display_errors', '1');
@@ -11,8 +15,8 @@
 
         public function __construct()
         {
-            $this->get = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
-            $this->post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $this->get = filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW);
+            $this->post = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
 
             if (empty($this->post)) {
                 $content = trim(file_get_contents('php://input'));
@@ -60,11 +64,7 @@
                     exit;
                 }
             }
-
- 
         }
-
-      
 
         public function retrieveFromTable(){
             $result =  DB::query("SELECT * FROM  Table  ");
@@ -72,9 +72,36 @@
          
         }
 
+        public function retrieveTestFeedback() {
+            $result = "Here is some sample feedback. " .
+                "Here is some sample feedback. " .
+                "Here is some sample feedback. " .
+                "Here is some sample feedback.";
+            print json_encode($result);
+        }
+
+        public function retrieveFeedback() {
+            //accept request from client
+            /*$section = $_GET['section'];
+            $input = $_GET['input'];
+            $feedbackType = $_GET['feedbackType'];*/
+
+            $section = "intro";
+            $input = getShortIntro();
+            $feedbackType = "grammatical";
+
+            //echo $section."<br>".$input."<br>".$feedbackType."<br>";
+
+            //obtain response
+            $result = getFeedback($section, $input, $feedbackType);
+
+            //send response back to client
+            print json_encode($result);
+        }
+
     }
 
 
-    $slassTemplate = new ClassTemplate();
+    $classTemplate = new ClassTemplate();
 
-    $slassTemplate->init();
+    $classTemplate->init();
