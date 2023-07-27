@@ -22,8 +22,8 @@ function DraftFeedback() {
     const conclusionText = useSelector(state => state.conclusionText);
     const feedbackType = useSelector(state => state.feedbackType);
     const feedback = useSelector(state => state.feedback);
-    const feedbackBody = useSelector(state => state.feedback);
-    const feedbackConclusion = useSelector(state => state.feedback);
+    const feedbackBody = useSelector(state => state.feedbackBody);
+    const feedbackConclusion = useSelector(state => state.feedbackConclusion);
     const errorMessage = useSelector(state => state.errorMessage);
 
     function setIntroText(newVal) {
@@ -39,7 +39,6 @@ function DraftFeedback() {
         dispatch({type: "feedbackTypeChanged", payload: newVal});
     }
     function setFeedback(newVal) {
-        console.log(feedback, feedbackBody, feedbackConclusion);
         dispatch({type: "feedbackChanged", payload: newVal});
     }
     function setBodyFeedback(newVal) {
@@ -67,6 +66,8 @@ function DraftFeedback() {
     function handleButton() {
         setErrorMessage("");
         setFeedback(DEFAULT_FEEDBACK_MESSAGE);
+        setBodyFeedback('');
+        setConclusionFeedback('');
 
         let error = "";
 
@@ -86,17 +87,23 @@ function DraftFeedback() {
     }
 
     async function getFeedback() {
-        setFeedback("Loading...");
+        if (introText) {
+            setFeedback("Loading...");
+        }
+        if (bodyText) {
+            setBodyFeedback("Loading...");
+        }
+        if (conclusionText) {
+            setConclusionFeedback("Loading...");
+        }
+
         if (introText) {
             let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
-            console.log(introFeedback);
             setFeedback(introFeedback);
         }
         if (bodyText) {
             let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
-            console.log(bodyFeedback);
             setBodyFeedback(bodyFeedback);
-            console.log(feedbackBody);
         }
         if (conclusionText) {
             let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
@@ -109,9 +116,9 @@ function DraftFeedback() {
         /*const response = await fetch(
             `http://localhost/writing-coach/action.php?task=retrieveFeedback&section=intro&input=${params.intro}&feedbackType=grammatical`);
         console.log(response);*/
+        await throttle();
 
         let feedback;
-        await throttle();
         if (params.section === "intro") {
             feedback = '\n\n{"feedback": ["Intro", "Intro 2", "Intro 3"]}';
         } else if (params.section === "body") {
@@ -213,7 +220,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
                       width="85%"
                 >
                     <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
-                    <Text size="medium" weight="light">Feedback will appear here.</Text>
+                    <Text size="medium" weight="light">{DEFAULT_FEEDBACK_MESSAGE}</Text>
 
                 </View>
             </>
@@ -232,9 +239,16 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
                   width="85%"
             >
                 <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
-                <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
-                <GeneratedFeedback title={"Body"} text={feedbackBody}/>
-                <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
+
+                {feedbackIntro ? (
+                    <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
+                ) : console.log("no intro")}
+                {feedbackBody ? (
+                    <GeneratedFeedback title={"Body"} text={feedbackBody}/>
+                ) : console.log("no body")}
+                {feedbackConclusion ? (
+                    <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
+                ) : console.log("no conclusion")}
 
             </View>
         </>
@@ -245,14 +259,15 @@ function GeneratedFeedback({title, text}) {
     if (text === "Loading...") {
         return (
             <>
+                <Heading level="h3" margin="0 0 small">{title}:</Heading>
                 <Text
                     size="medium"
                     weight="light"
                 >{text}</Text>
-                <Spinner renderTitle="Feedback Loading." size="x-small" margin="0 0 0 small" />
+                <Spinner renderTitle="Feedback Loading." size="x-small" margin="0 0 0 small" /><br/><br/>
             </>
         );
-    } else if (text === "Feedback will appear here.") {
+    } else if (text === DEFAULT_FEEDBACK_MESSAGE) {
         return (
             <>
                 <Text
@@ -277,7 +292,7 @@ function FeedbackSection({feedback}) {
 
     return (
         <>
-            <List as="ol" margin="0 0 medium">{listItems}</List>
+            <List as="ul" margin="0 0 medium">{listItems}</List>
         </>
     );
 }
