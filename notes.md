@@ -43,7 +43,10 @@ Emma Lynn
 * Figured out how to use the LTI Template
 * Started writing backend code
 * Tried to connect client and server but got hit with CORS stuff I don't want to deal with rn so I'll do that later I guess
-* 
+
+## 7.27.23
+* Fixed the frontend
+* Connected the front and backends
 
 TODO:
 * Start working on backend with Open AI

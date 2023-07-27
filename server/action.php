@@ -7,6 +7,8 @@
     session_start();
     ini_set('display_errors', '1');
 
+    header('Access-Control-Allow-Origin: http://localhost:3000');
+    header('Content-type: application/json');
 
     class ClassTemplate
     {
@@ -38,7 +40,7 @@
 
         public function sectionVariableSetUp()
         {
-               
+
             if (isset( $_POST['custom_canvas_course_id'])){
                 // var_dump($_POST);
                 $_SESSION['courseID'] = $_POST['custom_canvas_course_id'];
@@ -69,14 +71,10 @@
         public function retrieveFromTable(){
             $result =  DB::query("SELECT * FROM  Table  ");
             print json_encode($result);
-         
         }
 
         public function retrieveTestFeedback() {
-            $result = "Here is some sample feedback. " .
-                "Here is some sample feedback. " .
-                "Here is some sample feedback. " .
-                "Here is some sample feedback.";
+            $result = '\n\n{"feedback": ["Wow1", "Wow2", "Wow3"]}';
             print json_encode($result);
         }
 

@@ -6,8 +6,6 @@ import { useDispatch } from "react-redux";
 
 import {DEFAULT_FEEDBACK_MESSAGE} from './constants.js';
 
-const throttle = require('promise-ratelimit')(2000);
-
 function App() {
     return (
         <InstUISettingsProvider theme={canvas}>
@@ -113,22 +111,19 @@ function DraftFeedback() {
 
     async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`)
-        /*const response = await fetch(
-            `http://localhost/writing-coach/action.php?task=retrieveFeedback&section=intro&input=${params.intro}&feedbackType=grammatical`);
-        console.log(response);*/
-        await throttle();
-
-        let feedback;
-        if (params.section === "intro") {
-            feedback = '\n\n{"feedback": ["Intro", "Intro 2", "Intro 3"]}';
-        } else if (params.section === "body") {
-            feedback = '\n\n{"feedback": ["Body", "Body 2", "Body 3"]}';
-        } else {
-            feedback = '\n\n{"feedback": ["Conclusion", "Conclusion 2", "Conclusion 3"]}';
-        }
-
-        feedback = feedback.replace(/\n|\r/g, "");
-        return feedback;
+        return fetch(
+            `http://localhost/writing-coach/action.php?task=retrieveFeedback
+            &section=${params.section}
+            &input=${params.input}
+            &feedbackType=${params.feedbackType}`)
+            .then(response => {
+                console.log(response);
+                return response.json();
+            })
+            .then(result => {
+                console.log(result);
+                return result.replace(/\\n|\\r|\\/g, "");
+            })
     }
 
     let buttonText = 'Submit for Feedback';

@@ -32,5 +32,5 @@ function getConclusionPrompt($writing, $feedbackType) {
 }
 
 function getResponseFormat() {
-    return "Return your response in the following format: {'feedback': ['your first piece of feedback', 'your second piece of feedback', etc]}";
+    return "Return your response in the following JSON format: {'feedback': ['your first piece of feedback', 'your second piece of feedback', etc]}";
 }

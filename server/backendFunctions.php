@@ -21,5 +21,5 @@ function getFeedback($section, $input, $feedbackType) {
     }
 
     //send request to OpenAI
-    return requestCompletion($prompt, 200);
+    return requestCompletion($prompt, 200, .8);
 }

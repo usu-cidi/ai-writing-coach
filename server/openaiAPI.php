@@ -1,6 +1,6 @@
 <?php
 // This page contains a variety of functions that can be used to access the OpenAI API
-$token = '----';
+$token = '---';
 
 // Display any php errors (for development purposes)
 error_reporting(E_ALL);
@@ -98,7 +98,6 @@ function curlPostAI($url, $data) {
     return $response;
 }
 function requestCompletion($prompt, $maxTokens=20, $temperature=0) {
-    //$apiURL = "https://api.openai.com/v1/completions";
     $apiURL = "completions";
     $params = [
         "model" => "text-davinci-003",
