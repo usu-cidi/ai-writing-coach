@@ -8,6 +8,8 @@ const initialState = {
     conclusionText: '',
     feedbackType: [],
     feedback: DEFAULT_FEEDBACK_MESSAGE,
+    feedbackBody: '',
+    feedbackConclusion: '',
     errorMessage: '',
 }
 
@@ -30,6 +32,12 @@ function reducer(state = initialState, action) {
     }
     if (action.type === "feedbackChanged") {
         return { ...state, feedback: action.payload };
+    }
+    if (action.type === "feedbackBodyChanged") {
+        return { ...state, feedbackBody: action.payload };
+    }
+    if (action.type === "feedbackConclusionChanged") {
+        return { ...state, feedbackConclusion: action.payload };
     }
     if (action.type === "errorMessageChanged") {
         return { ...state, errorMessage: action.payload };

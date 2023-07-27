@@ -22,6 +22,8 @@ function DraftFeedback() {
     const conclusionText = useSelector(state => state.conclusionText);
     const feedbackType = useSelector(state => state.feedbackType);
     const feedback = useSelector(state => state.feedback);
+    const feedbackBody = useSelector(state => state.feedback);
+    const feedbackConclusion = useSelector(state => state.feedback);
     const errorMessage = useSelector(state => state.errorMessage);
 
     function setIntroText(newVal) {
@@ -37,7 +39,14 @@ function DraftFeedback() {
         dispatch({type: "feedbackTypeChanged", payload: newVal});
     }
     function setFeedback(newVal) {
+        console.log(feedback, feedbackBody, feedbackConclusion);
         dispatch({type: "feedbackChanged", payload: newVal});
+    }
+    function setBodyFeedback(newVal) {
+        dispatch({type: "feedbackBodyChanged", payload: newVal});
+    }
+    function setConclusionFeedback(newVal) {
+        dispatch({type: "feedbackConclusionChanged", payload: newVal});
     }
     function setErrorMessage(newVal) {
         dispatch({type: "errorMessageChanged", payload: newVal});
@@ -76,27 +85,41 @@ function DraftFeedback() {
         getFeedback();
     }
 
-    function getFeedback() {
+    async function getFeedback() {
         setFeedback("Loading...");
-        let params = {intro: introText, body: bodyText, conclusion: conclusionText, types: feedbackType};
-        getSampleFeedback(params)
-            .then(feedback => {
-                setFeedback(feedback + " (" + feedbackType + ")");
-            })
-            .catch(err => {
-                console.log(err)
-                setFeedback(feedbackType + ", Error :(");
-            });
+        if (introText) {
+            let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
+            console.log(introFeedback);
+            setFeedback(introFeedback);
+        }
+        if (bodyText) {
+            let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
+            console.log(bodyFeedback);
+            setBodyFeedback(bodyFeedback);
+            console.log(feedbackBody);
+        }
+        if (conclusionText) {
+            let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
+            setConclusionFeedback(conclusionFeedback);
+        }
     }
 
-    async function getSampleFeedback(params) {
+    async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`)
         /*const response = await fetch(
             `http://localhost/writing-coach/action.php?task=retrieveFeedback&section=intro&input=${params.intro}&feedbackType=grammatical`);
         console.log(response);*/
 
+        let feedback;
         await throttle();
-        let feedback = '\n\n{"feedback": ["Consider adding a sentence to the introduction that clearly states the thesis statement of the paper.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument.", \n"The introduction should provide a brief overview of the main points of the argument. Consider adding a sentence or two that summarizes the main points of the argument."]}';
+        if (params.section === "intro") {
+            feedback = '\n\n{"feedback": ["Intro", "Intro 2", "Intro 3"]}';
+        } else if (params.section === "body") {
+            feedback = '\n\n{"feedback": ["Body", "Body 2", "Body 3"]}';
+        } else {
+            feedback = '\n\n{"feedback": ["Conclusion", "Conclusion 2", "Conclusion 3"]}';
+        }
+
         feedback = feedback.replace(/\n|\r/g, "");
         return feedback;
     }
@@ -123,7 +146,7 @@ function DraftFeedback() {
                 />
             </div>
             <div className="column">
-                <Feedback feedback={feedback} />
+                <Feedback feedbackIntro={feedback} feedbackBody={feedbackBody} feedbackConclusion={feedbackConclusion} />
             </div>
         </>
     );
@@ -134,7 +157,6 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
 
     return (
         <>
-
             <form>
                 <InputSection sectionType="Introduction" text={introText} handleChange={handleChange} />
                 <InputSection sectionType="Body" text={bodyText} handleChange={handleChange} />
@@ -146,7 +168,7 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                                    onChange={function (value) {
                                        setFeedbackType(value);
                                    }}
-                                   description="Select type(s) of feedback to recieve:"
+                                   description="Select type(s) of feedback to receive:"
                     >
                         <Checkbox label="USU Standards" value="Standards" />
                         <Checkbox label="Grammatical" value="Grammar" />
@@ -177,7 +199,27 @@ function InputSection({sectionType, text, handleChange}) {
     );
 }
 
-function Feedback({feedback}) {
+function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
+    if (feedbackIntro === DEFAULT_FEEDBACK_MESSAGE && !feedbackBody && !feedbackConclusion) {
+        return (
+            <>
+                <View as="div"
+                      display="inline-block"
+                      margin="small"
+                      padding="small"
+                      background="secondary"
+                      shadow="resting"
+                      borderRadius="large"
+                      width="85%"
+                >
+                    <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
+                    <Text size="medium" weight="light">Feedback will appear here.</Text>
+
+                </View>
+            </>
+        );
+    }
+
     return (
         <>
             <View as="div"
@@ -190,14 +232,16 @@ function Feedback({feedback}) {
                   width="85%"
             >
                 <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
-                <GeneratedFeedback text={feedback}/>
+                <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
+                <GeneratedFeedback title={"Body"} text={feedbackBody}/>
+                <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
 
             </View>
         </>
     );
 }
 
-function GeneratedFeedback({text}) {
+function GeneratedFeedback({title, text}) {
     if (text === "Loading...") {
         return (
             <>
@@ -221,32 +265,21 @@ function GeneratedFeedback({text}) {
 
     return (
         <>
-            <FeedbackSection title={"Introduction"} feedback={text}/>
+            <Heading level="h3" margin="0 0 small">{title}:</Heading>
+            <FeedbackSection feedback={text}/>
         </>
     );
 }
 
-function FeedbackSection({title, feedback}) {
+function FeedbackSection({feedback}) {
     feedback = JSON.parse(feedback).feedback;
-    console.log(feedback);
-    const listItems = feedback.map((text) =>  <List.Item key={text}>{text}</List.Item>);
+    const listItems = feedback.map((text) => <List.Item key={text}>{text}</List.Item>);
 
     return (
         <>
-            <Heading level="h3" margin="0 0 small">{title}:</Heading>
             <List as="ol" margin="0 0 medium">{listItems}</List>
         </>
     );
-
-    /*return (
-        <>
-            <Heading level="h3" margin="0 0 small">{title}:</Heading>
-            <List as="ol" margin="0 0 medium">
-                <List.Item>{feedback}</List.Item>
-                <List.Item>helloooo</List.Item>
-            </List>
-        </>
-    );*/
 }
 
 export default App
