@@ -48,6 +48,12 @@ Emma Lynn
 * Fixed the frontend
 * Connected the front and backends
 
+## 7.28.23
+* Fixed some JSON parsing bugs
+* To ask about:
+  * Prompt workshopping
+  * How to include USU standards
+
 TODO:
 * Start working on backend with Open AI
 

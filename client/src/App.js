@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
 import {DEFAULT_FEEDBACK_MESSAGE} from './constants.js';
+import {SERVER_URL} from './constants.js';
 
 function App() {
     return (
@@ -110,18 +111,15 @@ function DraftFeedback() {
     }
 
     async function fetchFeedback(params) {
-        console.log(`Getting feedback on ${JSON.stringify(params)}`)
+        console.log(`Getting feedback on ${JSON.stringify(params)}`);
         return fetch(
-            `http://localhost/writing-coach/action.php?task=retrieveFeedback
-            &section=${params.section}
-            &input=${params.input}
-            &feedbackType=${params.feedbackType}`)
+            `${SERVER_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}`)
             .then(response => {
-                console.log(response);
+                //console.log(response);
                 return response.json();
             })
             .then(result => {
-                console.log(result);
+                //console.log(result);
                 return result.replace(/\\n|\\r|\\/g, "");
             })
     }
@@ -172,8 +170,8 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                                    }}
                                    description="Select type(s) of feedback to receive:"
                     >
-                        <Checkbox label="USU Standards" value="Standards" />
-                        <Checkbox label="Grammatical" value="Grammar" />
+                        <Checkbox label="USU Standards" value="standards" />
+                        <Checkbox label="Grammatical" value="grammatical" />
                     </CheckboxGroup>
 
                     <Button margin="small" color="primary"
@@ -282,7 +280,19 @@ function GeneratedFeedback({title, text}) {
 }
 
 function FeedbackSection({feedback}) {
-    feedback = JSON.parse(feedback).feedback;
+    //console.log(feedback);
+    try {
+        feedback = JSON.parse(feedback).feedback;
+    } catch(err) {
+        console.log(err);
+        return (
+            <>
+                <Text size="medium">Error formatting feedback. Raw text:</Text><br/>
+                <Text size="medium">{feedback}</Text>
+            </>
+        );
+    }
+
     const listItems = feedback.map((text) => <List.Item key={text}>{text}</List.Item>);
 
     return (

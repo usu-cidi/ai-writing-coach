@@ -80,13 +80,13 @@
 
         public function retrieveFeedback() {
             //accept request from client
-            /*$section = $_GET['section'];
+            $section = $_GET['section'];
             $input = $_GET['input'];
-            $feedbackType = $_GET['feedbackType'];*/
+            $feedbackType = $_GET['feedbackType'];
 
-            $section = "intro";
-            $input = getShortIntro();
-            $feedbackType = "grammatical";
+            //$section = "intro";
+            //$input = getShortIntro();
+            //$feedbackType = "grammatical";
 
             //echo $section."<br>".$input."<br>".$feedbackType."<br>";
 
