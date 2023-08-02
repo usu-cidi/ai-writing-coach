@@ -180,7 +180,7 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                                    description="Select type(s) of feedback to receive:"
                     >
                         <Checkbox label="USU Standards" value="standards" />
-                        <Checkbox label="Grammatical" value="grammatical" />
+                        <Checkbox label="General Best Practices" value="grammatical" />
                     </CheckboxGroup>
 
                     <Button margin="small" color="primary"

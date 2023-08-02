@@ -68,13 +68,13 @@ Emma Lynn
   * Also works for Open AI
 * Set character limit for input TextAreas
 * Fixed default message issue
-* 
+* Asked Neal if he'd give me feedback on my prompts and asked about how to apply the feedback type
 
 
 TODO:
 * Improve prompts
 * Feedback types
-* Persistent data
+* Persistent data - waiting for later
 * ResizeObserver loop completed with undelivered notifications?
 
 ## Sources
