@@ -3,7 +3,7 @@
 include "./prompts.php";
 include "./openaiAPI.php";
 
-function getFeedback($section,a $input, $feedbackType) {
+function getFeedback($section, $input, $feedbackType) {
     //format into prompt
     $prompt = "";
     switch ($section) {

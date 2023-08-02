@@ -51,11 +51,31 @@ Emma Lynn
 ## 7.28.23
 * Fixed some JSON parsing bugs
 * To ask about:
-  * Prompt workshopping
-  * How to include USU standards
+  * Improve prompts
+  * How to include USU standards in prompt
+  * How to structure database, what data needs to be persistent
+
+## 8.2.23
+* Got hit by a 414 http error (uri too long) before hitting an open ai limit
+  * 414 - 8900 chars
+  * 414 - 7500 chars
+  * 200 - 5500 chars
+  * 414 - 7000 chars
+  * 414 - 6500 chars
+  * 200 - 6000 chars
+  * 414 - 6250 chars
+* Sooo it looks like the limit (at least http wise) needs to be less than 6000 chars
+  * Also works for Open AI
+* Set character limit for input TextAreas
+* Fixed default message issue
+* 
+
 
 TODO:
-* Start working on backend with Open AI
+* Improve prompts
+* Feedback types
+* Persistent data
+* ResizeObserver loop completed with undelivered notifications?
 
 ## Sources
 * Run php code: 

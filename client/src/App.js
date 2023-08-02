@@ -4,8 +4,7 @@ import { Button, Heading, TextArea, View, Text, CheckboxGroup, Checkbox, Spinner
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {DEFAULT_FEEDBACK_MESSAGE} from './constants.js';
-import {SERVER_URL} from './constants.js';
+import {DEFAULT_FEEDBACK_MESSAGE, SERVER_URL, INPUT_TEXT_MAX_LENGTH} from './constants.js';
 
 function App() {
     return (
@@ -86,14 +85,22 @@ function DraftFeedback() {
     }
 
     async function getFeedback() {
+        let hideWaitingMessage = false;
+
         if (introText) {
             setFeedback("Loading...");
         }
         if (bodyText) {
             setBodyFeedback("Loading...");
+            hideWaitingMessage = true;
         }
         if (conclusionText) {
             setConclusionFeedback("Loading...");
+            hideWaitingMessage = true;
+        }
+
+        if (hideWaitingMessage) {
+            setFeedback("");
         }
 
         if (introText) {
@@ -108,6 +115,8 @@ function DraftFeedback() {
             let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
             setConclusionFeedback(conclusionFeedback);
         }
+
+
     }
 
     async function fetchFeedback(params) {
@@ -188,12 +197,17 @@ function InputSection({sectionType, text, handleChange}) {
     return (
         <>
             <View display="block" margin="small 0 0">
-                <TextArea
+                <TextArea maxLength={INPUT_TEXT_MAX_LENGTH}
                     label={sectionType}
                     placeholder={`Paste your ${sectionType.toLowerCase()} paragraph(s) here`}
                     onChange={(e) => handleChange(sectionType, e.target.value)}
                     value={text}
                 />
+                <Text
+                    color="secondary"
+                    weight="light"
+                    size="x-small"
+                >{text.length} / {INPUT_TEXT_MAX_LENGTH} characters</Text>
             </View>
         </>
     );

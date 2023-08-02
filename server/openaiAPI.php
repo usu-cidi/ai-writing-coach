@@ -1,6 +1,6 @@
 <?php
 // This page contains a variety of functions that can be used to access the OpenAI API
-$token = '---';
+$token = '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';
 
 // Display any php errors (for development purposes)
 error_reporting(E_ALL);

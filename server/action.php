@@ -84,6 +84,7 @@
             $input = $_GET['input'];
             $feedbackType = $_GET['feedbackType'];
 
+
             //$section = "intro";
             //$input = getShortIntro();
             //$feedbackType = "grammatical";
@@ -92,6 +93,7 @@
 
             //obtain response
             $result = getFeedback($section, $input, $feedbackType);
+            //$result = '\n\n{"feedback": ["Did", "this", "work?"]}';
 
             //send response back to client
             print json_encode($result);
