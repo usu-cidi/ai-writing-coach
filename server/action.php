@@ -1,7 +1,6 @@
 <?php
 
     include "./backendFunctions.php";
-    include "./sampleText.php";
 
     error_reporting(E_ALL);
     session_start();
@@ -73,27 +72,35 @@
             print json_encode($result);
         }
 
-        public function retrieveTestFeedback() {
+        public function retrieveTestFeedback(): void  {
             $result = '\n\n{"feedback": ["Wow1", "Wow2", "Wow3"]}';
             print json_encode($result);
         }
 
-        public function retrieveFeedback() {
+        public function retrieveFeedback(): void {
             //accept request from client
             $section = $_GET['section'];
             $input = $_GET['input'];
             $feedbackType = $_GET['feedbackType'];
-
-
-            //$section = "intro";
-            //$input = getShortIntro();
-            //$feedbackType = "grammatical";
-
-            //echo $section."<br>".$input."<br>".$feedbackType."<br>";
+            $assign = $_GET['assign'];
 
             //obtain response
-            $result = getFeedback($section, $input, $feedbackType);
-            //$result = '\n\n{"feedback": ["Did", "this", "work?"]}';
+            $result = getFeedback($section, $input, $feedbackType, $assign);
+            //$result = '\n\n{"feedback": ["Did", "this", "work?", "'.$feedbackType.'"]}';
+
+            //send response back to client
+            print json_encode($result);
+        }
+
+        public function getAssigns(): void {
+            //accept request from client
+
+            //obtain response
+            $result = '{"assignments": [
+                "Sample Assignment 1",
+                "Sample Assignment 2",
+                "Sample Assignment 3"
+            ]}';
 
             //send response back to client
             print json_encode($result);

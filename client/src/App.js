@@ -1,10 +1,10 @@
-import { Button, Heading, TextArea, View, Text, CheckboxGroup, Checkbox, Spinner, List,
+import { Button, Heading, TextArea, View, Text, CheckboxGroup, Checkbox, Spinner, List, SimpleSelect,
     InstUISettingsProvider, canvas } from '@instructure/ui';
 
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {DEFAULT_FEEDBACK_MESSAGE, SERVER_URL, INPUT_TEXT_MAX_LENGTH} from './constants.js';
+import {DEFAULT_FEEDBACK_MESSAGE, FEEDBACK_URL, ASSIGNS_URL, INPUT_TEXT_MAX_LENGTH} from './constants.js';
 
 function App() {
     return (
@@ -23,6 +23,8 @@ function DraftFeedback() {
     const feedbackBody = useSelector(state => state.feedbackBody);
     const feedbackConclusion = useSelector(state => state.feedbackConclusion);
     const errorMessage = useSelector(state => state.errorMessage);
+    const selectedAssign = useSelector(state => state.selectedAssign);
+    const allAssigns = useSelector(state => state.allAssigns);
 
     function setIntroText(newVal) {
         dispatch({type: "introTextChanged", payload: newVal});
@@ -48,6 +50,12 @@ function DraftFeedback() {
     function setErrorMessage(newVal) {
         dispatch({type: "errorMessageChanged", payload: newVal});
     }
+    function setSelectedAssign(newVal) {
+        dispatch({type: "selectedAssignChanged", payload: newVal});
+    }
+    function setAllAssigns(newVal) {
+        dispatch({type: "allAssignsChanged", payload: newVal});
+    }
 
     const dispatch = useDispatch();
 
@@ -62,6 +70,8 @@ function DraftFeedback() {
     }
 
     function handleButton() {
+        console.log(selectedAssign);
+
         setErrorMessage("");
         setFeedback(DEFAULT_FEEDBACK_MESSAGE);
         setBodyFeedback('');
@@ -74,7 +84,11 @@ function DraftFeedback() {
                 "(introduction, body, or conclusion) of your draft for feedback. "
         }
         if (feedbackType.length === 0) {
-            error += "You must select at least one type of feedback."
+            error += "You must select at least one type of feedback. "
+        }
+
+        if (feedbackType.includes("standards") && (!selectedAssign || selectedAssign === " ")) {
+            error += "To receive feedback based on USU standards you must select an assignment. "
         }
         if (error) {
             setErrorMessage(error);
@@ -103,39 +117,65 @@ function DraftFeedback() {
             setFeedback("");
         }
 
+        let theSelectedAssign = selectedAssign;
+        if (selectedAssign === " ") {
+            theSelectedAssign = "";
+        }
+
         if (introText) {
-            let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
+            let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType, assign: theSelectedAssign});
             setFeedback(introFeedback);
         }
         if (bodyText) {
-            let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
+            let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType, assign: theSelectedAssign});
             setBodyFeedback(bodyFeedback);
         }
         if (conclusionText) {
-            let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
+            let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType, assign: theSelectedAssign});
             setConclusionFeedback(conclusionFeedback);
         }
-
 
     }
 
     async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`);
         return fetch(
-            `${SERVER_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}`)
+            `${FEEDBACK_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}&assign=${params.assign}`)
             .then(response => {
-                //console.log(response);
                 return response.json();
             })
             .then(result => {
-                //console.log(result);
+                console.log(result);
                 return result.replace(/\\n|\\r|\\/g, "");
-            })
+            });
     }
 
     let buttonText = 'Submit for Feedback';
     if (feedback !== DEFAULT_FEEDBACK_MESSAGE) {
         buttonText = 'Resubmit for Feedback';
+    }
+
+    async function fetchAssigns() {
+        console.log(`Getting assignments`);
+        return fetch(ASSIGNS_URL)
+            .then(response => {
+                return response.json();
+            })
+            .then(result => {
+                return JSON.parse(result).assignments;
+            })
+
+    }
+
+    if (allAssigns.length === 0) {
+        console.log("Getting assignments");
+        fetchAssigns()
+            .then(result => {
+                setAllAssigns(result);
+            })
+            .catch(err => {
+                console.log(`Error getting assignments: ${err}`);
+            });
     }
 
     return (
@@ -152,17 +192,33 @@ function DraftFeedback() {
                     handleChange={handleChange}
                     handleButton={handleButton}
                     buttonText={buttonText}
+                    setAssign={setSelectedAssign}
+                    allAssigns={allAssigns}
                 />
             </div>
             <div className="column">
-                <Feedback feedbackIntro={feedback} feedbackBody={feedbackBody} feedbackConclusion={feedbackConclusion} />
+                <Feedback
+                    feedbackIntro={feedback}
+                    feedbackBody={feedbackBody}
+                    feedbackConclusion={feedbackConclusion}
+                />
             </div>
         </>
     );
 }
 
 function InputForm({introText, bodyText, setFeedbackType, errorMessage,
-                       conclusionText, handleChange, handleButton, buttonText}) {
+                       conclusionText, handleChange, handleButton, buttonText, setAssign, allAssigns}) {
+
+    const assignOptions = allAssigns.map((text) => <SimpleSelect.Option
+        id={text}
+        value={text}
+        key={text}
+    >{text}</SimpleSelect.Option>);
+
+    let handleSelect = (e, { id, value }) => {
+        setAssign(value);
+    }
 
     return (
         <>
@@ -172,6 +228,7 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                 <InputSection sectionType="Conclusion" text={conclusionText} handleChange={handleChange} />
 
                 <View display="block" margin="small 0 0">
+
                     <CheckboxGroup name="sports" size="small"
                                    layout="columns"
                                    onChange={function (value) {
@@ -181,7 +238,15 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                     >
                         <Checkbox label="USU Standards" value="standards" />
                         <Checkbox label="General Best Practices" value="grammatical" />
-                    </CheckboxGroup>
+                    </CheckboxGroup><br/>
+
+                    <SimpleSelect
+                        renderLabel="Assignment"
+                        onChange={handleSelect}
+                    >
+                        <SimpleSelect.Option id="blank" value={" "} key="blank">{" "}</SimpleSelect.Option>
+                        {assignOptions}
+                    </SimpleSelect>
 
                     <Button margin="small" color="primary"
                             onClick={() => handleButton()}>{buttonText}</Button>
@@ -234,6 +299,10 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
         );
     }
 
+    function saveToLocalStorage() {
+        console.log("Save button clicked!!");
+    }
+
     return (
         <>
             <View as="div"
@@ -256,6 +325,9 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
                 {feedbackConclusion ? (
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
                 ) : console.log("no conclusion")}
+
+                <Button margin="small" color="primary"
+                        onClick={() => saveToLocalStorage()}>Save</Button>
 
             </View>
         </>

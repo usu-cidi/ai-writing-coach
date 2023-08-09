@@ -11,6 +11,8 @@ const initialState = {
     feedbackBody: '',
     feedbackConclusion: '',
     errorMessage: '',
+    selectedAssign: '',
+    allAssigns: [],
 }
 
 export const store = configureStore({
@@ -41,6 +43,12 @@ function reducer(state = initialState, action) {
     }
     if (action.type === "errorMessageChanged") {
         return { ...state, errorMessage: action.payload };
+    }
+    if (action.type === "selectedAssignChanged") {
+        return { ...state, selectedAssign: action.payload };
+    }
+    if (action.type === "allAssignsChanged") {
+        return { ...state, allAssigns: action.payload };
     }
 
     return state;

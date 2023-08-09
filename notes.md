@@ -70,11 +70,19 @@ Emma Lynn
 * Fixed default message issue
 * Asked Neal if he'd give me feedback on my prompts and asked about how to apply the feedback type
 
+## 8.9.23
+* Got possible assignments from server
+* Added an option to pick the assignment to get feedback on
+* Sent assignment option selected to server
+* Added code to apply the selected feedback type to the prompt
+* Started on local storage saving thing
 
 TODO:
 * Improve prompts
-* Feedback types
-* Persistent data - waiting for later
+* Persistent data
+  * Option to save in local storage
+  * Build place to view saved feedback
+  * https://blog.logrocket.com/using-localstorage-react-hooks/
 * ResizeObserver loop completed with undelivered notifications?
 
 ## Sources
