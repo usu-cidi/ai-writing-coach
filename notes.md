@@ -78,18 +78,19 @@ Emma Lynn
 * Started on local storage saving thing
 
 ## 8.10.23
-* 
+* Split App.js file into multiple files
+* Added option to save feedback (local storage)
+* Option to delete from local storage
 
 TODO:
+* Update saved data
+  * Solution (I think): move list into another component and send with props
 * Improve prompts
-* Persistent data
-  * Option to save in local storage
-  * Build place to view saved feedback
-  * https://blog.logrocket.com/using-localstorage-react-hooks/
 * ResizeObserver loop completed with undelivered notifications?
 
 ## Sources
-* Run php code: 
-https://www.geeksforgeeks.org/how-to-execute-php-code-using-command-line/
+* Run php code: https://www.geeksforgeeks.org/how-to-execute-php-code-using-command-line/
+* https://blog.logrocket.com/using-localstorage-react-hooks/
+* https://www.telerik.com/blogs/javascript-local-storage-all-you-need-know
 
 

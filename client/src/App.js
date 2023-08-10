@@ -72,6 +72,21 @@ function DraftFeedback() {
         }
     }
 
+    function saveToLocalStorage() {
+        console.log("Save button clicked!!");
+        let id = Math.floor(Date.now() / 1000);
+        let dataToSave = {
+            id: id,
+            intro: introText,
+            body: bodyText,
+            con: conclusionText,
+            introFeedback: feedback,
+            bodyFeedback: feedbackBody,
+            conFeedback: feedbackConclusion,
+        }
+        localStorage.setItem(JSON.stringify(id), JSON.stringify(dataToSave));
+    }
+
     function handleButton() {
         console.log(selectedAssign);
 
@@ -204,8 +219,16 @@ function DraftFeedback() {
                     feedbackIntro={feedback}
                     feedbackBody={feedbackBody}
                     feedbackConclusion={feedbackConclusion}
+                    saveToLocal={saveToLocalStorage}
                 /><br/>
-                <SavedFeedback/>
+                <SavedFeedback
+                    setFeedback = {setFeedback}
+                    setBodyFeedback = {setBodyFeedback}
+                    setConclusionFeedback = {setConclusionFeedback}
+                    setIntroText = {setIntroText}
+                    setBodyText = {setBodyText}
+                    setConclusionText = {setConclusionText}
+                />
             </div>
         </>
     );

@@ -1,7 +1,7 @@
 import {DEFAULT_FEEDBACK_MESSAGE} from "./constants";
 import {Button, Heading, List, Spinner, Text, View} from "@instructure/ui";
 
-function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
+function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}) {
     if (feedbackIntro === DEFAULT_FEEDBACK_MESSAGE && !feedbackBody && !feedbackConclusion) {
         return (
             <>
@@ -20,10 +20,6 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
                 </View>
             </>
         );
-    }
-
-    function saveToLocalStorage() {
-        console.log("Save button clicked!!");
     }
 
     return (
@@ -49,8 +45,8 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion}) {
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
                 ) : console.log("no conclusion")}
 
-                <Button margin="small" color="primary"
-                        onClick={() => saveToLocalStorage()}>Save</Button>
+                <Button margin="x-small" color="primary"
+                        onClick={() => saveToLocal()}>Save</Button>
 
             </View>
         </>
@@ -106,7 +102,7 @@ function FeedbackSection({feedback}) {
 
     return (
         <>
-            <List as="ul" margin="0 0 medium">{listItems}</List>
+            <List as="ul" margin="0 0 x-small">{listItems}</List>
         </>
     );
 }
