@@ -77,6 +77,9 @@ Emma Lynn
 * Added code to apply the selected feedback type to the prompt
 * Started on local storage saving thing
 
+## 8.10.23
+* 
+
 TODO:
 * Improve prompts
 * Persistent data
