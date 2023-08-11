@@ -35,7 +35,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
             >
                 <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
 
-                {feedbackIntro ? (
+                {feedbackIntro !== DEFAULT_FEEDBACK_MESSAGE ? (
                     <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
                 ) : console.log("no intro")}
                 {feedbackBody ? (
@@ -54,6 +54,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
 }
 
 function GeneratedFeedback({title, text}) {
+    console.log(title, text);
     if (text === "Loading...") {
         return (
             <>

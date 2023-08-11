@@ -82,9 +82,26 @@ Emma Lynn
 * Added option to save feedback (local storage)
 * Option to delete from local storage
 
+## 8.11.23
+* Worked on local storage issues
+* Meeting: 
+  * Let's use 3.5
+  * Rachel has 2 sections, Russ has 4 (23 * 6 = 138 students)
+  * Could also have some control sections
+    * That do the assignments with Chat GPT or something
+    * See how effective the Canvas integration is
+  * Assignment with due date in maybe October - Russ's class at least
+  * We need some guinea pigs!
+    * Maybe trying out with Russ's honors section in September?
+    * Find some way to get some data in September
+  * Change USU Standards to Assignment Specific
+* Changed USU Standards to Assignment Specific
+* Finally got the saved data to update
+* Sorted saved data chronologically
+
 TODO:
-* Update saved data
-  * Solution (I think): move list into another component and send with props
+* Loading labels
+  * Fix default feedback to be uniform
 * Improve prompts
 * ResizeObserver loop completed with undelivered notifications?
 

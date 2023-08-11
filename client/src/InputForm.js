@@ -30,7 +30,7 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                                    }}
                                    description="Select type(s) of feedback to receive:"
                     >
-                        <Checkbox label="USU Standards" value="standards" />
+                        <Checkbox label="Assignment Specific" value="standards" />
                         <Checkbox label="General Best Practices" value="grammatical" />
                     </CheckboxGroup><br/>
 

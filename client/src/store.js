@@ -13,6 +13,13 @@ const initialState = {
     errorMessage: '',
     selectedAssign: '',
     allAssigns: [],
+    allSaved: (function() {
+        let theArray = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            theArray.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+        }
+        return theArray;
+        })(),
 }
 
 export const store = configureStore({
@@ -49,6 +56,9 @@ function reducer(state = initialState, action) {
     }
     if (action.type === "allAssignsChanged") {
         return { ...state, allAssigns: action.payload };
+    }
+    if (action.type === "allSavedChanged") {
+        return { ...state, allSaved: action.payload };
     }
 
     return state;

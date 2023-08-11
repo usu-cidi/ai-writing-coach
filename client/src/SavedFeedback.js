@@ -1,19 +1,58 @@
 import {Heading, View, Button, List} from "@instructure/ui";
+const { compare } = Intl.Collator('en-US');
 
 function SavedFeedback({setFeedback, setBodyFeedback, setConclusionFeedback,
-                           setIntroText, setBodyText, setConclusionText}) {
+                           setIntroText, setBodyText, setConclusionText, itemsArray, updateItemsArray}) {
 
-    function updateStorage() {
-        let itemsArray = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            itemsArray.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
-        }
+    function handleButton(id) {
+        const item = JSON.parse(localStorage.getItem(id));
+        setIntroText(item.intro);
+        setBodyText(item.body);
+        setConclusionText(item.con);
+        setFeedback(item.introFeedback);
+        setBodyFeedback(item.bodyFeedback);
+        setConclusionFeedback(item.conFeedback);
+    }
 
+    function handleDelete(id) {
+        localStorage.removeItem(id);
+        updateItemsArray();
+    }
+
+    return (
+        <>
+            <View as="div"
+                  display="inline-block"
+                  margin="small"
+                  padding="small"
+                  background="secondary"
+                  shadow="resting"
+                  borderRadius="large"
+                  width="85%"
+            >
+                <Heading level="h2" margin="0 0 x-small">Saved</Heading>
+                <SavedItems
+                    itemsArray={itemsArray}
+                    handleDelete={handleDelete}
+                    handleButton={handleButton}
+                />
+
+            </View>
+        </>
+    );
+}
+
+function SavedItems({itemsArray, handleDelete, handleButton}) {
+
+    function formatItems(itemsArray) {
         if (itemsArray.length === 0) {
             return <List.Item key={"none"}>No saved feedback.</List.Item>;
         }
 
-        return itemsArray.map((item) =>
+        let sortedArray = itemsArray.slice();
+        sortedArray.sort((a, b) => compare(a.id, b.id));
+
+        return sortedArray.map((item) =>
             <List.Item
                 key={item.id}>
                 {`
@@ -35,40 +74,11 @@ function SavedFeedback({setFeedback, setBodyFeedback, setConclusionFeedback,
             </List.Item>);
     }
 
-    let listItems = updateStorage();
-
-    function handleButton(id) {
-        const item = JSON.parse(localStorage.getItem(id));
-        console.log(item);
-        setIntroText(item.intro);
-        setBodyText(item.body);
-        setConclusionText(item.con);
-        setFeedback(item.introFeedback);
-        setBodyFeedback(item.bodyFeedback);
-        setConclusionFeedback(item.conFeedback);
-    }
-
-    function handleDelete(id) {
-        localStorage.removeItem(id);
-        updateStorage();
-        console.log(listItems);
-    }
+    let listItems = formatItems(itemsArray);
 
     return (
         <>
-            <View as="div"
-                  display="inline-block"
-                  margin="small"
-                  padding="small"
-                  background="secondary"
-                  shadow="resting"
-                  borderRadius="large"
-                  width="85%"
-            >
-                <Heading level="h2" margin="0 0 x-small">Saved</Heading>
-                <List delimiter="solid" isUnstyled margin="small 0 0">{listItems}</List>
-
-            </View>
+            <List delimiter="solid" isUnstyled margin="small 0 0">{listItems}</List>
         </>
     );
 }

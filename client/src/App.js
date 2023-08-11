@@ -28,6 +28,7 @@ function DraftFeedback() {
     const errorMessage = useSelector(state => state.errorMessage);
     const selectedAssign = useSelector(state => state.selectedAssign);
     const allAssigns = useSelector(state => state.allAssigns);
+    const allSaved = useSelector(state => state.allSaved);
 
     function setIntroText(newVal) {
         dispatch({type: "introTextChanged", payload: newVal});
@@ -59,6 +60,9 @@ function DraftFeedback() {
     function setAllAssigns(newVal) {
         dispatch({type: "allAssignsChanged", payload: newVal});
     }
+    function setAllSaved(newVal) {
+        dispatch({type: "allSavedChanged", payload: newVal});
+    }
 
     const dispatch = useDispatch();
 
@@ -85,6 +89,7 @@ function DraftFeedback() {
             conFeedback: feedbackConclusion,
         }
         localStorage.setItem(JSON.stringify(id), JSON.stringify(dataToSave));
+        updateSavedItems();
     }
 
     function handleButton() {
@@ -174,7 +179,6 @@ function DraftFeedback() {
     }
 
     async function fetchAssigns() {
-        console.log(`Getting assignments`);
         return fetch(ASSIGNS_URL)
             .then(response => {
                 return response.json();
@@ -186,7 +190,6 @@ function DraftFeedback() {
     }
 
     if (allAssigns.length === 0) {
-        console.log("Getting assignments");
         fetchAssigns()
             .then(result => {
                 setAllAssigns(result);
@@ -195,6 +198,15 @@ function DraftFeedback() {
                 console.log(`Error getting assignments: ${err}`);
             });
     }
+
+    function updateSavedItems() {
+        let theArray = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            theArray.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+        }
+        setAllSaved(theArray);
+    }
+
 
     return (
         <>
@@ -228,6 +240,8 @@ function DraftFeedback() {
                     setIntroText = {setIntroText}
                     setBodyText = {setBodyText}
                     setConclusionText = {setConclusionText}
+                    itemsArray={allSaved}
+                    updateItemsArray={updateSavedItems}
                 />
             </div>
         </>
