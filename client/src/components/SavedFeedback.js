@@ -1,10 +1,19 @@
-import {Heading, View, Button, List} from "@instructure/ui";
+import {Heading, View, Button, List, Flex} from "@instructure/ui";
+import {LOADING_MESSAGE} from "../constants";
 const { compare } = Intl.Collator('en-US');
 
 function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback,
-                           setIntroText, setBodyText, setConclusionText, itemsArray, updateItemsArray}) {
+                           setIntroText, setBodyText, setConclusionText, itemsArray, updateItemsArray,
+                       feedbackIntro, feedbackBody, feedbackConclusion}) {
+
+    let message = "";
 
     function handleButton(id) {
+        if (feedbackIntro === LOADING_MESSAGE || feedbackBody === LOADING_MESSAGE || feedbackConclusion === LOADING_MESSAGE) {
+            alert("Please wait until current feedback is loaded to restore a saved draft.");
+            return;
+        }
+
         const item = JSON.parse(localStorage.getItem(id));
         setIntroText(item.intro);
         setBodyText(item.body);
@@ -55,22 +64,29 @@ function SavedItems({itemsArray, handleDelete, handleButton}) {
         return sortedArray.map((item) =>
             <List.Item
                 key={item.id}>
-                {`
-            ${new Date(item.id * 1000).toLocaleDateString("en-US")} 
-            ${new Date(item.id * 1000).toLocaleTimeString("en-US")}
-             `}
-                <Button
-                    color="primary"
-                    size="small"
-                    margin="small"
-                    id={item.id}
-                    onClick={(e) => handleButton(e.currentTarget.id)}>Restore</Button>
-                <Button
-                    color="danger"
-                    size="small"
-                    margin="small"
-                    id={item.id}
-                    onClick={(e) => handleDelete(e.currentTarget.id)}>Remove</Button>
+                <Flex >
+                    <Flex.Item padding="x-small" shouldShrink size="200px">
+                        {`${new Date(item.id * 1000).toLocaleDateString("en-US")} 
+                        ${new Date(item.id * 1000).toLocaleTimeString("en-US")}`}
+                    </Flex.Item>
+                    <Flex.Item padding="x-small">
+                        <Button
+                            color="primary"
+                            size="small"
+                            withBackground={false}
+                            id={item.id}
+                            onClick={(e) => handleButton(e.currentTarget.id)}>Restore</Button>
+                    </Flex.Item>
+                    <Flex.Item padding="x-small">
+                        <Button
+                            color="danger"
+                            size="small"
+                            withBackground={false}
+                            id={item.id}
+                            onClick={(e) => handleDelete(e.currentTarget.id)}>Remove</Button>
+                    </Flex.Item>
+
+                </Flex>
             </List.Item>);
     }
 

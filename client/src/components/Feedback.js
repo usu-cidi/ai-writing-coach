@@ -1,4 +1,4 @@
-import {DEFAULT_FEEDBACK_MESSAGE} from "../constants";
+import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../constants";
 import {Button, Heading, List, Spinner, Text, View} from "@instructure/ui";
 
 function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}) {
@@ -20,6 +20,13 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
                 </View>
             </>
         );
+    }
+
+    let saveButton = <Button margin="x-small" color="primary"
+                             onClick={() => saveToLocal()}>Save</Button>;
+    if (feedbackIntro === LOADING_MESSAGE || feedbackBody === LOADING_MESSAGE || feedbackConclusion === LOADING_MESSAGE) {
+        saveButton = <Button margin="x-small" color="primary"
+                             onClick={() => saveToLocal()} disabled>Save</Button>;
     }
 
     return (
@@ -45,8 +52,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
                 ) : console.log("no conclusion")}
 
-                <Button margin="x-small" color="primary"
-                        onClick={() => saveToLocal()}>Save</Button>
+                {saveButton}
 
             </View>
         </>
@@ -54,7 +60,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
 }
 
 function GeneratedFeedback({title, text}) {
-    if (text === "Loading...") {
+    if (text === LOADING_MESSAGE) {
         return (
             <>
                 <Heading level="h3" margin="0 0 small">{title}:</Heading>

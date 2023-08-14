@@ -102,10 +102,15 @@ Emma Lynn
 ## 8.14.23
 * Fixed loading labels
 * Made intro feedback uniform with body and conclusion feedback
-* 
+* Moved the loading message into a constant
+* Disabled save button while content is loading
+* Added an error message if the user clicks restore while the current feedback is loading
+* Aligned Restore/Remove buttons
 
 TODO:
 * Improve prompts
+  * Try to use to improve writing
+* Find someone to test on
 * ResizeObserver loop completed with undelivered notifications?
 
 ## Sources

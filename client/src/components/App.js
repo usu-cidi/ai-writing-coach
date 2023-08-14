@@ -3,7 +3,7 @@ import { Heading, InstUISettingsProvider, canvas } from '@instructure/ui';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {FEEDBACK_URL, ASSIGNS_URL} from '../constants.js';
+import {FEEDBACK_URL, ASSIGNS_URL, LOADING_MESSAGE} from '../constants.js';
 
 import InputForm from "./InputForm";
 import Feedback from "./Feedback";
@@ -123,13 +123,13 @@ function DraftFeedback() {
     async function getFeedback() {
 
         if (introText) {
-            setIntroFeedback("Loading...");
+            setIntroFeedback(LOADING_MESSAGE);
         }
         if (bodyText) {
-            setBodyFeedback("Loading...");
+            setBodyFeedback(LOADING_MESSAGE);
         }
         if (conclusionText) {
-            setConclusionFeedback("Loading...");
+            setConclusionFeedback(LOADING_MESSAGE);
         }
 
         let theSelectedAssign = selectedAssign;
@@ -234,6 +234,9 @@ function DraftFeedback() {
                     setConclusionText = {setConclusionText}
                     itemsArray={allSaved}
                     updateItemsArray={updateSavedItems}
+                    feedbackIntro={feedbackIntro}
+                    feedbackBody={feedbackBody}
+                    feedbackConclusion={feedbackConclusion}
                 />
             </div>
         </>
