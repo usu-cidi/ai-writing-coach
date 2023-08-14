@@ -99,9 +99,12 @@ Emma Lynn
 * Finally got the saved data to update
 * Sorted saved data chronologically
 
+## 8.14.23
+* Fixed loading labels
+* Made intro feedback uniform with body and conclusion feedback
+* 
+
 TODO:
-* Loading labels
-  * Fix default feedback to be uniform
 * Improve prompts
 * ResizeObserver loop completed with undelivered notifications?
 

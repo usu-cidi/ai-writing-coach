@@ -1,7 +1,7 @@
 import {Heading, View, Button, List} from "@instructure/ui";
 const { compare } = Intl.Collator('en-US');
 
-function SavedFeedback({setFeedback, setBodyFeedback, setConclusionFeedback,
+function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback,
                            setIntroText, setBodyText, setConclusionText, itemsArray, updateItemsArray}) {
 
     function handleButton(id) {
@@ -9,7 +9,7 @@ function SavedFeedback({setFeedback, setBodyFeedback, setConclusionFeedback,
         setIntroText(item.intro);
         setBodyText(item.body);
         setConclusionText(item.con);
-        setFeedback(item.introFeedback);
+        setIntroFeedback(item.introFeedback);
         setBodyFeedback(item.bodyFeedback);
         setConclusionFeedback(item.conFeedback);
     }

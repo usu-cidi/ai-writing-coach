@@ -1,8 +1,8 @@
-import {DEFAULT_FEEDBACK_MESSAGE} from "./constants";
+import {DEFAULT_FEEDBACK_MESSAGE} from "../constants";
 import {Button, Heading, List, Spinner, Text, View} from "@instructure/ui";
 
 function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}) {
-    if (feedbackIntro === DEFAULT_FEEDBACK_MESSAGE && !feedbackBody && !feedbackConclusion) {
+    if (!feedbackIntro && !feedbackBody && !feedbackConclusion) {
         return (
             <>
                 <View as="div"
@@ -35,7 +35,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
             >
                 <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
 
-                {feedbackIntro !== DEFAULT_FEEDBACK_MESSAGE ? (
+                {feedbackIntro ? (
                     <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
                 ) : console.log("no intro")}
                 {feedbackBody ? (
@@ -54,7 +54,6 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
 }
 
 function GeneratedFeedback({title, text}) {
-    console.log(title, text);
     if (text === "Loading...") {
         return (
             <>
@@ -86,7 +85,6 @@ function GeneratedFeedback({title, text}) {
 }
 
 function FeedbackSection({feedback}) {
-    //console.log(feedback);
     try {
         feedback = JSON.parse(feedback).feedback;
     } catch(err) {

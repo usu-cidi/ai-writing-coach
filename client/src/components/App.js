@@ -3,7 +3,7 @@ import { Heading, InstUISettingsProvider, canvas } from '@instructure/ui';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {DEFAULT_FEEDBACK_MESSAGE, FEEDBACK_URL, ASSIGNS_URL} from './constants.js';
+import {FEEDBACK_URL, ASSIGNS_URL} from '../constants.js';
 
 import InputForm from "./InputForm";
 import Feedback from "./Feedback";
@@ -22,7 +22,7 @@ function DraftFeedback() {
     const bodyText = useSelector(state => state.bodyText);
     const conclusionText = useSelector(state => state.conclusionText);
     const feedbackType = useSelector(state => state.feedbackType);
-    const feedback = useSelector(state => state.feedback);
+    const feedbackIntro = useSelector(state => state.feedbackIntro);
     const feedbackBody = useSelector(state => state.feedbackBody);
     const feedbackConclusion = useSelector(state => state.feedbackConclusion);
     const errorMessage = useSelector(state => state.errorMessage);
@@ -42,7 +42,7 @@ function DraftFeedback() {
     function setFeedbackType(newVal) {
         dispatch({type: "feedbackTypeChanged", payload: newVal});
     }
-    function setFeedback(newVal) {
+    function setIntroFeedback(newVal) {
         dispatch({type: "feedbackChanged", payload: newVal});
     }
     function setBodyFeedback(newVal) {
@@ -77,14 +77,13 @@ function DraftFeedback() {
     }
 
     function saveToLocalStorage() {
-        console.log("Save button clicked!!");
         let id = Math.floor(Date.now() / 1000);
         let dataToSave = {
             id: id,
             intro: introText,
             body: bodyText,
             con: conclusionText,
-            introFeedback: feedback,
+            introFeedback: feedbackIntro,
             bodyFeedback: feedbackBody,
             conFeedback: feedbackConclusion,
         }
@@ -95,8 +94,8 @@ function DraftFeedback() {
     function handleButton() {
         console.log(selectedAssign);
 
-        setErrorMessage("");
-        setFeedback(DEFAULT_FEEDBACK_MESSAGE);
+        setErrorMessage('');
+        setIntroFeedback('');
         setBodyFeedback('');
         setConclusionFeedback('');
 
@@ -122,22 +121,15 @@ function DraftFeedback() {
     }
 
     async function getFeedback() {
-        let hideWaitingMessage = false;
 
         if (introText) {
-            setFeedback("Loading...");
+            setIntroFeedback("Loading...");
         }
         if (bodyText) {
             setBodyFeedback("Loading...");
-            hideWaitingMessage = true;
         }
         if (conclusionText) {
             setConclusionFeedback("Loading...");
-            hideWaitingMessage = true;
-        }
-
-        if (hideWaitingMessage) {
-            setFeedback("");
         }
 
         let theSelectedAssign = selectedAssign;
@@ -147,7 +139,7 @@ function DraftFeedback() {
 
         if (introText) {
             let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType, assign: theSelectedAssign});
-            setFeedback(introFeedback);
+            setIntroFeedback(introFeedback);
         }
         if (bodyText) {
             let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType, assign: theSelectedAssign});
@@ -174,7 +166,7 @@ function DraftFeedback() {
     }
 
     let buttonText = 'Submit for Feedback';
-    if (feedback !== DEFAULT_FEEDBACK_MESSAGE) {
+    if (feedbackIntro !== '') {
         buttonText = 'Resubmit for Feedback';
     }
 
@@ -228,13 +220,13 @@ function DraftFeedback() {
             </div>
             <div className="column">
                 <Feedback
-                    feedbackIntro={feedback}
+                    feedbackIntro={feedbackIntro}
                     feedbackBody={feedbackBody}
                     feedbackConclusion={feedbackConclusion}
                     saveToLocal={saveToLocalStorage}
                 /><br/>
                 <SavedFeedback
-                    setFeedback = {setFeedback}
+                    setIntroFeedback = {setIntroFeedback}
                     setBodyFeedback = {setBodyFeedback}
                     setConclusionFeedback = {setConclusionFeedback}
                     setIntroText = {setIntroText}

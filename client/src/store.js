@@ -1,13 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import {DEFAULT_FEEDBACK_MESSAGE} from './constants.js';
-
 const initialState = {
     introText: '',
     bodyText: '',
     conclusionText: '',
     feedbackType: [],
-    feedback: DEFAULT_FEEDBACK_MESSAGE,
+    feedbackIntro: '',
     feedbackBody: '',
     feedbackConclusion: '',
     errorMessage: '',
@@ -40,7 +38,7 @@ function reducer(state = initialState, action) {
         return { ...state, feedbackType: action.payload };
     }
     if (action.type === "feedbackChanged") {
-        return { ...state, feedback: action.payload };
+        return { ...state, feedbackIntro: action.payload };
     }
     if (action.type === "feedbackBodyChanged") {
         return { ...state, feedbackBody: action.payload };
