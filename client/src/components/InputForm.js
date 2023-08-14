@@ -2,7 +2,8 @@ import {Button, Checkbox, CheckboxGroup, SimpleSelect, Text, TextArea, View} fro
 import {INPUT_TEXT_MAX_LENGTH} from "../constants";
 
 function InputForm({introText, bodyText, setFeedbackType, errorMessage,
-                       conclusionText, handleChange, handleButton, buttonText, setAssign, allAssigns}) {
+                       conclusionText, handleChange, handleButton, buttonText, setAssign,
+                       allAssigns, handleReset}) {
 
     const assignOptions = allAssigns.map((text) => <SimpleSelect.Option
         id={text}
@@ -44,6 +45,8 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
 
                     <Button margin="small" color="primary"
                             onClick={() => handleButton()}>{buttonText}</Button>
+                    <Button margin="small" color="secondary"
+                            onClick={() => handleReset()}>Reset</Button>
                 </View>
             </form>
             <Text color="danger" weight="bold">{errorMessage}</Text>

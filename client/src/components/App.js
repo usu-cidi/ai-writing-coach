@@ -199,6 +199,15 @@ function DraftFeedback() {
         setAllSaved(theArray);
     }
 
+    function handleReset() {
+        setIntroText("");
+        setBodyText("");
+        setConclusionText("");
+        setIntroFeedback("")
+        setBodyFeedback("");
+        setConclusionFeedback("");
+    }
+
 
     return (
         <>
@@ -216,6 +225,7 @@ function DraftFeedback() {
                     buttonText={buttonText}
                     setAssign={setSelectedAssign}
                     allAssigns={allAssigns}
+                    handleReset={handleReset}
                 />
             </div>
             <div className="column">

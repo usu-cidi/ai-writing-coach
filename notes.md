@@ -106,16 +106,13 @@ Emma Lynn
 * Disabled save button while content is loading
 * Added an error message if the user clicks restore while the current feedback is loading
 * Aligned Restore/Remove buttons
+* Added reset button
+* 
 
 TODO:
 * Improve prompts
-  * Try to use to improve writing
+  * Try actually using
 * Find someone to test on
 * ResizeObserver loop completed with undelivered notifications?
-
-## Sources
-* Run php code: https://www.geeksforgeeks.org/how-to-execute-php-code-using-command-line/
-* https://blog.logrocket.com/using-localstorage-react-hooks/
-* https://www.telerik.com/blogs/javascript-local-storage-all-you-need-know
 
 
