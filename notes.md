@@ -107,7 +107,16 @@ Emma Lynn
 * Added an error message if the user clicks restore while the current feedback is loading
 * Aligned Restore/Remove buttons
 * Added reset button
-* 
+
+## 8.22.23
+* Deploying to AWS for a demo Neal's doing today
+
+## 8.28.23
+* Code review
+  * Remove specific assignment option
+  * Pull title for saved feedback (instead of timestamp)
+  * Options: general best practices and grammar
+
 
 TODO:
 * Improve prompts
