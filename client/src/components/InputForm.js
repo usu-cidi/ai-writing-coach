@@ -1,19 +1,8 @@
-import {Button, Checkbox, CheckboxGroup, SimpleSelect, Text, TextArea, View} from "@instructure/ui";
+import {Button, Checkbox, CheckboxGroup, Text, TextArea, View} from "@instructure/ui";
 import {INPUT_TEXT_MAX_LENGTH} from "../constants";
 
 function InputForm({introText, bodyText, setFeedbackType, errorMessage,
-                       conclusionText, handleChange, handleButton, buttonText, setAssign,
-                       allAssigns, handleReset}) {
-
-    const assignOptions = allAssigns.map((text) => <SimpleSelect.Option
-        id={text}
-        value={text}
-        key={text}
-    >{text}</SimpleSelect.Option>);
-
-    let handleSelect = (e, { id, value }) => {
-        setAssign(value);
-    }
+                       conclusionText, handleChange, handleButton, buttonText, handleReset}) {
 
     return (
         <>
@@ -31,17 +20,9 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                                    }}
                                    description="Select type(s) of feedback to receive:"
                     >
-                        <Checkbox label="Assignment Specific" value="standards" />
-                        <Checkbox label="General Best Practices" value="grammatical" />
+                        <Checkbox label="General Best Practices" value="standards" />
+                        <Checkbox label="Grammatical" value="grammatical" />
                     </CheckboxGroup><br/>
-
-                    <SimpleSelect
-                        renderLabel="Assignment"
-                        onChange={handleSelect}
-                    >
-                        <SimpleSelect.Option id="blank" value={" "} key="blank">{" "}</SimpleSelect.Option>
-                        {assignOptions}
-                    </SimpleSelect>
 
                     <Button margin="small" color="primary"
                             onClick={() => handleButton()}>{buttonText}</Button>

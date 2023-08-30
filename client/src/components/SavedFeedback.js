@@ -1,12 +1,10 @@
-import {Heading, View, Button, List, Flex} from "@instructure/ui";
-import {LOADING_MESSAGE} from "../constants";
+import {Heading, View, Button, List, Flex, Text} from "@instructure/ui";
+import {LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH} from "../constants";
 const { compare } = Intl.Collator('en-US');
 
 function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback,
                            setIntroText, setBodyText, setConclusionText, itemsArray, updateItemsArray,
                        feedbackIntro, feedbackBody, feedbackConclusion}) {
-
-    let message = "";
 
     function handleButton(id) {
         if (feedbackIntro === LOADING_MESSAGE || feedbackBody === LOADING_MESSAGE || feedbackConclusion === LOADING_MESSAGE) {
@@ -45,13 +43,40 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
                     handleDelete={handleDelete}
                     handleButton={handleButton}
                 />
-
             </View>
         </>
     );
 }
 
 function SavedItems({itemsArray, handleDelete, handleButton}) {
+
+    function getTitle(item) {
+        if (item.title) {
+            return item.title;
+        }
+        if (item.intro) {
+            if (item.intro.length <= SAVED_TITLE_MAX_LENGTH) {
+                return item.intro;
+            } else {
+                return `${item.intro.substring(0, SAVED_TITLE_MAX_LENGTH)}...`;
+            }
+        }
+        if (item.body) {
+            if (item.body.length <= SAVED_TITLE_MAX_LENGTH) {
+                return item.body;
+            } else {
+                return `${item.body.substring(0, SAVED_TITLE_MAX_LENGTH)}...`;
+            }
+        }
+        if (item.con) {
+            if (item.con.length <= SAVED_TITLE_MAX_LENGTH) {
+                return item.con;
+            } else {
+                return `${item.con.substring(0, SAVED_TITLE_MAX_LENGTH)}...`;
+            }
+        }
+        return "...";
+    }
 
     function formatItems(itemsArray) {
         if (itemsArray.length === 0) {
@@ -65,9 +90,14 @@ function SavedItems({itemsArray, handleDelete, handleButton}) {
             <List.Item
                 key={item.id}>
                 <Flex >
-                    <Flex.Item padding="x-small" shouldShrink size="200px">
-                        {`${new Date(item.id * 1000).toLocaleDateString("en-US")} 
-                        ${new Date(item.id * 1000).toLocaleTimeString("en-US")}`}
+                    <Flex.Item padding="x-small" shouldShrink size="325px">
+                        <Text>{getTitle(item)}&nbsp;</Text>
+                        <img
+                            alt="Edit icon."
+                            src={require('../assets/edit_icon.png')}
+                            width="17px"
+                        />
+                        <Text weight="light">&nbsp;&nbsp;&nbsp;{`${new Date(item.id * 1000).toLocaleDateString("en-US")}`}</Text>
                     </Flex.Item>
                     <Flex.Item padding="x-small">
                         <Button

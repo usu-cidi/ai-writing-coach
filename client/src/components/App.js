@@ -3,7 +3,7 @@ import { Heading, InstUISettingsProvider, canvas } from '@instructure/ui';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {FEEDBACK_URL, ASSIGNS_URL, LOADING_MESSAGE} from '../constants.js';
+import {FEEDBACK_URL, LOADING_MESSAGE} from '../constants.js';
 
 import InputForm from "./InputForm";
 import Feedback from "./Feedback";
@@ -26,8 +26,6 @@ function DraftFeedback() {
     const feedbackBody = useSelector(state => state.feedbackBody);
     const feedbackConclusion = useSelector(state => state.feedbackConclusion);
     const errorMessage = useSelector(state => state.errorMessage);
-    const selectedAssign = useSelector(state => state.selectedAssign);
-    const allAssigns = useSelector(state => state.allAssigns);
     const allSaved = useSelector(state => state.allSaved);
 
     function setIntroText(newVal) {
@@ -53,12 +51,6 @@ function DraftFeedback() {
     }
     function setErrorMessage(newVal) {
         dispatch({type: "errorMessageChanged", payload: newVal});
-    }
-    function setSelectedAssign(newVal) {
-        dispatch({type: "selectedAssignChanged", payload: newVal});
-    }
-    function setAllAssigns(newVal) {
-        dispatch({type: "allAssignsChanged", payload: newVal});
     }
     function setAllSaved(newVal) {
         dispatch({type: "allSavedChanged", payload: newVal});
@@ -92,7 +84,6 @@ function DraftFeedback() {
     }
 
     function handleButton() {
-        console.log(selectedAssign);
 
         setErrorMessage('');
         setIntroFeedback('');
@@ -109,9 +100,6 @@ function DraftFeedback() {
             error += "You must select at least one type of feedback. "
         }
 
-        if (feedbackType.includes("standards") && (!selectedAssign || selectedAssign === " ")) {
-            error += "To receive feedback based on USU standards you must select an assignment. "
-        }
         if (error) {
             setErrorMessage(error);
             return;
@@ -132,21 +120,16 @@ function DraftFeedback() {
             setConclusionFeedback(LOADING_MESSAGE);
         }
 
-        let theSelectedAssign = selectedAssign;
-        if (selectedAssign === " ") {
-            theSelectedAssign = "";
-        }
-
         if (introText) {
-            let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType, assign: theSelectedAssign});
+            let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
             setIntroFeedback(introFeedback);
         }
         if (bodyText) {
-            let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType, assign: theSelectedAssign});
+            let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
             setBodyFeedback(bodyFeedback);
         }
         if (conclusionText) {
-            let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType, assign: theSelectedAssign});
+            let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
             setConclusionFeedback(conclusionFeedback);
         }
 
@@ -155,12 +138,12 @@ function DraftFeedback() {
     async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`);
         return fetch(
-            `${FEEDBACK_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}&assign=${params.assign}`)
+            `${FEEDBACK_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}`)
             .then(response => {
                 return response.json();
             })
             .then(result => {
-                console.log(result);
+                //console.log(result);
                 return result.replace(/\\n|\\r|\\/g, "");
             });
     }
@@ -168,27 +151,6 @@ function DraftFeedback() {
     let buttonText = 'Submit for Feedback';
     if (feedbackIntro !== '') {
         buttonText = 'Resubmit for Feedback';
-    }
-
-    async function fetchAssigns() {
-        return fetch(ASSIGNS_URL)
-            .then(response => {
-                return response.json();
-            })
-            .then(result => {
-                return JSON.parse(result).assignments;
-            })
-
-    }
-
-    if (allAssigns.length === 0) {
-        fetchAssigns()
-            .then(result => {
-                setAllAssigns(result);
-            })
-            .catch(err => {
-                console.log(`Error getting assignments: ${err}`);
-            });
     }
 
     function updateSavedItems() {
@@ -223,8 +185,6 @@ function DraftFeedback() {
                     handleChange={handleChange}
                     handleButton={handleButton}
                     buttonText={buttonText}
-                    setAssign={setSelectedAssign}
-                    allAssigns={allAssigns}
                     handleReset={handleReset}
                 />
             </div>

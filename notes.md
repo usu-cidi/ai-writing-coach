@@ -117,6 +117,12 @@ Emma Lynn
   * Pull title for saved feedback (instead of timestamp)
   * Options: general best practices and grammar
 
+## 8.30.23
+* Added a short README
+* Removed assignment selection option
+* Changed options to general best practices and grammatical
+  * And edited prompts accordingly
+* Starting working on better title for saved feedback
 
 TODO:
 * Improve prompts

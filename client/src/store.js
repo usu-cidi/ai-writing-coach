@@ -9,8 +9,6 @@ const initialState = {
     feedbackBody: '',
     feedbackConclusion: '',
     errorMessage: '',
-    selectedAssign: '',
-    allAssigns: [],
     allSaved: (function() {
         let theArray = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -51,9 +49,6 @@ function reducer(state = initialState, action) {
     }
     if (action.type === "selectedAssignChanged") {
         return { ...state, selectedAssign: action.payload };
-    }
-    if (action.type === "allAssignsChanged") {
-        return { ...state, allAssigns: action.payload };
     }
     if (action.type === "allSavedChanged") {
         return { ...state, allSaved: action.payload };
