@@ -16,6 +16,7 @@ const initialState = {
         }
         return theArray;
         })(),
+    titleForSaving: '',
 }
 
 export const store = configureStore({
@@ -52,6 +53,9 @@ function reducer(state = initialState, action) {
     }
     if (action.type === "allSavedChanged") {
         return { ...state, allSaved: action.payload };
+    }
+    if (action.type === "titleForSavingChanged") {
+        return { ...state, titleForSaving: action.payload };
     }
 
     return state;

@@ -43,7 +43,7 @@ function getIntroPrompt($writing, $feedbackType) {
     }
 
     return $prompt."Do not generate any part of the actual writing, even to show as a good example.
-    ".getResponseFormat()." Here is the introduction: " . $writing;
+    ".getResponseFormat()." Do not use overly technical jargon. Here is the introduction: " . $writing;
 }
 
 function getBodyPrompt($writing, $feedbackType) {
@@ -63,7 +63,7 @@ function getBodyPrompt($writing, $feedbackType) {
     }
 
     return $prompt."Do not generate any part of the actual
-    writing, even to show as an example. ".getResponseFormat()." Here is the body of the paper: " . $writing;
+    writing, even to show as an example. ".getResponseFormat()." Do not use overly technical jargon. Here is the body of the paper: " . $writing;
 }
 
 function getConclusionPrompt($writing, $feedbackType) {
@@ -86,7 +86,7 @@ function getConclusionPrompt($writing, $feedbackType) {
 
     return $prompt."Do not generate any part of the actual writing, even to show as
     an example. Remember that you provide advice and suggestions- use words like could or consider instead of
-    should. ".getResponseFormat()." Here is the conclusion: " . $writing;
+    should. ".getResponseFormat()." Do not use overly technical jargon. Here is the conclusion: " . $writing;
 }
 
 function getResponseFormat() {

@@ -26,6 +26,12 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
         updateItemsArray();
     }
 
+    function editTitle(item, title) {
+        console.log("Editing title " + item.id);
+        item.title = title;
+        localStorage.setItem(JSON.stringify(item.id), JSON.stringify(item));
+    }
+
     return (
         <>
             <View as="div"
@@ -42,13 +48,14 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
                     itemsArray={itemsArray}
                     handleDelete={handleDelete}
                     handleButton={handleButton}
+                    editTitle={editTitle}
                 />
             </View>
         </>
     );
 }
 
-function SavedItems({itemsArray, handleDelete, handleButton}) {
+function SavedItems({itemsArray, handleDelete, handleButton, editTitle}) {
 
     function getTitle(item) {
         if (item.title) {
@@ -90,14 +97,9 @@ function SavedItems({itemsArray, handleDelete, handleButton}) {
             <List.Item
                 key={item.id}>
                 <Flex >
-                    <Flex.Item padding="x-small" shouldShrink size="325px">
-                        <Text>{getTitle(item)}&nbsp;</Text>
-                        <img
-                            alt="Edit icon."
-                            src={require('../assets/edit_icon.png')}
-                            width="17px"
-                        />
-                        <Text weight="light">&nbsp;&nbsp;&nbsp;{`${new Date(item.id * 1000).toLocaleDateString("en-US")}`}</Text>
+                    <Flex.Item padding="x-small" shouldShrink size="275px">
+                        <Text>{getTitle(item)}&nbsp;&nbsp;&nbsp;</Text>
+                        <Text weight="light">{`${new Date(item.id * 1000).toLocaleDateString("en-US")}`}</Text>
                     </Flex.Item>
                     <Flex.Item padding="x-small">
                         <Button
@@ -115,7 +117,6 @@ function SavedItems({itemsArray, handleDelete, handleButton}) {
                             id={item.id}
                             onClick={(e) => handleDelete(e.currentTarget.id)}>Remove</Button>
                     </Flex.Item>
-
                 </Flex>
             </List.Item>);
     }

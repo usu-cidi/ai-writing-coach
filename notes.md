@@ -124,10 +124,9 @@ Emma Lynn
   * And edited prompts accordingly
 * Starting working on better title for saved feedback
 
-TODO:
-* Improve prompts
-  * Try actually using
-* Find someone to test on
-* ResizeObserver loop completed with undelivered notifications?
+## 8.31.23
+* Finished adding better title options for saved feedback
+* Edited prompts a little to discourage overly technical language or jargon.
+* Cleaned up a little
 
 

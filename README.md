@@ -9,3 +9,4 @@ was written by Emma Lynn, supervised by Ludovic Attiogbe and Neal Legler.
 
 * Client side was written in Javascript with React (using Redux for state management)
 * Server side was written in PHP as a web server that runs on XAMPP
+  * Created from an LTI template written by Ludovic Attiogbe

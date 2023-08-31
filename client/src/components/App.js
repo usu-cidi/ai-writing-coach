@@ -27,6 +27,7 @@ function DraftFeedback() {
     const feedbackConclusion = useSelector(state => state.feedbackConclusion);
     const errorMessage = useSelector(state => state.errorMessage);
     const allSaved = useSelector(state => state.allSaved);
+    const titleForSaving = useSelector(state => state.titleForSaving)
 
     function setIntroText(newVal) {
         dispatch({type: "introTextChanged", payload: newVal});
@@ -55,6 +56,9 @@ function DraftFeedback() {
     function setAllSaved(newVal) {
         dispatch({type: "allSavedChanged", payload: newVal});
     }
+    function setTitleForSaving(newVal) {
+        dispatch({type: "titleForSavingChanged", payload: newVal});
+    }
 
     const dispatch = useDispatch();
 
@@ -78,6 +82,7 @@ function DraftFeedback() {
             introFeedback: feedbackIntro,
             bodyFeedback: feedbackBody,
             conFeedback: feedbackConclusion,
+            title: titleForSaving,
         }
         localStorage.setItem(JSON.stringify(id), JSON.stringify(dataToSave));
         updateSavedItems();
@@ -194,6 +199,7 @@ function DraftFeedback() {
                     feedbackBody={feedbackBody}
                     feedbackConclusion={feedbackConclusion}
                     saveToLocal={saveToLocalStorage}
+                    setTitleForSaving={setTitleForSaving}
                 /><br/>
                 <SavedFeedback
                     setIntroFeedback = {setIntroFeedback}

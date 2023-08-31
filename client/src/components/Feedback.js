@@ -1,7 +1,7 @@
 import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../constants";
-import {Button, Heading, List, Spinner, Text, View} from "@instructure/ui";
+import {Button, Heading, List, Spinner, Text, View, TextInput, ScreenReaderContent} from "@instructure/ui";
 
-function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}) {
+function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving}) {
     if (!feedbackIntro && !feedbackBody && !feedbackConclusion) {
         return (
             <>
@@ -16,16 +16,15 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
                 >
                     <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
                     <Text size="medium" weight="light">{DEFAULT_FEEDBACK_MESSAGE}</Text>
-
                 </View>
             </>
         );
     }
 
-    let saveButton = <Button margin="x-small" color="primary"
+    let saveButton = <Button margin="x-small" color="primary" display="inline-block" size="small"
                              onClick={() => saveToLocal()}>Save</Button>;
     if (feedbackIntro === LOADING_MESSAGE || feedbackBody === LOADING_MESSAGE || feedbackConclusion === LOADING_MESSAGE) {
-        saveButton = <Button margin="x-small" color="primary"
+        saveButton = <Button margin="x-small" color="primary" display="inline-block" size="small"
                              onClick={() => saveToLocal()} disabled>Save</Button>;
     }
 
@@ -52,8 +51,17 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal}
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
                 ) : console.log("no conclusion")}
 
+                <Text
+                    display="inline-block"
+                >
+                    Title:&nbsp;&nbsp;</Text>
+                <TextInput
+                    renderLabel={<ScreenReaderContent>Saved feedback title input.</ScreenReaderContent>}
+                    display="inline-block"
+                    onChange={(e) => setTitleForSaving(e.target.value)}
+                    size="small"
+                />
                 {saveButton}
-
             </View>
         </>
     );
