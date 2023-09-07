@@ -43,7 +43,7 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
                   borderRadius="large"
                   width="85%"
             >
-                <Heading level="h2" margin="0 0 x-small">Saved</Heading>
+                <Heading level="h3" margin="0 0 x-small">Saved</Heading>
                 <SavedItems
                     itemsArray={itemsArray}
                     handleDelete={handleDelete}

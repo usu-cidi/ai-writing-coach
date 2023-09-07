@@ -178,7 +178,7 @@ function DraftFeedback() {
 
     return (
         <>
-            <Heading level="h1" margin="0 0 x-small">Editing, Proofreading, & Revising</Heading>
+            <Heading level="h2" margin="0 0 x-small">Editing, Proofreading, & Revising</Heading>
 
             <div className="column">
                 <InputForm

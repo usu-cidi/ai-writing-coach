@@ -108,8 +108,6 @@ function requestCompletion($prompt, $maxTokens=20, $temperature=0) {
     $params = json_encode($params);
 
     $response = curlPostAI($apiURL, $params);
-    //var_dump($response);
-    //echo "<br><br>";
 
     $response = json_decode($response);
 

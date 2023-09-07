@@ -85,8 +85,6 @@ class ClassTemplate
 
         //obtain response
         $result = getFeedback($section, $input, $feedbackType);
-        sleep(2);
-        //$result = '\n\n{"feedback": ["'.$section.'", "'.$input.'", "'.$feedbackType.'"]}';
 
         //send response back to client
         print json_encode($result);

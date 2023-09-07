@@ -129,4 +129,9 @@ Emma Lynn
 * Edited prompts a little to discourage overly technical language or jargon.
 * Cleaned up a little
 
+## 9.7.23
+* Added line break before save feedback option
+* Added more descriptive title for save feedback option
+* Fixed heading levels
+* Removed sleep in `action.php`
 

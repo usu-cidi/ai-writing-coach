@@ -14,7 +14,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal,
                       borderRadius="large"
                       width="85%"
                 >
-                    <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
+                    <Heading level="h3" margin="0 0 x-small">Feedback</Heading>
                     <Text size="medium" weight="light">{DEFAULT_FEEDBACK_MESSAGE}</Text>
                 </View>
             </>
@@ -39,7 +39,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal,
                   borderRadius="large"
                   width="85%"
             >
-                <Heading level="h2" margin="0 0 x-small">Feedback</Heading>
+                <Heading level="h3" margin="0 0 x-small">Feedback</Heading>
 
                 {feedbackIntro ? (
                     <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
@@ -51,10 +51,10 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal,
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
                 ) : console.log("no conclusion")}
 
-                <Text
+                <br/><Text
                     display="inline-block"
                 >
-                    Title:&nbsp;&nbsp;</Text>
+                    Save feedback with title:&nbsp;&nbsp;</Text>
                 <TextInput
                     renderLabel={<ScreenReaderContent>Saved feedback title input.</ScreenReaderContent>}
                     display="inline-block"
@@ -71,7 +71,7 @@ function GeneratedFeedback({title, text}) {
     if (text === LOADING_MESSAGE) {
         return (
             <>
-                <Heading level="h3" margin="0 0 small">{title}:</Heading>
+                <Heading level="h4" margin="0 0 small">{title}:</Heading>
                 <Text
                     size="medium"
                     weight="light"
@@ -92,7 +92,7 @@ function GeneratedFeedback({title, text}) {
 
     return (
         <>
-            <Heading level="h3" margin="0 0 small">{title}:</Heading>
+            <Heading level="h4" margin="0 0 small">{title}:</Heading>
             <FeedbackSection feedback={text}/>
         </>
     );
