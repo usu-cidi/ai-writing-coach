@@ -72,11 +72,6 @@ class ClassTemplate
         print json_encode($result);
     }
 
-    public function retrieveTestFeedback(): void  {
-        $result = '\n\n{"feedback": ["Wow1", "Wow2", "Wow3"]}';
-        print json_encode($result);
-    }
-
     public function retrieveFeedback(): void {
         //accept request from client
         $section = $_GET['section'];

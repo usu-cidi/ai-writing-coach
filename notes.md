@@ -135,3 +135,31 @@ Emma Lynn
 * Fixed heading levels
 * Removed sleep in `action.php`
 
+## 9.12.23
+* Met with Neal, Ludo, & Russ to plan presentation and get feedback on tool
+* Changes to make now:
+  * Change “Title” to “Save As”
+  * Make the title input fill the whole width of the feedback section
+  * Check to make sure you really want to remove the feedback
+  * Add to the prompt to include specific examples
+  * Fix issue in the feedback formatting that comes from double quotes in the feedback (that’s the issue that Neal was having where it wouldn’t format the feedback)
+  * Before displaying saved feedback, check to see if what’s saved in the local storage is actually saved feedback (that’s the item of saved feedback that was displaying as Invalid Date on Neal’s computer)
+* Here are features that were requested that seem like they’re out of scope for this first version, and we can save for a later version:
+  * Structure the process to go through the feedback a specific amount of times
+  * Evaluate if the student is applying their feedback or not
+  * Possibly automatically correct punctuation and grammar
+
+## 9.13.23
+* Fixed no saved feedback message to match other fonts
+* Changed "Save feedback with title" to "Save as"
+* Made the title input fill the whole width of the feedback section
+* Added check to make sure you really want to remove the feedback
+* Added error message for if the server call doesn't work
+* Added some checking for formatting
+* Added to the prompt to include specific examples
+* Removed unfinished edit title stuff
+* Added a check to see if it's relevant before displaying saved feedback from local storage
+* Added writing coach header bar
+
+*TODO*
+* Fix formatting issues

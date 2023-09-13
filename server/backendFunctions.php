@@ -20,7 +20,7 @@ function getFeedback($section, $input, $feedbackType) {
     }
 
     //send request to OpenAI
-    return requestCompletion($prompt, 400, .5);
+    return requestCompletion($prompt, 400, .3);
 }
 
 function getIntroPrompt($writing, $feedbackType) {
@@ -42,8 +42,9 @@ function getIntroPrompt($writing, $feedbackType) {
     introduction grammatically, including spelling, punctuation, and sentence structure. ";
     }
 
-    return $prompt."Do not generate any part of the actual writing, even to show as a good example.
-    ".getResponseFormat()." Do not use overly technical jargon. Here is the introduction: " . $writing;
+    return $prompt."Do not generate any large part of the actual writing, but you must provide examples of the feedback you provide.
+    Remember that you provide advice and suggestions- use words like could or consider instead of
+    should. ".getResponseFormat()." Do not use overly technical jargon. Here is the introduction: " . $writing;
 }
 
 function getBodyPrompt($writing, $feedbackType) {
@@ -62,8 +63,9 @@ function getBodyPrompt($writing, $feedbackType) {
     body of the essay grammatically, including spelling, punctuation, and sentence structure. ";
     }
 
-    return $prompt."Do not generate any part of the actual
-    writing, even to show as an example. ".getResponseFormat()." Do not use overly technical jargon. Here is the body of the paper: " . $writing;
+    return $prompt."Do not generate any large part of the actual writing, but you must provide examples of the feedback
+    you provide. Remember that you provide advice and suggestions- use words like could or consider instead of
+    should. ".getResponseFormat()." Do not use overly technical jargon. Here is the body of the paper: " . $writing;
 }
 
 function getConclusionPrompt($writing, $feedbackType) {
@@ -84,8 +86,7 @@ function getConclusionPrompt($writing, $feedbackType) {
     conclusion grammatically, including spelling, punctuation, and sentence structure. ";
     }
 
-    return $prompt."Do not generate any part of the actual writing, even to show as
-    an example. Remember that you provide advice and suggestions- use words like could or consider instead of
+    return $prompt."Do not generate any large part of the actual writing, but you must provide examples of the feedback you provide. Remember that you provide advice and suggestions- use words like could or consider instead of
     should. ".getResponseFormat()." Do not use overly technical jargon. Here is the conclusion: " . $writing;
 }
 

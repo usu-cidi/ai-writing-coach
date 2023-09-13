@@ -1,4 +1,4 @@
-import { Heading, InstUISettingsProvider, canvas } from '@instructure/ui';
+import { Heading, View} from '@instructure/ui';
 
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -8,13 +8,17 @@ import {FEEDBACK_URL, LOADING_MESSAGE} from '../constants.js';
 import InputForm from "./InputForm";
 import Feedback from "./Feedback";
 import SavedFeedback from "./SavedFeedback";
+import ToolNavBar from "./ToolNavBar";
 
 function App() {
     return (
-        <InstUISettingsProvider theme={canvas}>
-            <DraftFeedback/>
-        </InstUISettingsProvider>
-    )
+        <>
+            <ToolNavBar />
+            <View as="div" margin="small">
+                <DraftFeedback />
+            </View>
+        </>
+    );
 }
 
 function DraftFeedback() {
@@ -28,6 +32,7 @@ function DraftFeedback() {
     const errorMessage = useSelector(state => state.errorMessage);
     const allSaved = useSelector(state => state.allSaved);
     const titleForSaving = useSelector(state => state.titleForSaving)
+    const feedbackError = useSelector(state => state.feedbackError)
 
     function setIntroText(newVal) {
         dispatch({type: "introTextChanged", payload: newVal});
@@ -58,6 +63,9 @@ function DraftFeedback() {
     }
     function setTitleForSaving(newVal) {
         dispatch({type: "titleForSavingChanged", payload: newVal});
+    }
+    function setFeedbackError(newVal) {
+        dispatch({type: "feedbackErrorChanged", payload: newVal});
     }
 
     const dispatch = useDispatch();
@@ -113,6 +121,20 @@ function DraftFeedback() {
         getFeedback();
     }
 
+    function validateResponse(response) {
+        console.log(response);
+
+        let indexOfStart = response.indexOf('{"feedback"');
+        let indexOfEnd = response.indexOf('"]}') + 3;
+
+        if (indexOfStart === -1 || indexOfEnd === -1) {
+            throw Error("Invalid response format.");
+        }
+
+        console.log(response.substring(indexOfStart, indexOfEnd));
+        return response.substring(indexOfStart, indexOfEnd);
+    }
+
     async function getFeedback() {
 
         if (introText) {
@@ -125,17 +147,23 @@ function DraftFeedback() {
             setConclusionFeedback(LOADING_MESSAGE);
         }
 
-        if (introText) {
-            let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
-            setIntroFeedback(introFeedback);
-        }
-        if (bodyText) {
-            let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
-            setBodyFeedback(bodyFeedback);
-        }
-        if (conclusionText) {
-            let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
-            setConclusionFeedback(conclusionFeedback);
+        try {
+            if (introText) {
+                let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
+                setIntroFeedback(validateResponse(introFeedback));
+            }
+            if (bodyText) {
+                let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
+                setBodyFeedback(validateResponse(bodyFeedback));
+            }
+            if (conclusionText) {
+                let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
+                setConclusionFeedback(validateResponse(conclusionFeedback));
+            }
+        } catch(err) {
+            console.log(`There was an error retrieving feedback: ${err.message}`)
+            console.log(err);
+            setFeedbackError("There was an error retrieving feedback, please try again later.");
         }
 
     }
@@ -148,20 +176,38 @@ function DraftFeedback() {
                 return response.json();
             })
             .then(result => {
-                //console.log(result);
+                console.log(result);
                 return result.replace(/\\n|\\r|\\/g, "");
             });
     }
 
     let buttonText = 'Submit for Feedback';
-    if (feedbackIntro !== '') {
+    if (feedbackIntro !== '' || feedbackBody !== '' || feedbackConclusion !== '') {
         buttonText = 'Resubmit for Feedback';
     }
 
     function updateSavedItems() {
         let theArray = [];
         for (let i = 0; i < localStorage.length; i++) {
-            theArray.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            try {
+                let item = JSON.parse(localStorage.getItem(localStorage.key(i)));
+                if (
+                    item.id === undefined ||
+                    item.intro === undefined ||
+                    item.body === undefined ||
+                    item.con === undefined ||
+                    item.introFeedback === undefined ||
+                    item.bodyFeedback === undefined ||
+                    item.conFeedback === undefined ||
+                    item.title === undefined
+                ) {
+                    console.log("Other local storage item found.");
+                } else {
+                    theArray.push(item);
+                }
+            } catch(err) {
+                console.log("Other local storage item found.");
+            }
         }
         setAllSaved(theArray);
     }
@@ -200,6 +246,7 @@ function DraftFeedback() {
                     feedbackConclusion={feedbackConclusion}
                     saveToLocal={saveToLocalStorage}
                     setTitleForSaving={setTitleForSaving}
+                    error={feedbackError}
                 /><br/>
                 <SavedFeedback
                     setIntroFeedback = {setIntroFeedback}

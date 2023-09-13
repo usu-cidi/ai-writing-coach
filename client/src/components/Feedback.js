@@ -1,7 +1,26 @@
 import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../constants";
 import {Button, Heading, List, Spinner, Text, View, TextInput, ScreenReaderContent} from "@instructure/ui";
 
-function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving}) {
+function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
+    if (error) {
+        return (
+            <>
+                <View as="div"
+                      display="inline-block"
+                      margin="small"
+                      padding="small"
+                      background="secondary"
+                      shadow="resting"
+                      borderRadius="large"
+                      width="85%"
+                >
+                    <Heading level="h3" margin="0 0 x-small">Feedback</Heading>
+                    <Text size="medium" weight="light">{error}</Text>
+                </View>
+            </>
+        );
+    }
+
     if (!feedbackIntro && !feedbackBody && !feedbackConclusion) {
         return (
             <>
@@ -54,12 +73,13 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal,
                 <br/><Text
                     display="inline-block"
                 >
-                    Save feedback with title:&nbsp;&nbsp;</Text>
+                    Save as:&nbsp;&nbsp;</Text>
                 <TextInput
                     renderLabel={<ScreenReaderContent>Saved feedback title input.</ScreenReaderContent>}
                     display="inline-block"
                     onChange={(e) => setTitleForSaving(e.target.value)}
                     size="small"
+                    width="70%"
                 />
                 {saveButton}
             </View>
@@ -105,7 +125,7 @@ function FeedbackSection({feedback}) {
         console.log(err);
         return (
             <>
-                <Text size="medium">Error formatting feedback. Raw text:</Text><br/>
+                <Text size="medium">Error formatting feedback. Raw response:</Text><br/>
                 <Text size="medium">{feedback}</Text>
             </>
         );

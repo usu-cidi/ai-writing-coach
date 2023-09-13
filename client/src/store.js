@@ -12,11 +12,30 @@ const initialState = {
     allSaved: (function() {
         let theArray = [];
         for (let i = 0; i < localStorage.length; i++) {
-            theArray.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            try {
+                let item = JSON.parse(localStorage.getItem(localStorage.key(i)));
+                if (
+                    item.id === undefined ||
+                    item.intro === undefined ||
+                    item.body === undefined ||
+                    item.con === undefined ||
+                    item.introFeedback === undefined ||
+                    item.bodyFeedback === undefined ||
+                    item.conFeedback === undefined ||
+                    item.title === undefined
+                ) {
+                    console.log("Other local storage item found.");
+                } else {
+                    theArray.push(item);
+                }
+            } catch(err) {
+                console.log("Other local storage item found.");
+            }
         }
         return theArray;
         })(),
     titleForSaving: '',
+    feedbackError: '',
 }
 
 export const store = configureStore({
@@ -56,6 +75,9 @@ function reducer(state = initialState, action) {
     }
     if (action.type === "titleForSavingChanged") {
         return { ...state, titleForSaving: action.payload };
+    }
+    if (action.type === "feedbackErrorChanged") {
+        return { ...state, feedbackError: action.payload };
     }
 
     return state;

@@ -22,14 +22,10 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
     }
 
     function handleDelete(id) {
-        localStorage.removeItem(id);
-        updateItemsArray();
-    }
-
-    function editTitle(item, title) {
-        console.log("Editing title " + item.id);
-        item.title = title;
-        localStorage.setItem(JSON.stringify(item.id), JSON.stringify(item));
+        if (window.confirm("Are you sure you want to delete your saved feedback?")) {
+            localStorage.removeItem(id);
+            updateItemsArray();
+        }
     }
 
     return (
@@ -48,14 +44,13 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
                     itemsArray={itemsArray}
                     handleDelete={handleDelete}
                     handleButton={handleButton}
-                    editTitle={editTitle}
                 />
             </View>
         </>
     );
 }
 
-function SavedItems({itemsArray, handleDelete, handleButton, editTitle}) {
+function SavedItems({itemsArray, handleDelete, handleButton}) {
 
     function getTitle(item) {
         if (item.title) {
@@ -87,7 +82,7 @@ function SavedItems({itemsArray, handleDelete, handleButton, editTitle}) {
 
     function formatItems(itemsArray) {
         if (itemsArray.length === 0) {
-            return <List.Item key={"none"}>No saved feedback.</List.Item>;
+            return <List.Item key={"none"}><Text size="medium" weight="light">No saved feedback.</Text></List.Item>;
         }
 
         let sortedArray = itemsArray.slice();
