@@ -161,5 +161,7 @@ Emma Lynn
 * Added a check to see if it's relevant before displaying saved feedback from local storage
 * Added writing coach header bar
 
-*TODO*
-* Fix formatting issues
+## 9.14.23
+* Fixed double quote issue
+* Fixed new line double quote issue
+* Added a lot more response validation

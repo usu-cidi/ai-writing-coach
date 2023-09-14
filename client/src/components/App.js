@@ -122,7 +122,6 @@ function DraftFeedback() {
     }
 
     function validateResponse(response) {
-        console.log(response);
 
         let indexOfStart = response.indexOf('{"feedback"');
         let indexOfEnd = response.indexOf('"]}') + 3;
@@ -131,8 +130,34 @@ function DraftFeedback() {
             throw Error("Invalid response format.");
         }
 
-        console.log(response.substring(indexOfStart, indexOfEnd));
-        return response.substring(indexOfStart, indexOfEnd);
+        let clean = response.substring(indexOfStart, indexOfEnd);
+        let newClean = '';
+
+        for (let i = 0; i < clean.length; i++) {
+            if (clean[i] === '"') {
+
+                if (
+                    //allowed double quotes:
+                    (clean[i - 1] === '{' && clean[i + 1] === 'f') || //{"f
+                    (clean[i - 1] === 'k' && clean[i + 1] === ':') || //k":
+                    (clean[i - 1] === '[') || //["*
+                    (clean[i + 1] === ',') || //*",
+                    (clean[i - 2] === ',' && clean[i - 1] === ' ') || //, "*
+                    (clean[i - 4] === ',' && clean[i - 3] === ' ' && clean[i - 1] === '\n') || //^^that but with a new line
+                    (clean[i - 3] === ',' && clean[i - 2] === ' ' && clean[i - 1] === '\n') || //^^another variation
+                    (clean[i + 1] === ']' && clean[i + 2] === '}') //*"]}
+                ) {
+                    newClean += clean[i];
+                } else {
+                    newClean += '\\\"';
+                }
+            } else {
+                newClean += clean[i];
+            }
+        }
+
+        console.log(newClean);
+        return newClean;
     }
 
     async function getFeedback() {
