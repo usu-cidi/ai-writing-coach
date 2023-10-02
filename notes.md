@@ -165,3 +165,13 @@ Emma Lynn
 * Fixed double quote issue
 * Fixed new line double quote issue
 * Added a lot more response validation
+
+## 10.2.23
+* Launch meeting
+  * Work on write-up for how to use the tool - before Thursday morning for Russ
+    * In canvas page
+  * Work on grammar prompt a bit
+  * Ask about running out of the quota - error handling??
+  * Future ideas
+    * Student inputs research, creates synthesis matrix
+    * PDF reader
