@@ -149,6 +149,7 @@ function DraftFeedback() {
                 ) {
                     newClean += clean[i];
                 } else {
+                    // eslint-disable-next-line
                     newClean += '\\\"';
                 }
             } else {
