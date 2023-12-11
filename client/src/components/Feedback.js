@@ -1,6 +1,8 @@
 import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../constants";
 import {Button, Heading, List, Spinner, Text, View, TextInput, ScreenReaderContent} from "@instructure/ui";
 
+import Rating from "./Rating";
+
 function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
     if (error) {
         return (
@@ -69,6 +71,10 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal,
                 {feedbackConclusion ? (
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
                 ) : console.log("no conclusion")}
+
+                <br/>
+
+                <Rating/>
 
                 <br/><Text
                     display="inline-block"

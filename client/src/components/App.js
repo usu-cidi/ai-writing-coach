@@ -1,9 +1,9 @@
-import { Heading, View} from '@instructure/ui';
+import {Heading, View, Alert, Text, Button} from '@instructure/ui';
 
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {FEEDBACK_URL, LOADING_MESSAGE} from '../constants.js';
+import {FEEDBACK_URL, LOADING_MESSAGE, TICKET_LINK} from '../constants.js';
 
 import InputForm from "./InputForm";
 import Feedback from "./Feedback";
@@ -250,7 +250,17 @@ function DraftFeedback() {
 
     return (
         <>
-            <Heading level="h2" margin="0 0 x-small">Editing, Proofreading, & Revising</Heading>
+            <Heading level="h2" margin="0 0 x-small">Draft Feedback</Heading>
+
+            <Alert
+                variant="info"
+                renderCloseButtonLabel="Close"
+                margin="small"
+            >
+                Paste your draft into the corresponding box. You can also submit a partial draft.
+                General Best Practices will give you feedback relating to the strength of the argument or structure of your paper.
+                Grammatical will give you feedback on your spelling and grammar.
+            </Alert>
 
             <div className="column">
                 <InputForm
@@ -264,6 +274,16 @@ function DraftFeedback() {
                     buttonText={buttonText}
                     handleReset={handleReset}
                 />
+
+                <br/><br/>
+                <Text>
+                    Something not working right? Have general feedback?</Text><br/>
+                <Button
+                    color="secondary"
+                    margin="small"
+                    onClick={() => {window.open(
+                        TICKET_LINK, "_blank");}}
+                >Fill out a Ticket</Button>
             </div>
             <div className="column">
                 <Feedback
