@@ -1,14 +1,15 @@
-import {Heading, View, Alert, Text, Button} from '@instructure/ui';
+import {Heading, View, Alert} from '@instructure/ui';
 
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {FEEDBACK_URL, LOADING_MESSAGE, TICKET_LINK} from '../constants.js';
+import {FEEDBACK_URL, LOADING_MESSAGE} from '../constants.js';
 
 import InputForm from "./InputForm";
 import Feedback from "./Feedback";
 import SavedFeedback from "./SavedFeedback";
 import ToolNavBar from "./ToolNavBar";
+import ApplicationFeedback from "./ApplicationFeedback";
 
 function App() {
     return (
@@ -251,62 +252,56 @@ function DraftFeedback() {
     return (
         <>
             <Heading level="h2" margin="0 0 x-small">Draft Feedback</Heading>
-
             <Alert
                 variant="info"
                 renderCloseButtonLabel="Close"
                 margin="small"
-            >
+                timeout={12000}>
                 Paste your draft into the corresponding box. You can also submit a partial draft.
                 General Best Practices will give you feedback relating to the strength of the argument or structure of your paper.
                 Grammatical will give you feedback on your spelling and grammar.
             </Alert>
 
-            <div className="column">
-                <InputForm
-                    introText={introText}
-                    bodyText={bodyText}
-                    conclusionText={conclusionText}
-                    setFeedbackType={setFeedbackType}
-                    errorMessage={errorMessage}
-                    handleChange={handleChange}
-                    handleButton={handleButton}
-                    buttonText={buttonText}
-                    handleReset={handleReset}
-                />
-
-                <br/><br/>
-                <Text>
-                    Something not working right? Have general feedback?</Text><br/>
-                <Button
-                    color="secondary"
-                    margin="small"
-                    onClick={() => {window.open(
-                        TICKET_LINK, "_blank");}}
-                >Fill out a Ticket</Button>
-            </div>
-            <div className="column">
-                <Feedback
-                    feedbackIntro={feedbackIntro}
-                    feedbackBody={feedbackBody}
-                    feedbackConclusion={feedbackConclusion}
-                    saveToLocal={saveToLocalStorage}
-                    setTitleForSaving={setTitleForSaving}
-                    error={feedbackError}
-                /><br/>
-                <SavedFeedback
-                    setIntroFeedback = {setIntroFeedback}
-                    setBodyFeedback = {setBodyFeedback}
-                    setConclusionFeedback = {setConclusionFeedback}
-                    setIntroText = {setIntroText}
-                    setBodyText = {setBodyText}
-                    setConclusionText = {setConclusionText}
-                    itemsArray={allSaved}
-                    updateItemsArray={updateSavedItems}
-                    feedbackIntro={feedbackIntro}
-                    feedbackBody={feedbackBody}
-                    feedbackConclusion={feedbackConclusion}
-                />
+            <div className="grid-container">
+                <div className="item0">
+                    <InputForm
+                        introText={introText}
+                        bodyText={bodyText}
+                        conclusionText={conclusionText}
+                        setFeedbackType={setFeedbackType}
+                        errorMessage={errorMessage}
+                        handleChange={handleChange}
+                        handleButton={handleButton}
+                        buttonText={buttonText}
+                        handleReset={handleReset}
+                    />
+                </div>
+                <div className="item1">
+                    <Feedback
+                        feedbackIntro={feedbackIntro}
+                        feedbackBody={feedbackBody}
+                        feedbackConclusion={feedbackConclusion}
+                        saveToLocal={saveToLocalStorage}
+                        setTitleForSaving={setTitleForSaving}
+                        error={feedbackError}
+                    /><br/>
+                    <SavedFeedback
+                        setIntroFeedback = {setIntroFeedback}
+                        setBodyFeedback = {setBodyFeedback}
+                        setConclusionFeedback = {setConclusionFeedback}
+                        setIntroText = {setIntroText}
+                        setBodyText = {setBodyText}
+                        setConclusionText = {setConclusionText}
+                        itemsArray={allSaved}
+                        updateItemsArray={updateSavedItems}
+                        feedbackIntro={feedbackIntro}
+                        feedbackBody={feedbackBody}
+                        feedbackConclusion={feedbackConclusion}
+                    />
+                </div>
+                <div className="item2">
+                    <ApplicationFeedback/>
+                </div>
             </div>
         </>
     );

@@ -88,7 +88,7 @@ function SavedItems({itemsArray, handleDelete, handleButton}) {
         let sortedArray = itemsArray.slice();
         sortedArray.sort((a, b) => compare(a.id, b.id));
 
-        return sortedArray.map((item) =>
+        return sortedArray.reverse().map((item) =>
             <List.Item
                 key={item.id}>
                 <Flex >

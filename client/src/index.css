@@ -15,6 +15,30 @@ code {
 @media (min-width: 60em) {
   .column {
     width: 50%;
-    float:left;
+    float: left;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-areas:
+    'aaa aaa aaa bbb'
+    'ddd ddd ddd ccc';
+    gap: 5px;
+    padding: 5px;
+    margin-bottom: 20px;
   }
 }
+
+.item0 {
+  grid-area: aaa;
+}
+
+.item1 {
+  grid-area: bbb;
+}
+
+.item2 {
+  grid-area: ccc;
+}
+
+
