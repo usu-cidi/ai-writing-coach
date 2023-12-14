@@ -21,11 +21,16 @@ code {
   .grid-container {
     display: grid;
     grid-template-areas:
-    'aaa aaa aaa bbb'
-    'ddd ddd ddd ccc';
+    'aaa aaa bbb bbb'
+    'ccc ccc ccc ccc';
     gap: 5px;
     padding: 5px;
     margin-bottom: 20px;
+  }
+
+  .column {
+    width: 50%;
+    float:left;
   }
 }
 
