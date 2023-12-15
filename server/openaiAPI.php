@@ -109,9 +109,16 @@ function requestCompletion($prompt, $maxTokens=20, $temperature=0) {
 
     $response = curlPostAI($apiURL, $params);
 
-    $response = json_decode($response);
+    //echo $response;
 
-    return $response->choices[0]->text;
+    $decodedResponse = json_decode($response);
+
+    try {
+        return $decodedResponse->choices[0]->text;
+    } catch (Exception $e) {
+        //echo 'Caught exception: ',  $e->getMessage(), "\n";
+        return $response;
+    }
 }
 
 ?>

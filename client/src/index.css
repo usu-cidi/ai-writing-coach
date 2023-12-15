@@ -21,8 +21,8 @@ code {
   .grid-container {
     display: grid;
     grid-template-areas:
-    'aaa aaa bbb bbb'
-    'ccc ccc ccc ccc';
+    'aaa'
+    'bbb';
     gap: 5px;
     padding: 5px;
     margin-bottom: 20px;
@@ -30,7 +30,8 @@ code {
 
   .column {
     width: 50%;
-    float:left;
+    float: left;
+    display: inline-block;
   }
 }
 
@@ -40,10 +41,6 @@ code {
 
 .item1 {
   grid-area: bbb;
-}
-
-.item2 {
-  grid-area: ccc;
 }
 
 

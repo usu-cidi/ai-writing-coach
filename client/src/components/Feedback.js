@@ -125,7 +125,7 @@ function FeedbackSection({feedback}) {
         console.log(err);
         return (
             <>
-                <Text size="medium">Error formatting feedback. Raw response:</Text><br/>
+                <Text size="medium">Error formatting feedback:</Text><br/>
                 <Text size="medium">{feedback}</Text>
             </>
         );

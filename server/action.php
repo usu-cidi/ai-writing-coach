@@ -79,11 +79,30 @@ class ClassTemplate
         $feedbackType = $_GET['feedbackType'];
 
         //obtain response
-        $result = getFeedback($section, $input, $feedbackType);
+        //$result = getFeedback($section, $input, $feedbackType);
+        $result = '{"feedback": ["'.$section.','.$input.','.$feedbackType.'"]}';
 
         //send response back to client
         print json_encode($result);
     }
+
+    public function receivePost(): void {
+        //accept request from client
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+
+        $section = $data->section;
+        $input = $data->input;
+        $feedbackType = $data->feedbackType;
+
+        //obtain response
+        $result = getFeedback($section, $input, $feedbackType);
+        //$result = '{"feedback": ["'.$section.','.$input.','.$feedbackType.']}';
+
+        //send response back to client
+        print json_encode($result);
+    }
+
 }
 
 $classTemplate = new ClassTemplate();

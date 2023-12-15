@@ -197,9 +197,19 @@ function DraftFeedback() {
 
     async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`);
+        //`${FEEDBACK_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}`
         return fetch(
-            `${FEEDBACK_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}`)
+            FEEDBACK_URL,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    section: params.section,
+                    input: params.input,
+                    feedbackType: `"${params.feedbackType}"`
+                })
+            })
             .then(response => {
+                console.log(response);
                 return response.json();
             })
             .then(result => {
@@ -264,42 +274,47 @@ function DraftFeedback() {
 
             <div className="grid-container">
                 <div className="item0">
-                    <InputForm
-                        introText={introText}
-                        bodyText={bodyText}
-                        conclusionText={conclusionText}
-                        setFeedbackType={setFeedbackType}
-                        errorMessage={errorMessage}
-                        handleChange={handleChange}
-                        handleButton={handleButton}
-                        buttonText={buttonText}
-                        handleReset={handleReset}
-                    />
+
+                    <div className="column">
+                        <InputForm
+                            introText={introText}
+                            bodyText={bodyText}
+                            conclusionText={conclusionText}
+                            setFeedbackType={setFeedbackType}
+                            errorMessage={errorMessage}
+                            handleChange={handleChange}
+                            handleButton={handleButton}
+                            buttonText={buttonText}
+                            handleReset={handleReset}
+                            className="column"
+                        />
+                    </div>
+                    <div className="column">
+                        <Feedback
+                            feedbackIntro={feedbackIntro}
+                            feedbackBody={feedbackBody}
+                            feedbackConclusion={feedbackConclusion}
+                            saveToLocal={saveToLocalStorage}
+                            setTitleForSaving={setTitleForSaving}
+                            error={feedbackError}
+                        /><br/>
+                        <SavedFeedback
+                            setIntroFeedback = {setIntroFeedback}
+                            setBodyFeedback = {setBodyFeedback}
+                            setConclusionFeedback = {setConclusionFeedback}
+                            setIntroText = {setIntroText}
+                            setBodyText = {setBodyText}
+                            setConclusionText = {setConclusionText}
+                            itemsArray={allSaved}
+                            updateItemsArray={updateSavedItems}
+                            feedbackIntro={feedbackIntro}
+                            feedbackBody={feedbackBody}
+                            feedbackConclusion={feedbackConclusion}
+                        />
+                    </div>
                 </div>
+
                 <div className="item1">
-                    <Feedback
-                        feedbackIntro={feedbackIntro}
-                        feedbackBody={feedbackBody}
-                        feedbackConclusion={feedbackConclusion}
-                        saveToLocal={saveToLocalStorage}
-                        setTitleForSaving={setTitleForSaving}
-                        error={feedbackError}
-                    /><br/>
-                    <SavedFeedback
-                        setIntroFeedback = {setIntroFeedback}
-                        setBodyFeedback = {setBodyFeedback}
-                        setConclusionFeedback = {setConclusionFeedback}
-                        setIntroText = {setIntroText}
-                        setBodyText = {setBodyText}
-                        setConclusionText = {setConclusionText}
-                        itemsArray={allSaved}
-                        updateItemsArray={updateSavedItems}
-                        feedbackIntro={feedbackIntro}
-                        feedbackBody={feedbackBody}
-                        feedbackConclusion={feedbackConclusion}
-                    />
-                </div>
-                <div className="item2">
                     <ApplicationFeedback/>
                 </div>
             </div>
