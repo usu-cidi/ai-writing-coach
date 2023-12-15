@@ -103,6 +103,7 @@ function DraftFeedback() {
         setIntroFeedback('');
         setBodyFeedback('');
         setConclusionFeedback('');
+        setFeedbackError('');
 
         let error = "";
 
