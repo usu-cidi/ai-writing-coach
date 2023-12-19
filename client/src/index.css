@@ -43,4 +43,8 @@ code {
   grid-area: bbb;
 }
 
+.hidden {
+  display: none;
+}
+
 

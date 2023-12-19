@@ -36,6 +36,7 @@ const initialState = {
         })(),
     titleForSaving: '',
     feedbackError: '',
+    transcript: [],
 }
 
 export const store = configureStore({
@@ -78,6 +79,9 @@ function reducer(state = initialState, action) {
     }
     if (action.type === "feedbackErrorChanged") {
         return { ...state, feedbackError: action.payload };
+    }
+    if (action.type === "transcriptChanged") {
+        return { ...state, transcript: action.payload };
     }
 
     return state;

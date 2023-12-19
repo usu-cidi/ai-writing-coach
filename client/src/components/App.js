@@ -10,8 +10,20 @@ import Feedback from "./Feedback";
 import SavedFeedback from "./SavedFeedback";
 import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
+import SaveSession from "./SaveSession";
+import Transcript from "./Transcript";
 
 function App() {
+    return (
+        <>
+            <View as="div" margin="small">
+                <DraftFeedback />
+            </View>
+        </>
+    );
+}
+
+/*function App() {
     return (
         <>
             <ToolNavBar />
@@ -20,7 +32,7 @@ function App() {
             </View>
         </>
     );
-}
+}*/
 
 function DraftFeedback() {
     const introText = useSelector(state => state.introText);
@@ -34,6 +46,7 @@ function DraftFeedback() {
     const allSaved = useSelector(state => state.allSaved);
     const titleForSaving = useSelector(state => state.titleForSaving)
     const feedbackError = useSelector(state => state.feedbackError)
+    const transcript = useSelector(state => state.transcript)
 
     function setIntroText(newVal) {
         dispatch({type: "introTextChanged", payload: newVal});
@@ -67,6 +80,9 @@ function DraftFeedback() {
     }
     function setFeedbackError(newVal) {
         dispatch({type: "feedbackErrorChanged", payload: newVal});
+    }
+    function setTranscript(newVal) {
+        dispatch({type: "transcriptChanged", payload: newVal});
     }
 
     const dispatch = useDispatch();
@@ -179,19 +195,44 @@ function DraftFeedback() {
             if (introText) {
                 let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
                 setIntroFeedback(validateResponse(introFeedback));
+                updateTranscript({
+                    input: introText,
+                    section: "intro",
+                    feedbackType: feedbackType,
+                    feedback: introFeedback,
+                    time: Date.now(),
+                });
             }
             if (bodyText) {
                 let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
                 setBodyFeedback(validateResponse(bodyFeedback));
+                updateTranscript({
+                    input: bodyText,
+                    section: "body",
+                    feedbackType: feedbackType,
+                    feedback: bodyFeedback,
+                    time: Date.now()
+                });
             }
             if (conclusionText) {
                 let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
                 setConclusionFeedback(validateResponse(conclusionFeedback));
+                updateTranscript({
+                    input: conclusionText,
+                    section: "conclusion",
+                    feedbackType: feedbackType,
+                    feedback: conclusionFeedback,
+                    time: Date.now()
+                });
             }
         } catch(err) {
             console.log(`There was an error retrieving feedback: ${err.message}`)
             console.log(err);
             setFeedbackError("There was an error retrieving feedback, please try again later.");
+            updateTranscript({
+                error: err,
+                time: Date.now()
+            });
         }
 
     }
@@ -259,6 +300,15 @@ function DraftFeedback() {
         setConclusionFeedback("");
     }
 
+    function downloadSession() {
+        console.log(transcript);
+    }
+
+    function updateTranscript(add) {
+        console.log(`Adding ${JSON.stringify(add)}!`);
+        setTranscript(transcript.concat([add]));
+    }
+
 
     return (
         <>
@@ -300,23 +350,29 @@ function DraftFeedback() {
                             error={feedbackError}
                         /><br/>
                         <SavedFeedback
-                            setIntroFeedback = {setIntroFeedback}
-                            setBodyFeedback = {setBodyFeedback}
-                            setConclusionFeedback = {setConclusionFeedback}
-                            setIntroText = {setIntroText}
-                            setBodyText = {setBodyText}
-                            setConclusionText = {setConclusionText}
+                            setIntroFeedback={setIntroFeedback}
+                            setBodyFeedback={setBodyFeedback}
+                            setConclusionFeedback={setConclusionFeedback}
+                            setIntroText={setIntroText}
+                            setBodyText={setBodyText}
+                            setConclusionText={setConclusionText}
                             itemsArray={allSaved}
                             updateItemsArray={updateSavedItems}
                             feedbackIntro={feedbackIntro}
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
+                        /><br/>
+                        <SaveSession
+                            downloadSession={downloadSession}
                         />
                     </div>
                 </div>
 
                 <div className="item1">
                     <ApplicationFeedback/>
+                    <Transcript
+                        transcript={transcript}
+                    />
                 </div>
             </div>
         </>
