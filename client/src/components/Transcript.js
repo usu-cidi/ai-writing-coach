@@ -1,4 +1,4 @@
-import {Text, Heading} from "@instructure/ui";
+import {Text, Heading, List} from "@instructure/ui";
 
 function Transcript({transcript}) {
 
@@ -26,15 +26,50 @@ function Event({data}) {
         section = "Conclusion";
     }
 
+    let feedbackType = "";
+    if (data.feedbackType.includes("standards")) {
+        feedbackType += "General Best Practices";
+    }
+    if (data.feedbackType.length > 1) {
+        feedbackType += ", ";
+    }
+    if (data.feedbackType.includes("grammatical")) {
+        feedbackType += "Grammatical";
+    }
+
+
+
     return (
         <>
             <Heading level="h2" as="h1" margin="0 0 x-small">{section} - {date.toLocaleDateString()} {date.toLocaleTimeString()}</Heading>
             <Text size="medium" weight="bold">Submitted Draft:</Text><br/>
-            <Text size="medium">&nbsp;&nbsp;&nbsp;{data.input}</Text><br/>
+            <Text size="medium">&nbsp;&nbsp;&nbsp;{data.input}</Text><br/><br/>
             <Text size="medium" weight="bold">Requested Feedback Type:</Text><br/>
-            <Text size="medium">&nbsp;&nbsp;&nbsp;{JSON.stringify(data.feedbackType)}</Text><br/>
+            <Text size="medium">&nbsp;&nbsp;&nbsp;{feedbackType}</Text><br/><br/>
             <Text size="medium" weight="bold">Generated Feedback:</Text><br/>
-            <Text size="medium">&nbsp;&nbsp;&nbsp;{data.feedback}</Text><br/><br/>
+            <FeedbackSection feedback={data.feedback}/><br/><br/>
+        </>
+    );
+}
+
+function FeedbackSection({feedback}) {
+    try {
+        feedback = JSON.parse(feedback).feedback;
+    } catch(err) {
+        console.log(err);
+        return (
+            <>
+                <Text size="medium">&nbsp;&nbsp;&nbsp;Error formatting feedback:</Text><br/>
+                <Text size="medium">&nbsp;&nbsp;&nbsp;{feedback}</Text>
+            </>
+        );
+    }
+
+    const listItems = feedback.map((text) => <List.Item key={text}>{text}</List.Item>);
+
+    return (
+        <>
+            <List as="ul" margin="0 0 x-small">{listItems}</List>
         </>
     );
 }

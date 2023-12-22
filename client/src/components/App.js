@@ -194,34 +194,37 @@ function DraftFeedback() {
         try {
             if (introText) {
                 let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
-                setIntroFeedback(validateResponse(introFeedback));
+                let validated = validateResponse(introFeedback);
+                setIntroFeedback(validated);
                 updateTranscript({
                     input: introText,
                     section: "intro",
                     feedbackType: feedbackType,
-                    feedback: introFeedback,
+                    feedback: validated,
                     time: Date.now(),
                 });
             }
             if (bodyText) {
                 let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
-                setBodyFeedback(validateResponse(bodyFeedback));
+                let validated = validateResponse(bodyFeedback);
+                setBodyFeedback(validated);
                 updateTranscript({
                     input: bodyText,
                     section: "body",
                     feedbackType: feedbackType,
-                    feedback: bodyFeedback,
+                    feedback: validated,
                     time: Date.now()
                 });
             }
             if (conclusionText) {
                 let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
-                setConclusionFeedback(validateResponse(conclusionFeedback));
+                let validated = validateResponse(conclusionFeedback);
+                setConclusionFeedback(validated);
                 updateTranscript({
                     input: conclusionText,
                     section: "conclusion",
                     feedbackType: feedbackType,
-                    feedback: conclusionFeedback,
+                    feedback: validated,
                     time: Date.now()
                 });
             }
