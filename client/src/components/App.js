@@ -11,7 +11,6 @@ import SavedFeedback from "./SavedFeedback";
 import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
-import Transcript from "./Transcript";
 
 function App() {
     return (
@@ -263,12 +262,6 @@ function DraftFeedback() {
         setTranscript(transcript.concat(toAdd));
     }
 
-    function downloadSession() {
-        let theLink = document.getElementById("downloadButton");
-        theLink.href='data:text/html;charset=UTF-8,'+encodeURIComponent(document.documentElement.outerHTML);
-        console.log(transcript);
-    }
-
     async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`);
         return fetch(
@@ -384,16 +377,13 @@ function DraftFeedback() {
                             feedbackConclusion={feedbackConclusion}
                         /><br/>
                         <SaveSession
-                            downloadSession={downloadSession}
+                            transcript={transcript}
                         />
                     </div>
                 </div>
 
                 <div className="item1">
                     <ApplicationFeedback/>
-                    <Transcript
-                        transcript={transcript}
-                    />
                 </div>
             </div>
         </>
