@@ -17,12 +17,12 @@ function Event({data}) {
 
     const date = new Date(data.time);
 
-    let section = "";
+    let section = data.section;
     if (data.section === "intro") {
         section = "Introduction";
     } else if (data.section === "body") {
         section = "Body";
-    } else {
+    } else if (data.section === "conclusion") {
         section = "Conclusion";
     }
 
@@ -36,7 +36,6 @@ function Event({data}) {
     if (data.feedbackType.includes("grammatical")) {
         feedbackType += "Grammatical";
     }
-
 
 
     return (

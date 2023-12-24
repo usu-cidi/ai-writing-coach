@@ -179,6 +179,30 @@ function DraftFeedback() {
         return newClean;
     }
 
+    async function handleSection(text, section, feedbackType) {
+        if (text) {
+            return fetchFeedback({input: text, section: section, feedbackType: feedbackType})
+                .then(theFeedback => {
+                    let validated = validateResponse(theFeedback);
+                    if (section === "intro") {
+                        setIntroFeedback(validated);
+                    } else if (section === "body") {
+                        setBodyFeedback(validated);
+                    } else {
+                        setConclusionFeedback(validated);
+                    }
+                    return {
+                        input: text,
+                        section: section,
+                        feedbackType: feedbackType,
+                        feedback: validated,
+                        time: Date.now(),
+                    };
+                });
+        }
+        return false;
+    }
+
     async function getFeedback() {
 
         if (introText) {
@@ -191,43 +215,25 @@ function DraftFeedback() {
             setConclusionFeedback(LOADING_MESSAGE);
         }
 
+        let introTranscript;
+        let bodyTranscript;
+        let conclusionTranscript;
+
         try {
-            if (introText) {
-                let introFeedback = await fetchFeedback({input: introText, section: "intro", feedbackType: feedbackType});
-                let validated = validateResponse(introFeedback);
-                setIntroFeedback(validated);
-                updateTranscript({
-                    input: introText,
-                    section: "intro",
-                    feedbackType: feedbackType,
-                    feedback: validated,
-                    time: Date.now(),
+            handleSection(introText, "intro", feedbackType)
+                .then(res => {
+                    introTranscript = res;
+                    return handleSection(bodyText, "body", feedbackType);
+                })
+                .then(res => {
+                    bodyTranscript = res;
+                    return handleSection(conclusionText, "conclusion", feedbackType);
+                })
+                .then(res => {
+                    conclusionTranscript = res;
+
+                    updateTranscript(introTranscript, bodyTranscript, conclusionTranscript);
                 });
-            }
-            if (bodyText) {
-                let bodyFeedback = await fetchFeedback({input: bodyText, section: "body", feedbackType: feedbackType});
-                let validated = validateResponse(bodyFeedback);
-                setBodyFeedback(validated);
-                updateTranscript({
-                    input: bodyText,
-                    section: "body",
-                    feedbackType: feedbackType,
-                    feedback: validated,
-                    time: Date.now()
-                });
-            }
-            if (conclusionText) {
-                let conclusionFeedback = await fetchFeedback({input: conclusionText, section: "conclusion", feedbackType: feedbackType});
-                let validated = validateResponse(conclusionFeedback);
-                setConclusionFeedback(validated);
-                updateTranscript({
-                    input: conclusionText,
-                    section: "conclusion",
-                    feedbackType: feedbackType,
-                    feedback: validated,
-                    time: Date.now()
-                });
-            }
         } catch(err) {
             console.log(`There was an error retrieving feedback: ${err.message}`)
             console.log(err);
@@ -240,9 +246,31 @@ function DraftFeedback() {
 
     }
 
+    function updateTranscript(intro, body, conclusion) {
+        let toAdd = [];
+        if (intro) {
+            console.log(`Adding ${JSON.stringify(intro)}!`);
+            toAdd.push(intro);
+        }
+        if (body) {
+            console.log(`Adding ${JSON.stringify(body)}!`);
+            toAdd.push(body);
+        }
+        if (conclusion) {
+            console.log(`Adding ${JSON.stringify(conclusion)}!`);
+            toAdd.push(conclusion);
+        }
+        setTranscript(transcript.concat(toAdd));
+    }
+
+    function downloadSession() {
+        let theLink = document.getElementById("downloadButton");
+        theLink.href='data:text/html;charset=UTF-8,'+encodeURIComponent(document.documentElement.outerHTML);
+        console.log(transcript);
+    }
+
     async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`);
-        //`${FEEDBACK_URL}&section=${params.section}&input=${params.input}&feedbackType=${params.feedbackType}`
         return fetch(
             FEEDBACK_URL,
             {
@@ -254,7 +282,6 @@ function DraftFeedback() {
                 })
             })
             .then(response => {
-                console.log(response);
                 return response.json();
             })
             .then(result => {
@@ -301,15 +328,6 @@ function DraftFeedback() {
         setIntroFeedback("")
         setBodyFeedback("");
         setConclusionFeedback("");
-    }
-
-    function downloadSession() {
-        console.log(transcript);
-    }
-
-    function updateTranscript(add) {
-        console.log(`Adding ${JSON.stringify(add)}!`);
-        setTranscript(transcript.concat([add]));
     }
 
 

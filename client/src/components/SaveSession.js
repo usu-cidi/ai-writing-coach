@@ -8,7 +8,9 @@ function SaveSession({downloadSession}) {
                 color="secondary"
                 margin="small"
                 onClick={() => downloadSession()}
-            >Download Session</Button>
+                id="downloadButton"
+                href="#"
+            >Download Session Summary</Button>
         </>
     );
 }
