@@ -1,33 +1,41 @@
-import {Button, Heading, List, Text} from "@instructure/ui";
+import {Button, ToggleGroup} from "@instructure/ui";
+import { useRef } from 'react';
+import generatePDF from 'react-to-pdf';
 
 function SaveSession({transcript}) {
-    //className="hidden"
+
+    //let visStatus = "hidden";
+    const targetRef = useRef();
+
+    async function downloadIt() {
+        await generatePDF(targetRef, {filename: 'feedback-session-summary.pdf'});
+    }
 
     return (
         <>
-            <Button
-                color="secondary"
-                margin="small"
-                onClick={() => downloadIt()}
-                id="downloadLink"
-                href="#"
-                download="feedback-session-summary.html"
-            >Download Session Summary</Button>
+            <ToggleGroup
+                summary="View and Download Session Summary"
+                toggleLabel="Shows session summary and download button."
+            >
 
-            <div id="toDownload" className="hidden">
-                <Heading level="h1" as="h2" margin="0 0 x-small">Writing Coach Session Summary</Heading><br/>
-                {transcript.map((object, i) => <Event data={object} key={i} />)}
-            </div>
+                <Button
+                    color="secondary"
+                    margin="small"
+                    onClick={() => downloadIt()}
+                    id="downloadLink"
+                    href="#"
+                >Download Session Summary</Button>
+
+                <div id="toDownload" ref={targetRef} style={{padding: '20px'}}>
+                    <h1>Writing Coach Session Summary</h1>
+                    {transcript.map((object, i) => <SubmissionEvent data={object} key={i} />)}
+                </div>
+            </ToggleGroup>
         </>
     );
 }
 
-function downloadIt() {
-    let theLink = document.getElementById("downloadLink");
-    theLink.href='data:text/html;charset=UTF-8,'+encodeURIComponent(document.getElementById("toDownload").outerHTML);
-}
-
-function Event({data}) {
+function SubmissionEvent({data}) {
 
     const date = new Date(data.time);
 
@@ -51,16 +59,15 @@ function Event({data}) {
         feedbackType += "Grammatical";
     }
 
-
     return (
         <>
-            <Heading level="h2" as="h1" margin="0 0 x-small">{section} - {date.toLocaleDateString()} {date.toLocaleTimeString()}</Heading>
-            <Text size="medium" weight="bold">Submitted Draft:</Text><br/>
-            <Text size="medium">&nbsp;&nbsp;&nbsp;{data.input}</Text><br/><br/>
-            <Text size="medium" weight="bold">Requested Feedback Type:</Text><br/>
-            <Text size="medium">&nbsp;&nbsp;&nbsp;{feedbackType}</Text><br/><br/>
-            <Text size="medium" weight="bold">Generated Feedback:</Text><br/>
-            <FeedbackSection feedback={data.feedback}/><br/><br/>
+            <h2>{section} - {date.toLocaleDateString()} {date.toLocaleTimeString()}</h2>
+            <p style={{fontWeight: "bold"}}>Submitted Draft:</p>
+            <p>&nbsp;&nbsp;&nbsp;{data.input}</p>
+            <p style={{fontWeight: "bold"}}>Requested Feedback Type:</p>
+            <p>&nbsp;&nbsp;&nbsp;{feedbackType}</p>
+            <p style={{fontWeight: "bold"}}>Generated Feedback:</p>
+            <FeedbackSection feedback={data.feedback}/>
         </>
     );
 }
@@ -71,17 +78,17 @@ function FeedbackSection({feedback}) {
     } catch(err) {
         return (
             <>
-                <Text size="medium">&nbsp;&nbsp;&nbsp;Error formatting feedback:</Text><br/>
-                <Text size="medium">&nbsp;&nbsp;&nbsp;{feedback}</Text>
+                <p>&nbsp;&nbsp;&nbsp;Error formatting feedback:</p>
+                <p>&nbsp;&nbsp;&nbsp;{feedback}</p>
             </>
         );
     }
 
-    const listItems = feedback.map((text) => <List.Item key={text}>{text}</List.Item>);
+    const listItems = feedback.map((text) => <li key={text}>{text}</li>);
 
     return (
         <>
-            <List as="ul" margin="0 0 x-small">{listItems}</List>
+            <ul>{listItems}</ul>
         </>
     );
 }

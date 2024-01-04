@@ -27,7 +27,7 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                     <Button margin="small" color="primary"
                             onClick={() => handleButton()}>{buttonText}</Button>
                     <Button margin="small" color="secondary"
-                            onClick={() => handleReset()}>Reset</Button>
+                            onClick={() => handleReset()}>Clear</Button>
                 </View>
             </form>
             <Text color="danger" weight="bold">{errorMessage}</Text>

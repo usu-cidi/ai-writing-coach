@@ -376,13 +376,13 @@ function DraftFeedback() {
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
                         /><br/>
-                        <SaveSession
-                            transcript={transcript}
-                        />
                     </div>
                 </div>
 
                 <div className="item1">
+                    <SaveSession
+                        transcript={transcript}
+                    />
                     <ApplicationFeedback/>
                 </div>
             </div>
