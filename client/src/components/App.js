@@ -141,18 +141,35 @@ function DraftFeedback() {
     function validateResponse(response) {
 
         let indexOfStart = response.indexOf('{"feedback"');
-        let indexOfEnd = response.indexOf('"]}') + 3;
+        let indexOfEnd = response.indexOf('"]}');
 
-        if (indexOfStart === -1 || indexOfEnd === -1) {
-            throw Error("Invalid response format.");
+        console.log(indexOfStart, indexOfEnd);
+
+        if (indexOfStart === -1) {
+            console.log("Invalid response format.");
+            return response;
+        }
+        if (indexOfEnd === -1) {
+            console.log("Invalid response format.");
+
+            if (response.indexOf('"]') !== -1) {
+                response.replace('"]', '"]}')
+            } else {
+                response += '"]}';
+            }
+
+            indexOfEnd = response.indexOf('"]}');
+            if (indexOfEnd === -1) {
+                console.log("Invalid response format.");
+                return response;
+            }
         }
 
-        let clean = response.substring(indexOfStart, indexOfEnd);
+        let clean = response.substring(indexOfStart, indexOfEnd + 3);
         let newClean = '';
 
         for (let i = 0; i < clean.length; i++) {
             if (clean[i] === '"') {
-
                 if (
                     //allowed double quotes:
                     (clean[i - 1] === '{' && clean[i + 1] === 'f') || //{"f
@@ -248,15 +265,15 @@ function DraftFeedback() {
     function updateTranscript(intro, body, conclusion) {
         let toAdd = [];
         if (intro) {
-            console.log(`Adding ${JSON.stringify(intro)}!`);
+            //console.log(`Adding ${JSON.stringify(intro)}!`);
             toAdd.push(intro);
         }
         if (body) {
-            console.log(`Adding ${JSON.stringify(body)}!`);
+            //console.log(`Adding ${JSON.stringify(body)}!`);
             toAdd.push(body);
         }
         if (conclusion) {
-            console.log(`Adding ${JSON.stringify(conclusion)}!`);
+            //console.log(`Adding ${JSON.stringify(conclusion)}!`);
             toAdd.push(conclusion);
         }
         setTranscript(transcript.concat(toAdd));

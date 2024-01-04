@@ -4,7 +4,6 @@ import generatePDF from 'react-to-pdf';
 
 function SaveSession({transcript}) {
 
-    //let visStatus = "hidden";
     const targetRef = useRef();
 
     async function downloadIt() {
@@ -22,8 +21,6 @@ function SaveSession({transcript}) {
                     color="secondary"
                     margin="small"
                     onClick={() => downloadIt()}
-                    id="downloadLink"
-                    href="#"
                 >Download Session Summary</Button>
 
                 <div id="toDownload" ref={targetRef} style={{padding: '20px'}}>

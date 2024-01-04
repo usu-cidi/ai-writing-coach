@@ -82,6 +82,10 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal,
                     width="70%"
                 />
                 {saveButton}
+                <br/><Text weight="light" side="small">
+                AI generated content should be used with discretion after evaluation by a human,
+                 as it may contain errors or inaccuracies.
+            </Text>
             </View>
         </>
     );
