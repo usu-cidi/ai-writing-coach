@@ -13,6 +13,12 @@ import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
 
 function App() {
+
+    window.addEventListener('beforeunload', function (event) {
+        event.preventDefault();
+        return (event.returnValue = "");
+    });
+
     return (
         <>
             <View as="div" margin="small">
@@ -21,6 +27,7 @@ function App() {
         </>
     );
 }
+
 
 /*function App() {
     return (
