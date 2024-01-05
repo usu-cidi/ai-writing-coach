@@ -1,6 +1,7 @@
 <?php
 
 include "./backendFunctions.php";
+include 'db_interaction.php';
 
 error_reporting(E_ALL);
 session_start();
@@ -101,6 +102,49 @@ class ClassTemplate
 
         //send response back to client
         print json_encode($result);
+    }
+
+    public function getSavedEntries(): void {
+        $sampleEntries = ["hello", "cool"];
+        print json_encode($sampleEntries);
+    }
+
+    public function addSavedEntry(): void {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+
+        /*$idToAdd = $data->id;
+        $body = $data->body;
+        $body_feedback = $data->body_feedback;
+        $con = $data->con;
+        $con_feedback = $data->con_feedback;
+        $intro = $data->intro;
+        $intro_feedback = $data->intro_feedback;*/
+
+        //print addFeedbackRecord();
+        getSavedEntries();
+
+        /*try {
+            //add the entry
+            //return the new list of entries
+        }
+        catch(Exception $e) {
+            //return the error $e
+        }*/
+    }
+
+    public function deleteSavedEntry(): void {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+        $idToRemove = $data->id;
+
+        /*try {
+            //remove $idToRemove
+            //return true
+        }
+        catch(Exception $e) {
+            //return false with error $e
+        }*/
     }
 
 }
