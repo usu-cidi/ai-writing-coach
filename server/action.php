@@ -73,20 +73,6 @@ class ClassTemplate
         print json_encode($result);
     }
 
-    public function retrieveFeedback(): void {
-        //accept request from client
-        $section = $_GET['section'];
-        $input = $_GET['input'];
-        $feedbackType = $_GET['feedbackType'];
-
-        //obtain response
-        //$result = getFeedback($section, $input, $feedbackType);
-        $result = '{"feedback": ["'.$section.','.$input.','.$feedbackType.'"]}';
-
-        //send response back to client
-        print json_encode($result);
-    }
-
     public function receivePost(): void {
         //accept request from client
         $json = file_get_contents('php://input');
@@ -105,32 +91,33 @@ class ClassTemplate
     }
 
     public function getSavedEntries(): void {
-        $sampleEntries = ["hello", "cool"];
-        print json_encode($sampleEntries);
+        print getSavedEntries();
     }
 
     public function addSavedEntry(): void {
         $json = file_get_contents('php://input');
         $data = json_decode($json);
 
-        /*$idToAdd = $data->id;
-        $body = $data->body;
-        $body_feedback = $data->body_feedback;
-        $con = $data->con;
-        $con_feedback = $data->con_feedback;
-        $intro = $data->intro;
-        $intro_feedback = $data->intro_feedback;*/
+        $inputData = [
+            "id" => $data->id,
+            "body" => $data->body,
+            "body_feedback" => $data->body_feedback,
+            "con" => $data->con,
+            "con_feedback" => $data->con_feedback,
+            "intro" => $data->intro,
+            "intro_feedback" => $data->intro_feedback
+        ];
 
-        //print addFeedbackRecord();
-        getSavedEntries();
-
-        /*try {
+        try {
             //add the entry
+            addFeedbackRecord($inputData);
             //return the new list of entries
+            print getSavedEntries();
         }
         catch(Exception $e) {
             //return the error $e
-        }*/
+            print json_encode(array("error" => $e->getMessage()));
+        }
     }
 
     public function deleteSavedEntry(): void {
@@ -138,13 +125,16 @@ class ClassTemplate
         $data = json_decode($json);
         $idToRemove = $data->id;
 
-        /*try {
+        try {
             //remove $idToRemove
-            //return true
+            deleteFeedbackRecord($idToRemove);
+            //return the new list of entries
+            print getSavedEntries();
         }
         catch(Exception $e) {
-            //return false with error $e
-        }*/
+            //return the error $e
+            print json_encode(array("error" => $e->getMessage()));
+        }
     }
 
 }

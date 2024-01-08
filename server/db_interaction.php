@@ -2,40 +2,35 @@
 
 include 'db_connection.php';
 
+const TABLE_NAME = "wc_feedback";
+
 //Add to database
-function addFeedbackRecord(): string {
+function addFeedbackRecord($data): string {
     $conn = OpenCon();
-
-    $data = [
-        "id" => 1234,
-        "body" => "Here is the body",
-        "body_feedback" => "Here is the body feedback",
-        "con" => "Here is the conclusion",
-        "con_feedback" => "Here is the conclusion feedback",
-        "intro" => "Here is the introduction",
-        "intro_feedback" => "Here is the introduction feedback"
-    ];
-
-    $result = addRecord($conn, "wc_saved_feedback", $data);
+    $result = addRecord($conn, TABLE_NAME, $data);
     CloseCon($conn);
     return $result;
 }
 
-function getSavedEntries(): void {
+function deleteFeedbackRecord($id): string {
     $conn = OpenCon();
-    $fields = ["id", "body", "body_feedback", "con", "con_feedback", "intro", "intro_feedback"];
-    //$fields = ["Name", "UserID", "Address"];
-    readDatabase($conn, "wc_saved_feedback", $fields);
-    //readDatabase($conn, "Customer", $fields);
+    $identifier = [
+        "key" => "id",
+        "value" => $id,
+    ];
+    $result = deleteRecord($conn, TABLE_NAME, $identifier);
     CloseCon($conn);
+    return $result;
 }
 
-//Delete from database
-/*$identifier = [
-    "key" => "UserID",
-    "value" => "3",
-];
-echo deleteRecord($conn, "Customer", $identifier);*/
+function getSavedEntries(): string|bool {
+    $conn = OpenCon();
+    $fields = ["id", "body", "body_feedback", "con", "con_feedback", "intro", "intro_feedback"];
+    $result = readDatabase($conn, TABLE_NAME, $fields);
+    CloseCon($conn);
+    return $result;
+}
+
 
 //Edit record in database
 /*$data = [
@@ -46,10 +41,6 @@ $identifier = [
     "value" => "0",
 ];
 echo updateRecord($conn, "Customer", $data, $identifier);*/
-
-//Read from database
-/*$fields = ["Name", "UserID", "Address"];
-readDatabase($conn, "Customer", $fields);*/
 
 
 function readDatabase($conn, $tableName, $fields) {
@@ -63,25 +54,20 @@ function readDatabase($conn, $tableName, $fields) {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $header = "<table><tr>";
-        foreach($fields as $field) {
-            $header = $header . "<th>" . $field . "</th> ";
-        }
-        $header = $header . "</tr>";
-        echo $header;
+        $data = array(); // Initialize an empty array
 
-        // output data of each row
-        while($row = $result->fetch_assoc()) {
-            $info = "<tr>";
-            foreach($fields as $field) {
-                $info = $info . "<td>" . $row[$field] . "</td> ";
+        // Loop through each row of the result
+        while ($row = $result->fetch_assoc()) {
+            $rowData = array();
+            foreach ($fields as $field) {
+                $rowData[$field] = $row[$field]; // Add each field to the rowData array
             }
-            $info = $info . "</tr>";
-            echo $info;
+            $data[] = $rowData; // Add the rowData to the main data array
         }
-        echo "</table><br>";
+
+        return json_encode($data); // Convert the data array to JSON and output it
     } else {
-        echo "0 results<br>";
+        return json_encode(array("message" => "0 results")); // Return a JSON object indicating no results
     }
 }
 
@@ -95,9 +81,9 @@ function updateRecord($conn, $tableName, $data, $identifier) {
     $sqlQuery = "UPDATE " . $tableName . " SET " . $newData . " " . " WHERE " . $identifier["key"] . "=" . $identifier["value"] . ";";
 
     if ($conn->query($sqlQuery) === TRUE) {
-        return "Record updated successfully<br>";
+        return "Record updated successfully";
     } else {
-        return "Error: " . $sqlQuery . "<br>" . $conn->error;
+        return "Error: " . $sqlQuery . " " . $conn->error;
     }
 }
 
@@ -105,9 +91,9 @@ function deleteRecord($conn, $tableName, $identifier) {
     $sqlQuery = "DELETE FROM " . $tableName . " WHERE " .
         $identifier["key"] . "=" . $identifier["value"] . ";";
     if ($conn->query($sqlQuery) === TRUE) {
-        return "Record deleted successfully<br>";
+        return "Record deleted successfully";
     } else {
-        return "Error: " . $sqlQuery . "<br>" . $conn->error;
+        return "Error: " . $sqlQuery . " " . $conn->error;
     }
 }
 
@@ -123,9 +109,9 @@ function addRecord($conn, $tableName, $data) {
     $sqlQuery = "INSERT INTO " . $tableName .
         " (" . substr($keys, 0, -2) . ") values (" . substr($vals, 0, -2) . ");";
     if ($conn->query($sqlQuery) === TRUE) {
-        return "Record inserted successfully<br>";
+        return "Record inserted successfully";
     } else {
-        return "Error: " . $sqlQuery . "<br>" . $conn->error;
+        return "Error: " . $sqlQuery . " " . $conn->error;
     }
 }
 

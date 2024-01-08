@@ -3,7 +3,7 @@ import {Heading, View, Alert} from '@instructure/ui';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {FEEDBACK_URL, LOADING_MESSAGE} from '../constants.js';
+import {FEEDBACK_URL, LOADING_MESSAGE, SERVER_URL} from '../constants.js';
 
 import InputForm from "./InputForm";
 import Feedback from "./Feedback";
@@ -103,7 +103,7 @@ function DraftFeedback() {
         }
     }
 
-    function saveToLocalStorage() {
+    function saveFeedbackEntryToDatabase() {
         let id = Math.floor(Date.now() / 1000);
         let dataToSave = {
             id: id,
@@ -115,8 +115,19 @@ function DraftFeedback() {
             conFeedback: feedbackConclusion,
             title: titleForSaving,
         }
-        localStorage.setItem(JSON.stringify(id), JSON.stringify(dataToSave));
-        updateSavedItems();
+        //localStorage.setItem(JSON.stringify(id), JSON.stringify(dataToSave));
+        return fetch(`${SERVER_URL}?task=addSavedEntry`,
+            {
+                method: 'POST',
+                body: JSON.stringify(dataToSave)
+            })
+            .then(response => {
+                return response.json();
+            })
+            .then(resp => {
+                console.log(resp);
+                return updateSavedItems();
+            });
     }
 
     function handleButton() {
@@ -383,7 +394,7 @@ function DraftFeedback() {
                             feedbackIntro={feedbackIntro}
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
-                            saveToLocal={saveToLocalStorage}
+                            saveToLocal={saveFeedbackEntryToDatabase}
                             setTitleForSaving={setTitleForSaving}
                             error={feedbackError}
                         /><br/>
