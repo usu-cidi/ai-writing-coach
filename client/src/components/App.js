@@ -361,7 +361,7 @@ function DraftFeedback() {
 
     return (
         <>
-            <Heading level="h2" margin="0 0 x-small">Draft Feedback</Heading>
+            <Heading level="h2" margin="0 0 small" border="bottom">Draft Feedback</Heading>
             <Alert
                 variant="info"
                 renderCloseButtonLabel="Close"
