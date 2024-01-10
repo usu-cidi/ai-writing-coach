@@ -105,7 +105,8 @@ class ClassTemplate
             "con" => $data->con,
             "con_feedback" => $data->con_feedback,
             "intro" => $data->intro,
-            "intro_feedback" => $data->intro_feedback
+            "intro_feedback" => $data->intro_feedback,
+            "title" => $data->title
         ];
 
         try {

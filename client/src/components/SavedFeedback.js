@@ -1,5 +1,5 @@
 import {Heading, View, Button, List, Flex, Text} from "@instructure/ui";
-import {LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH} from "../constants";
+import {LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH, SERVER_URL} from "../constants";
 const { compare } = Intl.Collator('en-US');
 
 function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback,
@@ -12,7 +12,10 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
             return;
         }
 
-        const item = JSON.parse(localStorage.getItem(id));
+        const item = itemsArray.find(obj => {
+            return obj.id === id;
+        });
+
         setIntroText(item.intro);
         setBodyText(item.body);
         setConclusionText(item.con);
@@ -23,8 +26,21 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
 
     function handleDelete(id) {
         if (window.confirm("Are you sure you want to delete your saved feedback?")) {
-            localStorage.removeItem(id);
-            updateItemsArray();
+            //localStorage.removeItem(id);
+            return fetch(`${SERVER_URL}?task=deleteSavedEntry`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({id: id})
+                })
+                .then(response => {
+                    return response.text();
+                })
+                .then(resp => {
+                    return updateItemsArray();
+                })
+                .catch(err => {
+                    console.log(`Error saving to database: ${err}`);
+                });
         }
     }
 

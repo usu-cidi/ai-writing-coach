@@ -100,7 +100,7 @@ function curlPostAI($url, $data) {
 function requestCompletion($prompt, $maxTokens=20, $temperature=0) {
     $apiURL = "completions";
     $params = [
-        "model" => "text-davinci-003",
+        "model" => "gpt-3.5-turbo-instruct",
         "prompt" => $prompt,
         "max_tokens" => $maxTokens,
         "temperature"=> $temperature
@@ -109,14 +109,11 @@ function requestCompletion($prompt, $maxTokens=20, $temperature=0) {
 
     $response = curlPostAI($apiURL, $params);
 
-    //echo $response;
-
     $decodedResponse = json_decode($response);
 
     try {
         return $decodedResponse->choices[0]->text;
     } catch (Exception $e) {
-        //echo 'Caught exception: ',  $e->getMessage(), "\n";
         return $response;
     }
 }

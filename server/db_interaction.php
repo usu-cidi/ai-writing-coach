@@ -25,7 +25,7 @@ function deleteFeedbackRecord($id): string {
 
 function getSavedEntries(): string|bool {
     $conn = OpenCon();
-    $fields = ["id", "body", "body_feedback", "con", "con_feedback", "intro", "intro_feedback"];
+    $fields = ["id", "body", "body_feedback", "con", "con_feedback", "intro", "intro_feedback", "title"];
     $result = readDatabase($conn, TABLE_NAME, $fields);
     CloseCon($conn);
     return $result;

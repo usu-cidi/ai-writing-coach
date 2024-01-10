@@ -1,7 +1,7 @@
 import {Heading, View, Alert} from '@instructure/ui';
 
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from 'react';
 
 import {FEEDBACK_URL, LOADING_MESSAGE, SERVER_URL} from '../constants.js';
 
@@ -115,18 +115,19 @@ function DraftFeedback() {
             conFeedback: feedbackConclusion,
             title: titleForSaving,
         }
-        //localStorage.setItem(JSON.stringify(id), JSON.stringify(dataToSave));
         return fetch(`${SERVER_URL}?task=addSavedEntry`,
             {
                 method: 'POST',
                 body: JSON.stringify(dataToSave)
             })
             .then(response => {
-                return response.json();
+                return response.text();
             })
             .then(resp => {
-                console.log(resp);
                 return updateSavedItems();
+            })
+            .catch(err => {
+                console.log(`Error saving to database: ${err}`);
             });
     }
 
@@ -310,11 +311,14 @@ function DraftFeedback() {
                 })
             })
             .then(response => {
-                return response.json();
+                return response.text();
             })
             .then(result => {
                 console.log(result);
                 return result.replace(/\\n|\\r|\\/g, "");
+            })
+            .catch(err => {
+                console.log(`Error retrieving feedback: ${err}`);
             });
     }
 
@@ -324,29 +328,16 @@ function DraftFeedback() {
     }
 
     function updateSavedItems() {
-        let theArray = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            try {
-                let item = JSON.parse(localStorage.getItem(localStorage.key(i)));
-                if (
-                    item.id === undefined ||
-                    item.intro === undefined ||
-                    item.body === undefined ||
-                    item.con === undefined ||
-                    item.introFeedback === undefined ||
-                    item.bodyFeedback === undefined ||
-                    item.conFeedback === undefined ||
-                    item.title === undefined
-                ) {
-                    console.log("Other local storage item found.");
-                } else {
-                    theArray.push(item);
-                }
-            } catch(err) {
-                console.log("Other local storage item found.");
-            }
-        }
-        setAllSaved(theArray);
+        fetch(`${SERVER_URL}?task=getSavedEntries`)
+            .then(response => {
+                return response.text();
+            })
+            .then(resp => {
+                setAllSaved(JSON.parse(resp));
+            })
+            .catch(err => {
+                console.log(`Unexpected item found: ${err}`);
+            });
     }
 
     function handleReset() {
@@ -358,6 +349,9 @@ function DraftFeedback() {
         setConclusionFeedback("");
     }
 
+    useEffect(() => {
+        updateSavedItems();
+    }, [updateSavedItems]);
 
     return (
         <>

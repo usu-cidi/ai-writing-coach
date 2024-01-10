@@ -9,31 +9,7 @@ const initialState = {
     feedbackBody: '',
     feedbackConclusion: '',
     errorMessage: '',
-    allSaved: (function() {
-        let theArray = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            try {
-                let item = JSON.parse(localStorage.getItem(localStorage.key(i)));
-                if (
-                    item.id === undefined ||
-                    item.intro === undefined ||
-                    item.body === undefined ||
-                    item.con === undefined ||
-                    item.introFeedback === undefined ||
-                    item.bodyFeedback === undefined ||
-                    item.conFeedback === undefined ||
-                    item.title === undefined
-                ) {
-                    console.log("Other local storage item found.");
-                } else {
-                    theArray.push(item);
-                }
-            } catch(err) {
-                console.log("Other local storage item found.");
-            }
-        }
-        return theArray;
-        })(),
+    allSaved: [],
     titleForSaving: '',
     feedbackError: '',
     transcript: [],
