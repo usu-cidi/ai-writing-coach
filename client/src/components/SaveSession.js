@@ -10,6 +10,8 @@ function SaveSession({transcript}) {
         await generatePDF(targetRef, {filename: 'feedback-session-summary.pdf'});
     }
 
+    const aNumber = sessionStorage.getItem(`login_id`);
+
     return (
         <>
             <ToggleGroup
@@ -24,9 +26,12 @@ function SaveSession({transcript}) {
                 >Download Session Summary</Button>
 
                 <div id="toDownload" ref={targetRef} style={{padding: '20px'}}>
+                    <p>{ aNumber }</p>
                     <h1>Writing Coach Session Summary</h1>
                     {transcript.map((object, i) => <SubmissionEvent data={object} key={i} />)}
                 </div>
+
+                <p style={{padding: '20px'}}>To submit your work, click the Download Session summary button and upload the pdf to the relevant assignment on Canvas.</p>
             </ToggleGroup>
         </>
     );
