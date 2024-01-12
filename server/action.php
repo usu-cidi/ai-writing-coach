@@ -101,12 +101,13 @@ class ClassTemplate
         $inputData = [
             "id" => $data->id,
             "body" => $data->body,
-            "body_feedback" => $data->body_feedback,
+            "body_feedback" => $data->bodyFeedback,
             "con" => $data->con,
-            "con_feedback" => $data->con_feedback,
+            "con_feedback" => $data->conFeedback,
             "intro" => $data->intro,
-            "intro_feedback" => $data->intro_feedback,
-            "title" => $data->title
+            "intro_feedback" => $data->introFeedback,
+            "title" => $data->title,
+            "user_id" => $data->userId
         ];
 
         try {
