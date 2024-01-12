@@ -97,7 +97,10 @@ function SavedItems({itemsArray, handleDelete, handleButton}) {
     }
 
     function formatItems(itemsArray) {
-        if (itemsArray.length === 0) {
+
+        console.log(itemsArray);
+
+        if (itemsArray.length === 0 || itemsArray.message === "0 results") {
             return <List.Item key={"none"}><Text size="medium" weight="light">No saved feedback.</Text></List.Item>;
         }
 

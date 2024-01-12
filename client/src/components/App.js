@@ -114,7 +114,13 @@ function DraftFeedback() {
             bodyFeedback: feedbackBody,
             conFeedback: feedbackConclusion,
             title: titleForSaving,
-        }
+            userId: '1234'
+        };
+
+        console.log(dataToSave);
+
+        setTitleForSaving("");
+
         return fetch(`${SERVER_URL}?task=addSavedEntry`,
             {
                 method: 'POST',
@@ -124,6 +130,7 @@ function DraftFeedback() {
                 return response.text();
             })
             .then(resp => {
+                console.log(resp);
                 return updateSavedItems();
             })
             .catch(err => {
@@ -333,7 +340,12 @@ function DraftFeedback() {
                 return response.text();
             })
             .then(resp => {
-                setAllSaved(JSON.parse(resp));
+                console.log(resp);
+                if (resp.message === "0 results") {
+                    setAllSaved([]);
+                } else {
+                    setAllSaved(JSON.parse(resp));
+                }
             })
             .catch(err => {
                 console.log(`Unexpected item found: ${err}`);
@@ -351,7 +363,7 @@ function DraftFeedback() {
 
     useEffect(() => {
         updateSavedItems();
-    }, [updateSavedItems]);
+    }, []);
 
     return (
         <>
