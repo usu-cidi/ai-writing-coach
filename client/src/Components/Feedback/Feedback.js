@@ -1,16 +1,19 @@
-import {Heading, View, Alert} from '@instructure/ui';
-
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
-
-import {FEEDBACK_URL, LOADING_MESSAGE, SERVER_URL} from '../../constants.js';
-
+import {
+    Heading,
+    View,
+    Alert
+} from '@instructure/ui';
+import instance from "../../axios";
+import devInstance from "../../dev-axios";
 import InputForm from "./InputForm";
 import FeedbackDisplay from "./FeedbackDisplay";
 import SavedFeedback from "./SavedFeedback";
 import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
+import { useSelector, useDispatch } from "react-redux";
+import { LOADING_MESSAGE } from '../../constants.js';
 
 function Feedback() {
 
@@ -125,13 +128,9 @@ function DraftFeedback() {
 
         setTitleForSaving("");
 
-        return fetch(`${SERVER_URL}?task=addSavedEntry`,
-            {
-                method: 'POST',
-                body: JSON.stringify(dataToSave)
-            })
+        return devInstance.post('?task=addSavedEntry', JSON.stringify(dataToSave))
             .then(response => {
-                return response.text();
+                return response.data;
             })
             .then(resp => {
                 return updateSavedItems();
@@ -310,18 +309,16 @@ function DraftFeedback() {
 
     async function fetchFeedback(params) {
         console.log(`Getting feedback on ${JSON.stringify(params)}`);
-        return fetch(
-            FEEDBACK_URL,
-            {
-                method: 'POST',
-                body: JSON.stringify({
-                    section: params.section,
-                    input: params.input,
-                    feedbackType: `"${params.feedbackType}"`
-                })
+        return devInstance.post(
+            '?task=receivePost',
+            JSON.stringify({
+                section: params.section,
+                input: params.input,
+                feedbackType: `"${params.feedbackType}"`
             })
+        )
             .then(response => {
-                return response.text();
+                return response.data;
             })
             .then(result => {
                 console.log(result);
@@ -342,15 +339,15 @@ function DraftFeedback() {
     }
 
     function updateSavedItems() {
-        fetch(`${SERVER_URL}?task=getSavedEntries`)
+        devInstance.get('?task=getSavedEntries')
             .then(response => {
-                return response.text();
+                return response.data;
             })
             .then(resp => {
                 if (resp.message === "0 results") {
                     setAllSaved([]);
                 } else {
-                    setAllSaved(filterSavedItemsByUser(JSON.parse(resp), getUserId()));
+                    setAllSaved(filterSavedItemsByUser(resp, getUserId()));
                 }
             })
             .catch(err => {

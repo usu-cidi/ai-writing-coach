@@ -1,5 +1,14 @@
-import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../../constants";
-import {Button, Heading, List, Spinner, Text, View, TextInput, ScreenReaderContent} from "@instructure/ui";
+import {
+    Button,
+    Heading,
+    List,
+    Spinner,
+    Text,
+    View,
+    TextInput,
+    ScreenReaderContent
+} from "@instructure/ui";
+import { DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE } from "../../constants";
 
 function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
 

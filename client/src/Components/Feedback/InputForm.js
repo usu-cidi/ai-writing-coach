@@ -1,5 +1,13 @@
-import {Button, Checkbox, CheckboxGroup, Text, TextArea, View} from "@instructure/ui";
-import {INPUT_TEXT_MAX_LENGTH} from "../../constants";
+import {
+    Button,
+    Checkbox,
+    CheckboxGroup,
+    Text,
+    TextArea,
+    View
+} from "@instructure/ui";
+import { INPUT_TEXT_MAX_LENGTH } from "../../constants";
+
 
 function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                        conclusionText, handleChange, handleButton, buttonText, handleReset}) {

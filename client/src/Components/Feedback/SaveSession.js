@@ -1,6 +1,10 @@
-import {Button, ToggleGroup} from "@instructure/ui";
 import { useRef } from 'react';
+import {
+    Button,
+    ToggleGroup
+} from "@instructure/ui";
 import generatePDF from 'react-to-pdf';
+
 
 function SaveSession({transcript}) {
 

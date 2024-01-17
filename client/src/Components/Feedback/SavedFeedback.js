@@ -1,6 +1,17 @@
-import {Heading, View, Button, List, Flex, Text} from "@instructure/ui";
-import {LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH, SERVER_URL} from "../../constants";
+import {
+    Heading,
+    View,
+    Button,
+    List,
+    Flex,
+    Text
+} from "@instructure/ui";
+import instance from "../../axios";
+import devInstance from "../../dev-axios";
+import { LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH } from "../../constants";
+
 const { compare } = Intl.Collator('en-US');
+
 
 function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback,
                            setIntroText, setBodyText, setConclusionText, itemsArray, updateItemsArray,
@@ -34,14 +45,9 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
 
     function handleDelete(id) {
         if (window.confirm("Are you sure you want to delete your saved feedback?")) {
-            //localStorage.removeItem(id);
-            return fetch(`${SERVER_URL}?task=deleteSavedEntry`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({id: id})
-                })
+            return devInstance.post('?task=deleteSavedEntry', JSON.stringify({id: id}))
                 .then(response => {
-                    return response.text();
+                    return response.data;
                 })
                 .then(resp => {
                     return updateItemsArray();
