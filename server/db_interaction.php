@@ -7,6 +7,16 @@ const TABLE_NAME = "wc_feedback";
 //Add to database
 function addFeedbackRecord($data): string {
     $conn = OpenCon();
+
+    $cleanIntroFeedback = htmlspecialchars($data["intro_feedback"], ENT_QUOTES, 'UTF-8');
+    $data["intro_feedback"] = $cleanIntroFeedback;
+
+    $cleanBodyFeedback = htmlspecialchars($data["body_feedback"], ENT_QUOTES, 'UTF-8');
+    $data["body_feedback"] = $cleanBodyFeedback;
+
+    $cleanConFeedback = htmlspecialchars($data["con_feedback"], ENT_QUOTES, 'UTF-8');
+    $data["con_feedback"] = $cleanConFeedback;
+
     $result = addRecord($conn, TABLE_NAME, $data);
     CloseCon($conn);
     return $result;
@@ -25,7 +35,7 @@ function deleteFeedbackRecord($id): string {
 
 function getSavedEntries(): string|bool {
     $conn = OpenCon();
-    $fields = ["id", "body", "body_feedback", "con", "con_feedback", "intro", "intro_feedback", "title"];
+    $fields = ["id", "body", "body_feedback", "con", "con_feedback", "intro", "intro_feedback", "title", "user_id"];
     $result = readDatabase($conn, TABLE_NAME, $fields);
     CloseCon($conn);
     return $result;
@@ -108,6 +118,7 @@ function addRecord($conn, $tableName, $data) {
 
     $sqlQuery = "INSERT INTO " . $tableName .
         " (" . substr($keys, 0, -2) . ") values (" . substr($vals, 0, -2) . ");";
+
     if ($conn->query($sqlQuery) === TRUE) {
         return "Record inserted successfully";
     } else {

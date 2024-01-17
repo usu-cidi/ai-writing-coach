@@ -19,9 +19,17 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
         setIntroText(item.intro);
         setBodyText(item.body);
         setConclusionText(item.con);
-        setIntroFeedback(item.introFeedback);
-        setBodyFeedback(item.bodyFeedback);
-        setConclusionFeedback(item.conFeedback);
+        setIntroFeedback(reformatFeedbackText(item.intro_feedback));
+        setBodyFeedback(reformatFeedbackText(item.body_feedback));
+        setConclusionFeedback(reformatFeedbackText(item.con_feedback));
+    }
+
+    function reformatFeedbackText(original) {
+        if (original) {
+            return original.replaceAll('&quot;', '"').replaceAll('&#039;', "'");
+        }
+
+        return "";
     }
 
     function handleDelete(id) {

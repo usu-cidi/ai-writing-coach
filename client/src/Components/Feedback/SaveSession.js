@@ -25,7 +25,7 @@ function SaveSession({transcript}) {
                     onClick={() => downloadIt()}
                 >Download Session Summary</Button>
 
-                <div id="toDownload" ref={targetRef} style={{'padding-left': '20px'}}>
+                <div id="toDownload" ref={targetRef} style={{'paddingLeft': '20px'}}>
                     <p>{ aNumber }</p>
                     <h1>Writing Coach Session Summary</h1>
                     {transcript.map((object, i) => <SubmissionEvent data={object} key={i} />)}

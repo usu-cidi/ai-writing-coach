@@ -14,10 +14,10 @@ import SaveSession from "./SaveSession";
 
 function Feedback() {
 
-    window.addEventListener('beforeunload', function (event) {
+    /*TODO: window.addEventListener('beforeunload', function (event) {
         event.preventDefault();
         return (event.returnValue = "");
-    });
+    });*/
 
     return (
         <>
@@ -26,6 +26,10 @@ function Feedback() {
             </View>
         </>
     );
+}
+
+function getUserId() {
+    return '123';
 }
 
 
@@ -114,7 +118,7 @@ function DraftFeedback() {
             bodyFeedback: feedbackBody,
             conFeedback: feedbackConclusion,
             title: titleForSaving,
-            userId: '1234'
+            userId: getUserId()
         };
 
         console.log(`Trying to save ${JSON.stringify(dataToSave)}`);
@@ -130,7 +134,6 @@ function DraftFeedback() {
                 return response.text();
             })
             .then(resp => {
-                console.log(resp);
                 return updateSavedItems();
             })
             .catch(err => {
@@ -334,17 +337,20 @@ function DraftFeedback() {
         buttonText = 'Resubmit for Feedback';
     }
 
+    function filterSavedItemsByUser(saved, userId) {
+        return saved.filter((item) => item.user_id === userId);
+    }
+
     function updateSavedItems() {
         fetch(`${SERVER_URL}?task=getSavedEntries`)
             .then(response => {
                 return response.text();
             })
             .then(resp => {
-                console.log(resp);
                 if (resp.message === "0 results") {
                     setAllSaved([]);
                 } else {
-                    setAllSaved(JSON.parse(resp));
+                    setAllSaved(filterSavedItemsByUser(JSON.parse(resp), getUserId()));
                 }
             })
             .catch(err => {

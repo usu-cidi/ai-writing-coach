@@ -2,6 +2,7 @@ import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../../constants";
 import {Button, Heading, List, Spinner, Text, View, TextInput, ScreenReaderContent} from "@instructure/ui";
 
 function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
+
     if (error) {
         return (
             <>
@@ -58,17 +59,17 @@ function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveT
                   borderRadius="large"
                   width="85%"
             >
-                <Heading level="h3" margin="0 0 x-small">FeedbackDisplay</Heading>
+                <Heading level="h3" margin="0 0 x-small">Feedback</Heading>
 
                 {feedbackIntro ? (
                     <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
-                ) : console.log("no intro")}
+                ) : console.log("")}
                 {feedbackBody ? (
                     <GeneratedFeedback title={"Body"} text={feedbackBody}/>
-                ) : console.log("no body")}
+                ) : console.log("")}
                 {feedbackConclusion ? (
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
-                ) : console.log("no conclusion")}
+                ) : console.log("")}
 
                 <br/><Text
                     display="inline-block"
@@ -100,7 +101,7 @@ function GeneratedFeedback({title, text}) {
                     size="medium"
                     weight="light"
                 >{text}</Text>
-                <Spinner renderTitle="FeedbackDisplay Loading." size="x-small" margin="0 0 0 small" /><br/><br/>
+                <Spinner renderTitle="Feedback Loading." size="x-small" margin="0 0 0 small" /><br/><br/>
             </>
         );
     } else if (text === DEFAULT_FEEDBACK_MESSAGE) {
