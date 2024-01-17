@@ -3,16 +3,16 @@ import {Heading, View, Alert} from '@instructure/ui';
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
 
-import {FEEDBACK_URL, LOADING_MESSAGE, SERVER_URL} from '../constants.js';
+import {FEEDBACK_URL, LOADING_MESSAGE, SERVER_URL} from '../../constants.js';
 
 import InputForm from "./InputForm";
-import Feedback from "./Feedback";
+import FeedbackDisplay from "./FeedbackDisplay";
 import SavedFeedback from "./SavedFeedback";
 import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
 
-function App() {
+function Feedback() {
 
     window.addEventListener('beforeunload', function (event) {
         event.preventDefault();
@@ -29,7 +29,7 @@ function App() {
 }
 
 
-/*function App() {
+/*function Feedback() {
     return (
         <>
             <ToolNavBar />
@@ -117,7 +117,7 @@ function DraftFeedback() {
             userId: '1234'
         };
 
-        console.log(dataToSave);
+        console.log(`Trying to save ${JSON.stringify(dataToSave)}`);
 
         setTitleForSaving("");
 
@@ -361,8 +361,14 @@ function DraftFeedback() {
         setConclusionFeedback("");
     }
 
+    let didInit = false;
+
     useEffect(() => {
-        updateSavedItems();
+        if (!didInit) {
+            didInit = true;
+            // ✅ Only runs once per app load
+            updateSavedItems();
+        }
     }, []);
 
     return (
@@ -396,7 +402,7 @@ function DraftFeedback() {
                         />
                     </div>
                     <div className="column">
-                        <Feedback
+                        <FeedbackDisplay
                             feedbackIntro={feedbackIntro}
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
@@ -432,4 +438,4 @@ function DraftFeedback() {
 }
 
 
-export default App;
+export default Feedback;

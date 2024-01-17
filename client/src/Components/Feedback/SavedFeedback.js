@@ -1,5 +1,5 @@
 import {Heading, View, Button, List, Flex, Text} from "@instructure/ui";
-import {LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH, SERVER_URL} from "../constants";
+import {LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH, SERVER_URL} from "../../constants";
 const { compare } = Intl.Collator('en-US');
 
 function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback,
@@ -97,8 +97,6 @@ function SavedItems({itemsArray, handleDelete, handleButton}) {
     }
 
     function formatItems(itemsArray) {
-
-        console.log(itemsArray);
 
         if (itemsArray.length === 0 || itemsArray.message === "0 results") {
             return <List.Item key={"none"}><Text size="medium" weight="light">No saved feedback.</Text></List.Item>;

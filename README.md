@@ -8,6 +8,6 @@ This section of the application focuses on editing, proofreading, and revising a
 was written by Emma Lynn, supervised by Ludovic Attiogbe and Neal Legler.
 
 * Client side was written in Javascript with React (using Redux for state management)
-  * `npm run`
+  * `npm start`
 * Server side was written in PHP as a web server that runs on XAMPP
   * Created from an LTI template written by Ludovic Attiogbe

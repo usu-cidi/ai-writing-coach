@@ -1,7 +1,7 @@
-import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../constants";
+import {DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE} from "../../constants";
 import {Button, Heading, List, Spinner, Text, View, TextInput, ScreenReaderContent} from "@instructure/ui";
 
-function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
+function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
     if (error) {
         return (
             <>
@@ -58,7 +58,7 @@ function Feedback({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal,
                   borderRadius="large"
                   width="85%"
             >
-                <Heading level="h3" margin="0 0 x-small">Feedback</Heading>
+                <Heading level="h3" margin="0 0 x-small">FeedbackDisplay</Heading>
 
                 {feedbackIntro ? (
                     <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
@@ -100,7 +100,7 @@ function GeneratedFeedback({title, text}) {
                     size="medium"
                     weight="light"
                 >{text}</Text>
-                <Spinner renderTitle="Feedback Loading." size="x-small" margin="0 0 0 small" /><br/><br/>
+                <Spinner renderTitle="FeedbackDisplay Loading." size="x-small" margin="0 0 0 small" /><br/><br/>
             </>
         );
     } else if (text === DEFAULT_FEEDBACK_MESSAGE) {
@@ -144,4 +144,4 @@ function FeedbackSection({feedback}) {
     );
 }
 
-export default Feedback;
+export default FeedbackDisplay;

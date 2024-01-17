@@ -1,5 +1,5 @@
 import {Button, Text, Alert} from "@instructure/ui";
-import {TICKET_LINK} from "../constants";
+import {TICKET_LINK} from "../../constants";
 
 function ApplicationFeedback() {
 
