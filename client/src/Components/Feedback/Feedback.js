@@ -32,7 +32,7 @@ function Feedback() {
 }
 
 function getUserId() {
-    return '123';
+    return 'demo';
 }
 
 
@@ -170,8 +170,6 @@ function DraftFeedback() {
 
         let indexOfStart = response.indexOf('{"feedback"');
         let indexOfEnd = response.indexOf('"]}');
-
-        console.log(indexOfStart, indexOfEnd);
 
         if (indexOfStart === -1) {
             console.log("Invalid response format.");
@@ -321,7 +319,6 @@ function DraftFeedback() {
                 return response.data;
             })
             .then(result => {
-                console.log(result);
                 return result.replace(/\\n|\\r|\\/g, "");
             })
             .catch(err => {
