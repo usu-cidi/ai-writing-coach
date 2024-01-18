@@ -13,6 +13,20 @@ import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
 import { useSelector, useDispatch } from "react-redux";
+import {
+    setIntroText,
+    setBodyText,
+    setConclusionText,
+    setFeedbackType,
+    setIntroFeedback,
+    setBodyFeedback,
+    setConclusionFeedback,
+    setErrorMessage,
+    setAllSaved,
+    setTitleForSaving,
+    setFeedbackError,
+    setTranscript
+} from '../../store/feedback-slice'
 import { LOADING_MESSAGE } from '../../constants.js';
 
 function Feedback() {
@@ -48,59 +62,20 @@ function getUserId() {
 }*/
 
 function DraftFeedback() {
-    const introText = useSelector(state => state.introText);
-    const bodyText = useSelector(state => state.bodyText);
-    const conclusionText = useSelector(state => state.conclusionText);
-    const feedbackType = useSelector(state => state.feedbackType);
-    const feedbackIntro = useSelector(state => state.feedbackIntro);
-    const feedbackBody = useSelector(state => state.feedbackBody);
-    const feedbackConclusion = useSelector(state => state.feedbackConclusion);
-    const errorMessage = useSelector(state => state.errorMessage);
-    const allSaved = useSelector(state => state.allSaved);
-    const titleForSaving = useSelector(state => state.titleForSaving);
-    const feedbackError = useSelector(state => state.feedbackError);
-    const transcript = useSelector(state => state.transcript);
+    const introText = useSelector((state) => state.feedback.introText);
+    const bodyText = useSelector((state) => state.feedback.bodyText);
+    const conclusionText = useSelector((state) => state.feedback.conclusionText);
+    const feedbackType = useSelector((state) => state.feedback.feedbackType);
+    const feedbackIntro = useSelector((state) => state.feedback.feedbackIntro);
+    const feedbackBody = useSelector((state) => state.feedback.feedbackBody);
+    const feedbackConclusion = useSelector((state) => state.feedback.feedbackConclusion);
+    const errorMessage = useSelector((state) => state.feedback.errorMessage);
+    const allSaved = useSelector((state) => state.feedback.allSaved);
+    const titleForSaving = useSelector((state) => state.feedback.titleForSaving);
+    const feedbackError = useSelector((state) => state.feedback.feedbackError);
+    const transcript = useSelector((state) => state.feedback.transcript);
 
     const dispatch = useDispatch();
-
-    /*function setIntroText(newVal) {
-        dispatch({type: "introTextChanged", payload: newVal});
-    }
-    function setBodyText(newVal) {
-        dispatch({type: "bodyTextChanged", payload: newVal});
-    }
-    function setConclusionText(newVal) {
-        dispatch({type: "conclusionTextChanged", payload: newVal});
-    }
-    function setFeedbackType(newVal) {
-        dispatch({type: "feedbackTypeChanged", payload: newVal});
-    }
-    function setIntroFeedback(newVal) {
-        dispatch({type: "feedbackChanged", payload: newVal});
-    }
-    function setBodyFeedback(newVal) {
-        dispatch({type: "feedbackBodyChanged", payload: newVal});
-    }
-    function setConclusionFeedback(newVal) {
-        dispatch({type: "feedbackConclusionChanged", payload: newVal});
-    }
-    function setErrorMessage(newVal) {
-        dispatch({type: "errorMessageChanged", payload: newVal});
-    }
-    function setAllSaved(newVal) {
-        dispatch({type: "allSavedChanged", payload: newVal});
-    }
-    function setTitleForSaving(newVal) {
-        dispatch({type: "titleForSavingChanged", payload: newVal});
-    }
-    function setFeedbackError(newVal) {
-        dispatch({type: "feedbackErrorChanged", payload: newVal});
-    }
-    function setTranscript(newVal) {
-        dispatch({type: "transcriptChanged", payload: newVal});
-    }
-
-    const dispatch = useDispatch();*/
 
     function handleChange(type, newVal) {
         if (type === "Introduction") {
@@ -172,8 +147,6 @@ function DraftFeedback() {
 
         let indexOfStart = response.indexOf('{"feedback"');
         let indexOfEnd = response.indexOf('"]}');
-
-        console.log(indexOfStart, indexOfEnd);
 
         if (indexOfStart === -1) {
             console.log("Invalid response format.");
@@ -323,7 +296,6 @@ function DraftFeedback() {
                 return response.data;
             })
             .then(result => {
-                console.log(result);
                 return result.replace(/\\n|\\r|\\/g, "");
             })
             .catch(err => {
@@ -397,7 +369,7 @@ function DraftFeedback() {
                             introText={introText}
                             bodyText={bodyText}
                             conclusionText={conclusionText}
-                            setFeedbackType={dispatch(setFeedbackType)}
+                            setFeedbackType={setFeedbackType}
                             errorMessage={errorMessage}
                             handleChange={handleChange}
                             handleButton={handleButton}
@@ -412,16 +384,16 @@ function DraftFeedback() {
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
                             saveToLocal={saveFeedbackEntryToDatabase}
-                            setTitleForSaving={dispatch(setTitleForSaving)}
+                            setTitleForSaving={setTitleForSaving}
                             error={feedbackError}
                         /><br/>
                         <SavedFeedback
-                            setIntroFeedback={dispatch(setIntroFeedback)}
-                            setBodyFeedback={dispatch(setBodyFeedback)}
-                            setConclusionFeedback={dispatch(setConclusionFeedback)}
-                            setIntroText={dispatch(setIntroText)}
-                            setBodyText={dispatch(setBodyText)}
-                            setConclusionText={dispatch(setConclusionText)}
+                            setIntroFeedback={setIntroFeedback}
+                            setBodyFeedback={setBodyFeedback}
+                            setConclusionFeedback={setConclusionFeedback}
+                            setIntroText={setIntroText}
+                            setBodyText={setBodyText}
+                            setConclusionText={setConclusionText}
                             itemsArray={allSaved}
                             updateItemsArray={updateSavedItems}
                             feedbackIntro={feedbackIntro}

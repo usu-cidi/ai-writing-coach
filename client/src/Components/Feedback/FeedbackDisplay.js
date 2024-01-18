@@ -9,8 +9,15 @@ import {
     ScreenReaderContent
 } from "@instructure/ui";
 import { DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE } from "../../constants";
+import { useDispatch } from "react-redux";
 
 function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
+
+    const dispatch = useDispatch();
+
+    console.log(feedbackIntro);
+    console.log(feedbackBody);
+    console.log(feedbackConclusion);
 
     if (error) {
         return (
@@ -87,7 +94,7 @@ function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveT
                 <TextInput
                     renderLabel={<ScreenReaderContent>Saved feedback title input.</ScreenReaderContent>}
                     display="inline-block"
-                    onChange={(e) => setTitleForSaving(e.target.value)}
+                    onChange={(e) => dispatch(setTitleForSaving(e.target.value))}
                     size="small"
                     width="70%"
                 />
