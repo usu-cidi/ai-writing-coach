@@ -57,11 +57,13 @@ function DraftFeedback() {
     const feedbackConclusion = useSelector(state => state.feedbackConclusion);
     const errorMessage = useSelector(state => state.errorMessage);
     const allSaved = useSelector(state => state.allSaved);
-    const titleForSaving = useSelector(state => state.titleForSaving)
-    const feedbackError = useSelector(state => state.feedbackError)
-    const transcript = useSelector(state => state.transcript)
+    const titleForSaving = useSelector(state => state.titleForSaving);
+    const feedbackError = useSelector(state => state.feedbackError);
+    const transcript = useSelector(state => state.transcript);
 
-    function setIntroText(newVal) {
+    const dispatch = useDispatch();
+
+    /*function setIntroText(newVal) {
         dispatch({type: "introTextChanged", payload: newVal});
     }
     function setBodyText(newVal) {
@@ -98,15 +100,15 @@ function DraftFeedback() {
         dispatch({type: "transcriptChanged", payload: newVal});
     }
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch();*/
 
     function handleChange(type, newVal) {
         if (type === "Introduction") {
-            setIntroText(newVal);
+            dispatch(setIntroText(newVal));
         } else if (type === "Body") {
-            setBodyText(newVal);
+            dispatch(setBodyText(newVal));
         } else if (type === "Conclusion") {
-            setConclusionText(newVal);
+            dispatch(setConclusionText(newVal));
         }
     }
 
@@ -126,7 +128,7 @@ function DraftFeedback() {
 
         console.log(`Trying to save ${JSON.stringify(dataToSave)}`);
 
-        setTitleForSaving("");
+        dispatch(setTitleForSaving(""));
 
         return devInstance.post('?task=addSavedEntry', JSON.stringify(dataToSave))
             .then(response => {
@@ -142,11 +144,11 @@ function DraftFeedback() {
 
     function handleButton() {
 
-        setErrorMessage('');
-        setIntroFeedback('');
-        setBodyFeedback('');
-        setConclusionFeedback('');
-        setFeedbackError('');
+        dispatch(setErrorMessage(''));
+        dispatch(setIntroFeedback(''));
+        dispatch(setBodyFeedback(''));
+        dispatch(setConclusionFeedback(''));
+        dispatch(setFeedbackError(''));
 
         let error = "";
 
@@ -159,7 +161,7 @@ function DraftFeedback() {
         }
 
         if (error) {
-            setErrorMessage(error);
+            dispatch(setErrorMessage(error));
             return;
         }
 
@@ -229,11 +231,11 @@ function DraftFeedback() {
                 .then(theFeedback => {
                     let validated = validateResponse(theFeedback);
                     if (section === "intro") {
-                        setIntroFeedback(validated);
+                        dispatch(setIntroFeedback(validated));
                     } else if (section === "body") {
-                        setBodyFeedback(validated);
+                        dispatch(setBodyFeedback(validated));
                     } else {
-                        setConclusionFeedback(validated);
+                        dispatch(setConclusionFeedback(validated));
                     }
                     return {
                         input: text,
@@ -250,13 +252,13 @@ function DraftFeedback() {
     async function getFeedback() {
 
         if (introText) {
-            setIntroFeedback(LOADING_MESSAGE);
+            dispatch(setIntroFeedback(LOADING_MESSAGE));
         }
         if (bodyText) {
-            setBodyFeedback(LOADING_MESSAGE);
+            dispatch(setBodyFeedback(LOADING_MESSAGE));
         }
         if (conclusionText) {
-            setConclusionFeedback(LOADING_MESSAGE);
+            dispatch(setConclusionFeedback(LOADING_MESSAGE));
         }
 
         let introTranscript;
@@ -281,7 +283,7 @@ function DraftFeedback() {
         } catch(err) {
             console.log(`There was an error retrieving feedback: ${err.message}`)
             console.log(err);
-            setFeedbackError("There was an error retrieving feedback, please try again later.");
+            dispatch(setFeedbackError("There was an error retrieving feedback, please try again later."));
             updateTranscript({
                 error: err,
                 time: Date.now()
@@ -304,7 +306,7 @@ function DraftFeedback() {
             //console.log(`Adding ${JSON.stringify(conclusion)}!`);
             toAdd.push(conclusion);
         }
-        setTranscript(transcript.concat(toAdd));
+        dispatch(setTranscript(transcript.concat(toAdd)));
     }
 
     async function fetchFeedback(params) {
@@ -345,9 +347,9 @@ function DraftFeedback() {
             })
             .then(resp => {
                 if (resp.message === "0 results") {
-                    setAllSaved([]);
+                    dispatch(setAllSaved([]));
                 } else {
-                    setAllSaved(filterSavedItemsByUser(resp, getUserId()));
+                    dispatch(setAllSaved(filterSavedItemsByUser(resp, getUserId())));
                 }
             })
             .catch(err => {
@@ -356,12 +358,12 @@ function DraftFeedback() {
     }
 
     function handleReset() {
-        setIntroText("");
-        setBodyText("");
-        setConclusionText("");
-        setIntroFeedback("")
-        setBodyFeedback("");
-        setConclusionFeedback("");
+        dispatch(setIntroText(""));
+        dispatch(setBodyText(""));
+        dispatch(setConclusionText(""));
+        dispatch(setIntroFeedback(""));
+        dispatch(setBodyFeedback(""));
+        dispatch(setConclusionFeedback(""));
     }
 
     let didInit = false;
@@ -395,7 +397,7 @@ function DraftFeedback() {
                             introText={introText}
                             bodyText={bodyText}
                             conclusionText={conclusionText}
-                            setFeedbackType={setFeedbackType}
+                            setFeedbackType={dispatch(setFeedbackType)}
                             errorMessage={errorMessage}
                             handleChange={handleChange}
                             handleButton={handleButton}
@@ -410,16 +412,16 @@ function DraftFeedback() {
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
                             saveToLocal={saveFeedbackEntryToDatabase}
-                            setTitleForSaving={setTitleForSaving}
+                            setTitleForSaving={dispatch(setTitleForSaving)}
                             error={feedbackError}
                         /><br/>
                         <SavedFeedback
-                            setIntroFeedback={setIntroFeedback}
-                            setBodyFeedback={setBodyFeedback}
-                            setConclusionFeedback={setConclusionFeedback}
-                            setIntroText={setIntroText}
-                            setBodyText={setBodyText}
-                            setConclusionText={setConclusionText}
+                            setIntroFeedback={dispatch(setIntroFeedback)}
+                            setBodyFeedback={dispatch(setBodyFeedback)}
+                            setConclusionFeedback={dispatch(setConclusionFeedback)}
+                            setIntroText={dispatch(setIntroText)}
+                            setBodyText={dispatch(setBodyText)}
+                            setConclusionText={dispatch(setConclusionText)}
                             itemsArray={allSaved}
                             updateItemsArray={updateSavedItems}
                             feedbackIntro={feedbackIntro}

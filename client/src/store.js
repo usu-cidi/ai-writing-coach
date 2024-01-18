@@ -1,6 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-const initialState = {
+export default configureStore({
+    reducer: {},
+})
+
+/*const initialState = {
     introText: '',
     bodyText: '',
     conclusionText: '',
@@ -61,4 +65,4 @@ function reducer(state = initialState, action) {
     }
 
     return state;
-}
+}*/
