@@ -9,7 +9,7 @@ import {
 import instance from "../../axios";
 import devInstance from "../../dev-axios";
 import { LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH } from "../../constants";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 
 const { compare } = Intl.Collator('en-US');
 

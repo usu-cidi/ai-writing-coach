@@ -58,19 +58,6 @@ export const feedbackSlice = createSlice({
     },
 });
 
-export const {
-    setIntroText,
-    setBodyText,
-    setConclusionText,
-    setFeedbackType,
-    setIntroFeedback,
-    setBodyFeedback,
-    setConclusionFeedback,
-    setErrorMessage,
-    setAllSaved,
-    setTitleForSaving,
-    setFeedbackError,
-    setTranscript
-} = feedbackSlice.actions
+export const feedbackActions = feedbackSlice.actions;
 
-export default feedbackSlice.reducer
+export default feedbackSlice.reducer;

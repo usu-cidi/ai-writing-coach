@@ -13,20 +13,7 @@ import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
 import { useSelector, useDispatch } from "react-redux";
-import {
-    setIntroText,
-    setBodyText,
-    setConclusionText,
-    setFeedbackType,
-    setIntroFeedback,
-    setBodyFeedback,
-    setConclusionFeedback,
-    setErrorMessage,
-    setAllSaved,
-    setTitleForSaving,
-    setFeedbackError,
-    setTranscript
-} from '../../store/feedback-slice'
+import { feedbackActions } from '../../store/feedback-slice'
 import { LOADING_MESSAGE } from '../../constants.js';
 
 function Feedback() {
@@ -51,6 +38,12 @@ function getUserId() {
 
 
 /*function Feedback() {
+
+    window.addEventListener('beforeunload', function (event) {
+        event.preventDefault();
+        return (event.returnValue = "");
+    });
+
     return (
         <>
             <ToolNavBar />
@@ -79,11 +72,11 @@ function DraftFeedback() {
 
     function handleChange(type, newVal) {
         if (type === "Introduction") {
-            dispatch(setIntroText(newVal));
+            dispatch(feedbackActions.setIntroText(newVal));
         } else if (type === "Body") {
-            dispatch(setBodyText(newVal));
+            dispatch(feedbackActions.setBodyText(newVal));
         } else if (type === "Conclusion") {
-            dispatch(setConclusionText(newVal));
+            dispatch(feedbackActions.setConclusionText(newVal));
         }
     }
 
@@ -103,7 +96,7 @@ function DraftFeedback() {
 
         console.log(`Trying to save ${JSON.stringify(dataToSave)}`);
 
-        dispatch(setTitleForSaving(""));
+        dispatch(feedbackActions.setTitleForSaving(""));
 
         return devInstance.post('?task=addSavedEntry', JSON.stringify(dataToSave))
             .then(response => {
@@ -119,11 +112,11 @@ function DraftFeedback() {
 
     function handleButton() {
 
-        dispatch(setErrorMessage(''));
-        dispatch(setIntroFeedback(''));
-        dispatch(setBodyFeedback(''));
-        dispatch(setConclusionFeedback(''));
-        dispatch(setFeedbackError(''));
+        dispatch(feedbackActions.setErrorMessage(''));
+        dispatch(feedbackActions.setIntroFeedback(''));
+        dispatch(feedbackActions.setBodyFeedback(''));
+        dispatch(feedbackActions.setConclusionFeedback(''));
+        dispatch(feedbackActions.setFeedbackError(''));
 
         let error = "";
 
@@ -136,7 +129,7 @@ function DraftFeedback() {
         }
 
         if (error) {
-            dispatch(setErrorMessage(error));
+            dispatch(feedbackActions.setErrorMessage(error));
             return;
         }
 
@@ -204,11 +197,11 @@ function DraftFeedback() {
                 .then(theFeedback => {
                     let validated = validateResponse(theFeedback);
                     if (section === "intro") {
-                        dispatch(setIntroFeedback(validated));
+                        dispatch(feedbackActions.setIntroFeedback(validated));
                     } else if (section === "body") {
-                        dispatch(setBodyFeedback(validated));
+                        dispatch(feedbackActions.setBodyFeedback(validated));
                     } else {
-                        dispatch(setConclusionFeedback(validated));
+                        dispatch(feedbackActions.setConclusionFeedback(validated));
                     }
                     return {
                         input: text,
@@ -225,13 +218,13 @@ function DraftFeedback() {
     async function getFeedback() {
 
         if (introText) {
-            dispatch(setIntroFeedback(LOADING_MESSAGE));
+            dispatch(feedbackActions.setIntroFeedback(LOADING_MESSAGE));
         }
         if (bodyText) {
-            dispatch(setBodyFeedback(LOADING_MESSAGE));
+            dispatch(feedbackActions.setBodyFeedback(LOADING_MESSAGE));
         }
         if (conclusionText) {
-            dispatch(setConclusionFeedback(LOADING_MESSAGE));
+            dispatch(feedbackActions.setConclusionFeedback(LOADING_MESSAGE));
         }
 
         let introTranscript;
@@ -256,7 +249,7 @@ function DraftFeedback() {
         } catch(err) {
             console.log(`There was an error retrieving feedback: ${err.message}`)
             console.log(err);
-            dispatch(setFeedbackError("There was an error retrieving feedback, please try again later."));
+            dispatch(feedbackActions.setFeedbackError("There was an error retrieving feedback, please try again later."));
             updateTranscript({
                 error: err,
                 time: Date.now()
@@ -279,7 +272,7 @@ function DraftFeedback() {
             //console.log(`Adding ${JSON.stringify(conclusion)}!`);
             toAdd.push(conclusion);
         }
-        dispatch(setTranscript(transcript.concat(toAdd)));
+        dispatch(feedbackActions.setTranscript(transcript.concat(toAdd)));
     }
 
     async function fetchFeedback(params) {
@@ -319,9 +312,9 @@ function DraftFeedback() {
             })
             .then(resp => {
                 if (resp.message === "0 results") {
-                    dispatch(setAllSaved([]));
+                    dispatch(feedbackActions.setAllSaved([]));
                 } else {
-                    dispatch(setAllSaved(filterSavedItemsByUser(resp, getUserId())));
+                    dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(resp, getUserId())));
                 }
             })
             .catch(err => {
@@ -330,12 +323,12 @@ function DraftFeedback() {
     }
 
     function handleReset() {
-        dispatch(setIntroText(""));
-        dispatch(setBodyText(""));
-        dispatch(setConclusionText(""));
-        dispatch(setIntroFeedback(""));
-        dispatch(setBodyFeedback(""));
-        dispatch(setConclusionFeedback(""));
+        dispatch(feedbackActions.setIntroText(""));
+        dispatch(feedbackActions.setBodyText(""));
+        dispatch(feedbackActions.setConclusionText(""));
+        dispatch(feedbackActions.setIntroFeedback(""));
+        dispatch(feedbackActions.setBodyFeedback(""));
+        dispatch(feedbackActions.setConclusionFeedback(""));
     }
 
     let didInit = false;
@@ -369,7 +362,7 @@ function DraftFeedback() {
                             introText={introText}
                             bodyText={bodyText}
                             conclusionText={conclusionText}
-                            setFeedbackType={setFeedbackType}
+                            setFeedbackType={feedbackActions.setFeedbackType}
                             errorMessage={errorMessage}
                             handleChange={handleChange}
                             handleButton={handleButton}
@@ -384,16 +377,16 @@ function DraftFeedback() {
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
                             saveToLocal={saveFeedbackEntryToDatabase}
-                            setTitleForSaving={setTitleForSaving}
+                            setTitleForSaving={feedbackActions.setTitleForSaving}
                             error={feedbackError}
                         /><br/>
                         <SavedFeedback
-                            setIntroFeedback={setIntroFeedback}
-                            setBodyFeedback={setBodyFeedback}
-                            setConclusionFeedback={setConclusionFeedback}
-                            setIntroText={setIntroText}
-                            setBodyText={setBodyText}
-                            setConclusionText={setConclusionText}
+                            setIntroFeedback={feedbackActions.setIntroFeedback}
+                            setBodyFeedback={feedbackActions.setBodyFeedback}
+                            setConclusionFeedback={feedbackActions.setConclusionFeedback}
+                            setIntroText={feedbackActions.setIntroText}
+                            setBodyText={feedbackActions.setBodyText}
+                            setConclusionText={feedbackActions.setConclusionText}
                             itemsArray={allSaved}
                             updateItemsArray={updateSavedItems}
                             feedbackIntro={feedbackIntro}
