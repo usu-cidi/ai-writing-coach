@@ -32,13 +32,13 @@ export const feedbackSlice = createSlice({
             state.feedbackType = action.payload;
         },
         setIntroFeedback: (state, action) => {
-            state.introFeedback = action.payload;
+            state.feedbackIntro = action.payload;
         },
         setBodyFeedback: (state, action) => {
-            state.bodyFeedback = action.payload;
+            state.feedbackBody = action.payload;
         },
         setConclusionFeedback: (state, action) => {
-            state.conFeedback = action.payload;
+            state.feedbackConclusion = action.payload;
         },
         setErrorMessage: (state, action) => {
             state.errorMessage = action.payload;

@@ -15,10 +15,6 @@ function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveT
 
     const dispatch = useDispatch();
 
-    console.log(feedbackIntro);
-    console.log(feedbackBody);
-    console.log(feedbackConclusion);
-
     if (error) {
         return (
             <>
@@ -79,13 +75,13 @@ function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveT
 
                 {feedbackIntro ? (
                     <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
-                ) : console.log("")}
+                ) : console.log("no intro")}
                 {feedbackBody ? (
                     <GeneratedFeedback title={"Body"} text={feedbackBody}/>
-                ) : console.log("")}
+                ) : console.log("no body")}
                 {feedbackConclusion ? (
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
-                ) : console.log("")}
+                ) : console.log("no conclusion")}
 
                 <br/><Text
                     display="inline-block"
