@@ -13,31 +13,16 @@ import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchSaved } from "../../store/feedback-actions";
 import { feedbackActions } from '../../store/feedback-slice'
 import { LOADING_MESSAGE } from '../../constants.js';
-
-function Feedback() {
-
-    /*TODO: window.addEventListener('beforeunload', function (event) {
-        event.preventDefault();
-        return (event.returnValue = "");
-    });*/
-
-    return (
-        <>
-            <View as="div" margin="small">
-                <DraftFeedback />
-            </View>
-        </>
-    );
-}
 
 function getUserId() {
     return '123';
 }
 
 
-/*function Feedback() {
+function Feedback() {
 
     window.addEventListener('beforeunload', function (event) {
         event.preventDefault();
@@ -52,7 +37,7 @@ function getUserId() {
             </View>
         </>
     );
-}*/
+}
 
 function DraftFeedback() {
     const introText = useSelector((state) => state.feedback.introText);
@@ -69,6 +54,10 @@ function DraftFeedback() {
     const transcript = useSelector((state) => state.feedback.transcript);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchSaved(getUserId(), filterSavedItemsByUser));
+    }, [dispatch]);
 
     function handleChange(type, newVal) {
         if (type === "Introduction") {
@@ -330,16 +319,6 @@ function DraftFeedback() {
         dispatch(feedbackActions.setBodyFeedback(""));
         dispatch(feedbackActions.setConclusionFeedback(""));
     }
-
-    let didInit = false;
-
-    useEffect(() => {
-        if (!didInit) {
-            didInit = true;
-            // ✅ Only runs once per app load
-            updateSavedItems();
-        }
-    }, []);
 
     return (
         <>
