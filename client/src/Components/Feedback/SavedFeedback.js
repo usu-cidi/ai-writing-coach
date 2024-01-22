@@ -9,6 +9,7 @@ import {
 import instance from "../../axios";
 import devInstance from "../../dev-axios";
 import { LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH } from "../../constants";
+import { useDispatch } from "react-redux";
 
 const { compare } = Intl.Collator('en-US');
 
@@ -16,6 +17,8 @@ const { compare } = Intl.Collator('en-US');
 function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback,
                            setIntroText, setBodyText, setConclusionText, itemsArray, updateItemsArray,
                        feedbackIntro, feedbackBody, feedbackConclusion}) {
+
+    const dispatch = useDispatch();
 
     function handleButton(id) {
         if (feedbackIntro === LOADING_MESSAGE || feedbackBody === LOADING_MESSAGE || feedbackConclusion === LOADING_MESSAGE) {
@@ -27,12 +30,12 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
             return obj.id === id;
         });
 
-        setIntroText(item.intro);
-        setBodyText(item.body);
-        setConclusionText(item.con);
-        setIntroFeedback(reformatFeedbackText(item.intro_feedback));
-        setBodyFeedback(reformatFeedbackText(item.body_feedback));
-        setConclusionFeedback(reformatFeedbackText(item.con_feedback));
+        dispatch(setIntroText(item.intro));
+        dispatch(setBodyText(item.body));
+        dispatch(setConclusionText(item.con));
+        dispatch(setIntroFeedback(reformatFeedbackText(item.intro_feedback)));
+        dispatch(setBodyFeedback(reformatFeedbackText(item.body_feedback)));
+        dispatch(setConclusionFeedback(reformatFeedbackText(item.con_feedback)));
     }
 
     function reformatFeedbackText(original) {

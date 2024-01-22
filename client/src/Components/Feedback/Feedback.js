@@ -13,30 +13,22 @@ import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchSaved } from "../../store/feedback-actions";
+import { feedbackActions } from '../../store/feedback-slice'
 import { LOADING_MESSAGE } from '../../constants.js';
-
-function Feedback() {
-
-    /*TODO: window.addEventListener('beforeunload', function (event) {
-        event.preventDefault();
-        return (event.returnValue = "");
-    });*/
-
-    return (
-        <>
-            <View as="div" margin="small">
-                <DraftFeedback />
-            </View>
-        </>
-    );
-}
 
 function getUserId() {
     return 'demo';
 }
 
 
-/*function Feedback() {
+function Feedback() {
+
+    window.addEventListener('beforeunload', function (event) {
+        event.preventDefault();
+        return (event.returnValue = "");
+    });
+
     return (
         <>
             <ToolNavBar />
@@ -45,68 +37,35 @@ function getUserId() {
             </View>
         </>
     );
-}*/
+}
 
 function DraftFeedback() {
-    const introText = useSelector(state => state.introText);
-    const bodyText = useSelector(state => state.bodyText);
-    const conclusionText = useSelector(state => state.conclusionText);
-    const feedbackType = useSelector(state => state.feedbackType);
-    const feedbackIntro = useSelector(state => state.feedbackIntro);
-    const feedbackBody = useSelector(state => state.feedbackBody);
-    const feedbackConclusion = useSelector(state => state.feedbackConclusion);
-    const errorMessage = useSelector(state => state.errorMessage);
-    const allSaved = useSelector(state => state.allSaved);
-    const titleForSaving = useSelector(state => state.titleForSaving)
-    const feedbackError = useSelector(state => state.feedbackError)
-    const transcript = useSelector(state => state.transcript)
-
-    function setIntroText(newVal) {
-        dispatch({type: "introTextChanged", payload: newVal});
-    }
-    function setBodyText(newVal) {
-        dispatch({type: "bodyTextChanged", payload: newVal});
-    }
-    function setConclusionText(newVal) {
-        dispatch({type: "conclusionTextChanged", payload: newVal});
-    }
-    function setFeedbackType(newVal) {
-        dispatch({type: "feedbackTypeChanged", payload: newVal});
-    }
-    function setIntroFeedback(newVal) {
-        dispatch({type: "feedbackChanged", payload: newVal});
-    }
-    function setBodyFeedback(newVal) {
-        dispatch({type: "feedbackBodyChanged", payload: newVal});
-    }
-    function setConclusionFeedback(newVal) {
-        dispatch({type: "feedbackConclusionChanged", payload: newVal});
-    }
-    function setErrorMessage(newVal) {
-        dispatch({type: "errorMessageChanged", payload: newVal});
-    }
-    function setAllSaved(newVal) {
-        dispatch({type: "allSavedChanged", payload: newVal});
-    }
-    function setTitleForSaving(newVal) {
-        dispatch({type: "titleForSavingChanged", payload: newVal});
-    }
-    function setFeedbackError(newVal) {
-        dispatch({type: "feedbackErrorChanged", payload: newVal});
-    }
-    function setTranscript(newVal) {
-        dispatch({type: "transcriptChanged", payload: newVal});
-    }
+    const introText = useSelector((state) => state.feedback.introText);
+    const bodyText = useSelector((state) => state.feedback.bodyText);
+    const conclusionText = useSelector((state) => state.feedback.conclusionText);
+    const feedbackType = useSelector((state) => state.feedback.feedbackType);
+    const feedbackIntro = useSelector((state) => state.feedback.feedbackIntro);
+    const feedbackBody = useSelector((state) => state.feedback.feedbackBody);
+    const feedbackConclusion = useSelector((state) => state.feedback.feedbackConclusion);
+    const errorMessage = useSelector((state) => state.feedback.errorMessage);
+    const allSaved = useSelector((state) => state.feedback.allSaved);
+    const titleForSaving = useSelector((state) => state.feedback.titleForSaving);
+    const feedbackError = useSelector((state) => state.feedback.feedbackError);
+    const transcript = useSelector((state) => state.feedback.transcript);
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(fetchSaved(getUserId(), filterSavedItemsByUser));
+    }, [dispatch]);
+
     function handleChange(type, newVal) {
         if (type === "Introduction") {
-            setIntroText(newVal);
+            dispatch(feedbackActions.setIntroText(newVal));
         } else if (type === "Body") {
-            setBodyText(newVal);
+            dispatch(feedbackActions.setBodyText(newVal));
         } else if (type === "Conclusion") {
-            setConclusionText(newVal);
+            dispatch(feedbackActions.setConclusionText(newVal));
         }
     }
 
@@ -126,7 +85,7 @@ function DraftFeedback() {
 
         console.log(`Trying to save ${JSON.stringify(dataToSave)}`);
 
-        setTitleForSaving("");
+        dispatch(feedbackActions.setTitleForSaving(""));
 
         return devInstance.post('?task=addSavedEntry', JSON.stringify(dataToSave))
             .then(response => {
@@ -142,11 +101,11 @@ function DraftFeedback() {
 
     function handleButton() {
 
-        setErrorMessage('');
-        setIntroFeedback('');
-        setBodyFeedback('');
-        setConclusionFeedback('');
-        setFeedbackError('');
+        dispatch(feedbackActions.setErrorMessage(''));
+        dispatch(feedbackActions.setIntroFeedback(''));
+        dispatch(feedbackActions.setBodyFeedback(''));
+        dispatch(feedbackActions.setConclusionFeedback(''));
+        dispatch(feedbackActions.setFeedbackError(''));
 
         let error = "";
 
@@ -159,7 +118,7 @@ function DraftFeedback() {
         }
 
         if (error) {
-            setErrorMessage(error);
+            dispatch(feedbackActions.setErrorMessage(error));
             return;
         }
 
@@ -227,11 +186,11 @@ function DraftFeedback() {
                 .then(theFeedback => {
                     let validated = validateResponse(theFeedback);
                     if (section === "intro") {
-                        setIntroFeedback(validated);
+                        dispatch(feedbackActions.setIntroFeedback(validated));
                     } else if (section === "body") {
-                        setBodyFeedback(validated);
+                        dispatch(feedbackActions.setBodyFeedback(validated));
                     } else {
-                        setConclusionFeedback(validated);
+                        dispatch(feedbackActions.setConclusionFeedback(validated));
                     }
                     return {
                         input: text,
@@ -248,13 +207,13 @@ function DraftFeedback() {
     async function getFeedback() {
 
         if (introText) {
-            setIntroFeedback(LOADING_MESSAGE);
+            dispatch(feedbackActions.setIntroFeedback(LOADING_MESSAGE));
         }
         if (bodyText) {
-            setBodyFeedback(LOADING_MESSAGE);
+            dispatch(feedbackActions.setBodyFeedback(LOADING_MESSAGE));
         }
         if (conclusionText) {
-            setConclusionFeedback(LOADING_MESSAGE);
+            dispatch(feedbackActions.setConclusionFeedback(LOADING_MESSAGE));
         }
 
         let introTranscript;
@@ -279,7 +238,7 @@ function DraftFeedback() {
         } catch(err) {
             console.log(`There was an error retrieving feedback: ${err.message}`)
             console.log(err);
-            setFeedbackError("There was an error retrieving feedback, please try again later.");
+            dispatch(feedbackActions.setFeedbackError("There was an error retrieving feedback, please try again later."));
             updateTranscript({
                 error: err,
                 time: Date.now()
@@ -302,7 +261,7 @@ function DraftFeedback() {
             //console.log(`Adding ${JSON.stringify(conclusion)}!`);
             toAdd.push(conclusion);
         }
-        setTranscript(transcript.concat(toAdd));
+        dispatch(feedbackActions.setTranscript(transcript.concat(toAdd)));
     }
 
     async function fetchFeedback(params) {
@@ -342,9 +301,9 @@ function DraftFeedback() {
             })
             .then(resp => {
                 if (resp.message === "0 results") {
-                    setAllSaved([]);
+                    dispatch(feedbackActions.setAllSaved([]));
                 } else {
-                    setAllSaved(filterSavedItemsByUser(resp, getUserId()));
+                    dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(resp, getUserId())));
                 }
             })
             .catch(err => {
@@ -353,23 +312,13 @@ function DraftFeedback() {
     }
 
     function handleReset() {
-        setIntroText("");
-        setBodyText("");
-        setConclusionText("");
-        setIntroFeedback("")
-        setBodyFeedback("");
-        setConclusionFeedback("");
+        dispatch(feedbackActions.setIntroText(""));
+        dispatch(feedbackActions.setBodyText(""));
+        dispatch(feedbackActions.setConclusionText(""));
+        dispatch(feedbackActions.setIntroFeedback(""));
+        dispatch(feedbackActions.setBodyFeedback(""));
+        dispatch(feedbackActions.setConclusionFeedback(""));
     }
-
-    let didInit = false;
-
-    useEffect(() => {
-        if (!didInit) {
-            didInit = true;
-            // ✅ Only runs once per app load
-            updateSavedItems();
-        }
-    }, []);
 
     return (
         <>
@@ -392,7 +341,7 @@ function DraftFeedback() {
                             introText={introText}
                             bodyText={bodyText}
                             conclusionText={conclusionText}
-                            setFeedbackType={setFeedbackType}
+                            setFeedbackType={feedbackActions.setFeedbackType}
                             errorMessage={errorMessage}
                             handleChange={handleChange}
                             handleButton={handleButton}
@@ -407,16 +356,16 @@ function DraftFeedback() {
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
                             saveToLocal={saveFeedbackEntryToDatabase}
-                            setTitleForSaving={setTitleForSaving}
+                            setTitleForSaving={feedbackActions.setTitleForSaving}
                             error={feedbackError}
                         /><br/>
                         <SavedFeedback
-                            setIntroFeedback={setIntroFeedback}
-                            setBodyFeedback={setBodyFeedback}
-                            setConclusionFeedback={setConclusionFeedback}
-                            setIntroText={setIntroText}
-                            setBodyText={setBodyText}
-                            setConclusionText={setConclusionText}
+                            setIntroFeedback={feedbackActions.setIntroFeedback}
+                            setBodyFeedback={feedbackActions.setBodyFeedback}
+                            setConclusionFeedback={feedbackActions.setConclusionFeedback}
+                            setIntroText={feedbackActions.setIntroText}
+                            setBodyText={feedbackActions.setBodyText}
+                            setConclusionText={feedbackActions.setConclusionText}
                             itemsArray={allSaved}
                             updateItemsArray={updateSavedItems}
                             feedbackIntro={feedbackIntro}

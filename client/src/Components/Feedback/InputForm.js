@@ -7,10 +7,13 @@ import {
     View
 } from "@instructure/ui";
 import { INPUT_TEXT_MAX_LENGTH } from "../../constants";
+import { useDispatch } from "react-redux";
 
 
 function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                        conclusionText, handleChange, handleButton, buttonText, handleReset}) {
+
+    const dispatch = useDispatch();
 
     return (
         <>
@@ -24,7 +27,7 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                     <CheckboxGroup name="sports" size="small"
                                    layout="columns"
                                    onChange={function (value) {
-                                       setFeedbackType(value);
+                                       dispatch(setFeedbackType(value));
                                    }}
                                    description="Select type(s) of feedback to receive:"
                     >
