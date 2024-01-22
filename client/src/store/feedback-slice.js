@@ -13,7 +13,7 @@ const initialState = {
     titleForSaving: '',
     feedbackError: '',
     transcript: [],
-    courseAssns: [],
+    courseAssns: undefined,
     selectedAssn: ''
 };
 

@@ -25,6 +25,10 @@ function getFeedback($section, $input, $feedbackType) {
     return requestCompletion($prompt, 400, .3);
 }
 
+function getAssignmentCriteria() {
+
+}
+
 function getIntroPrompt($writing, $feedbackType, $grammarPrompt) {
 
     $prompt = "You are a college writing tutor. You will be provided with the introduction to a paper.

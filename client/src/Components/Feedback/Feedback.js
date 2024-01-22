@@ -69,6 +69,8 @@ function DraftFeedback() {
         dispatch(fetchAssns(getCourseId()));
     }, [dispatch]);
 
+    console.log(selectedAssn);
+
     if (!selectedAssn) {
         return (
             <>

@@ -8,7 +8,7 @@ export const fetchAssns = (courseId) => {
     return async (dispatch) => {
         const fetchData = async () => {
             try {
-                const response = await instance.get(`?task=listAssignments&courseID=${courseId}`);
+                const response = await instance.get(`?task=retrieveAssignments&courseID=${courseId}`);
 
                 return response.data;
             } catch (error) {
@@ -20,11 +20,8 @@ export const fetchAssns = (courseId) => {
             const assignments = await fetchData();
             console.log(assignments);
 
-            dispatch( feedbackActions.setCourseAssns([
-                {name: 'Assn 1'},
-                {name: 'Assn 2'},
-                {name: 'Assn 3'},
-            ]) );
+            dispatch( feedbackActions.setCourseAssns([]) );
+            //dispatch( feedbackActions.setCourseAssns(assignments) );
 
         } catch (error) {
             console.log(`Error getting course assignments: ${error}`);

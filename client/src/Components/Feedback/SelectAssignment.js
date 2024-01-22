@@ -9,17 +9,31 @@ import { TICKET_LINK } from "../../constants";
 
 function SelectAssignment({setSelectedAssn, selectedAssn, courseAssns}) {
 
+    if (courseAssns === undefined) {
+        setSelectedAssn("No assignment selected");
+
+        return (
+            <>
+                <Text>Loading...</Text>
+            </>
+        );
+    }
+
+    if (courseAssns.length === 0) {
+        return (
+            <>
+                <Text>Loading...</Text>
+            </>
+        );
+    }
+
+    let theOptions = courseAssns.map((item) => ({id: item.id, label: item.name}));
+    console.log(theOptions);
+
     return (
         <>
             <SingleSelectExample
-                options={[
-                    { id: 'opt1', label: 'Alaska' },
-                    { id: 'opt2', label: 'American Samoa' },
-                    { id: 'opt3', label: 'Arizona' },
-                    { id: 'opt4', label: 'Arkansas' },
-                    { id: 'opt5', label: 'California' },
-                    { id: 'opt6', label: 'Colorado' },
-                ]}
+                options={theOptions}
             />
             <Button
                 color="primary"
