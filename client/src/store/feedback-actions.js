@@ -2,6 +2,36 @@ import { feedbackActions } from "./feedback-slice";
 import instance from "../axios";
 import devInstance from "../dev-axios";
 
+
+export const fetchAssns = (courseId) => {
+
+    return async (dispatch) => {
+        const fetchData = async () => {
+            try {
+                const response = await instance.get(`?task=listAssignments&courseID=${courseId}`);
+
+                return response.data;
+            } catch (error) {
+                throw new Error(`Could not fetch source data: ${error}`);
+            }
+        };
+
+        try {
+            const assignments = await fetchData();
+            console.log(assignments);
+
+            dispatch( feedbackActions.setCourseAssns([
+                {name: 'Assn 1'},
+                {name: 'Assn 2'},
+                {name: 'Assn 3'},
+            ]) );
+
+        } catch (error) {
+            console.log(`Error getting course assignments: ${error}`);
+        }
+    };
+};
+
 export const fetchSaved = (userId, filterSavedItemsByUser) => {
 
     return async (dispatch) => {
@@ -27,36 +57,5 @@ export const fetchSaved = (userId, filterSavedItemsByUser) => {
         } catch (error) {
             console.log(`Error getting saved feedback: ${error}`);
         }
-
-};
-
-    /*return async (dispatch) => {
-        const fetchData = async () => {
-            try {
-                const response = await instance.get("?task=retrieveMyAnnotations");
-
-                return response.data;
-            } catch (error) {
-                throw new Error("Could not fetch source data!");
-            }
-        };
-
-        try {
-            const annotations = await fetchData();
-
-            dispatch(
-                annotationActions.setAnnotation({
-                    annotations: annotations || [],
-                })
-            );
-        } catch (error) {
-            dispatch(
-                uiActions.setNotification({
-                    status: "error",
-                    title: "Error!",
-                    message: "Fetching source failed!",
-                })
-            );
-        }
-    };*/
+    };
 };

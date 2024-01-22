@@ -10,17 +10,17 @@ import { INPUT_TEXT_MAX_LENGTH } from "../../constants";
 import { useDispatch } from "react-redux";
 
 
-function InputForm({introText, bodyText, setFeedbackType, errorMessage,
-                       conclusionText, handleChange, handleButton, buttonText, handleReset}) {
+function InputForm({introText, bodyText, setFeedbackType, errorMessage, conclusionText,
+                       handleChange, handleButton, buttonText, handleReset, feedbackType}) {
 
     const dispatch = useDispatch();
 
     return (
         <>
             <form>
-                <InputSection sectionType="Introduction" text={introText} handleChange={handleChange} />
-                <InputSection sectionType="Body" text={bodyText} handleChange={handleChange} />
-                <InputSection sectionType="Conclusion" text={conclusionText} handleChange={handleChange} />
+                <InputSection sectionType="Introduction" text={introText} handleChange={handleChange}/>
+                <InputSection sectionType="Body" text={bodyText} handleChange={handleChange}/>
+                <InputSection sectionType="Conclusion" text={conclusionText} handleChange={handleChange}/>
 
                 <View display="block" margin="small 0 0">
 
@@ -31,8 +31,9 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage,
                                    }}
                                    description="Select type(s) of feedback to receive:"
                     >
-                        <Checkbox label="General Best Practices" value="standards" />
-                        <Checkbox label="Grammatical" value="grammatical" />
+                        <Checkbox label="Assignment Specific" value="assn"/>
+                        <Checkbox label="General Best Practices" value="standards"/>
+                        <Checkbox label="Grammatical" value="grammatical"/>
                     </CheckboxGroup><br/>
 
                     <Button margin="small" color="primary"

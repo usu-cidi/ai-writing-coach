@@ -12,22 +12,29 @@ import SavedFeedback from "./SavedFeedback";
 import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
+import SelectAssignment from "./SelectAssignment";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchSaved } from "../../store/feedback-actions";
+import {
+    fetchSaved,
+    fetchAssns
+} from "../../store/feedback-actions";
 import { feedbackActions } from '../../store/feedback-slice'
 import { LOADING_MESSAGE } from '../../constants.js';
 
 function getUserId() {
-    return 'demo';
+    return '123';
 }
 
+function getCourseId() {
+    return '742803';
+}
 
 function Feedback() {
 
-    window.addEventListener('beforeunload', function (event) {
+    /*window.addEventListener('beforeunload', function (event) {
         event.preventDefault();
         return (event.returnValue = "");
-    });
+    });*/
 
     return (
         <>
@@ -52,12 +59,27 @@ function DraftFeedback() {
     const titleForSaving = useSelector((state) => state.feedback.titleForSaving);
     const feedbackError = useSelector((state) => state.feedback.feedbackError);
     const transcript = useSelector((state) => state.feedback.transcript);
+    const courseAssns = useSelector((state) => state.feedback.courseAssns);
+    const selectedAssn = useSelector((state) => state.feedback.selectedAssn);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchSaved(getUserId(), filterSavedItemsByUser));
+        dispatch(fetchAssns(getCourseId()));
     }, [dispatch]);
+
+    if (!selectedAssn) {
+        return (
+            <>
+                <SelectAssignment
+                    setSelectedAssn={feedbackActions.setSelectedAssn}
+                    selectedAssn={selectedAssn}
+                    courseAssns={courseAssns}
+                />
+            </>
+        );
+    }
 
     function handleChange(type, newVal) {
         if (type === "Introduction") {
@@ -232,7 +254,6 @@ function DraftFeedback() {
                 })
                 .then(res => {
                     conclusionTranscript = res;
-
                     updateTranscript(introTranscript, bodyTranscript, conclusionTranscript);
                 });
         } catch(err) {
@@ -250,15 +271,12 @@ function DraftFeedback() {
     function updateTranscript(intro, body, conclusion) {
         let toAdd = [];
         if (intro) {
-            //console.log(`Adding ${JSON.stringify(intro)}!`);
             toAdd.push(intro);
         }
         if (body) {
-            //console.log(`Adding ${JSON.stringify(body)}!`);
             toAdd.push(body);
         }
         if (conclusion) {
-            //console.log(`Adding ${JSON.stringify(conclusion)}!`);
             toAdd.push(conclusion);
         }
         dispatch(feedbackActions.setTranscript(transcript.concat(toAdd)));
@@ -347,6 +365,7 @@ function DraftFeedback() {
                             handleButton={handleButton}
                             buttonText={buttonText}
                             handleReset={handleReset}
+                            feedbackType={feedbackType}
                             className="column"
                         />
                     </div>

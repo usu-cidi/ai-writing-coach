@@ -13,6 +13,8 @@ const initialState = {
     titleForSaving: '',
     feedbackError: '',
     transcript: [],
+    courseAssns: [],
+    selectedAssn: ''
 };
 
 export const feedbackSlice = createSlice({
@@ -54,6 +56,12 @@ export const feedbackSlice = createSlice({
         },
         setTranscript: (state, action) => {
             state.transcript = action.payload;
+        },
+        setCourseAssns: (state, action) => {
+            state.courseAssns = action.payload;
+        },
+        setSelectedAssn: (state, action) => {
+            state.selectedAssn = action.payload;
         },
     },
 });
