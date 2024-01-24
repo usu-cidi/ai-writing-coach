@@ -53,7 +53,7 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
                     return response.data;
                 })
                 .then(resp => {
-                    return updateItemsArray();
+                    return updateItemsArray(resp);
                 })
                 .catch(err => {
                     console.log(`Error saving to database: ${err}`);

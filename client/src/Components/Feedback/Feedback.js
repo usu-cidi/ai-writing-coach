@@ -38,12 +38,20 @@ function Feedback() {
 
     return (
         <>
-            <ToolNavBar />
             <View as="div" margin="small">
                 <DraftFeedback />
             </View>
         </>
     );
+
+    /*return (
+        <>
+            <ToolNavBar />
+            <View as="div" margin="small">
+                <DraftFeedback />
+            </View>
+        </>
+    );*/
 }
 
 function DraftFeedback() {
@@ -113,8 +121,6 @@ function DraftFeedback() {
             userId: getUserId()
         };
 
-        console.log(`Trying to save ${JSON.stringify(dataToSave)}`);
-
         dispatch(feedbackActions.setTitleForSaving(""));
 
         return devInstance.post('?task=addSavedEntry', JSON.stringify(dataToSave))
@@ -122,7 +128,7 @@ function DraftFeedback() {
                 return response.data;
             })
             .then(resp => {
-                return updateSavedItems();
+                return updateSavedItems(resp);
             })
             .catch(err => {
                 console.log(`Error saving to database: ${err}`);
@@ -319,21 +325,29 @@ function DraftFeedback() {
         return saved.filter((item) => item.user_id === userId);
     }
 
-    function updateSavedItems() {
-        devInstance.get('?task=getSavedEntries')
-            .then(response => {
-                return response.data;
-            })
-            .then(resp => {
-                if (resp.message === "0 results") {
-                    dispatch(feedbackActions.setAllSaved([]));
-                } else {
-                    dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(resp, getUserId())));
-                }
-            })
-            .catch(err => {
-                console.log(`Unexpected item found: ${err}`);
-            });
+    function updateSavedItems(updated=undefined) {
+        if (updated) {
+            if (updated.message === "0 results") {
+                dispatch(feedbackActions.setAllSaved([]));
+            } else {
+                dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(updated, getUserId())));
+            }
+        } else {
+            devInstance.get('?task=getSavedEntries')
+                .then(response => {
+                    return response.data;
+                })
+                .then(resp => {
+                    if (resp.message === "0 results") {
+                        dispatch(feedbackActions.setAllSaved([]));
+                    } else {
+                        dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(resp, getUserId())));
+                    }
+                })
+                .catch(err => {
+                    console.log(`Unexpected item found: ${err}`);
+                });
+        }
     }
 
     function handleReset() {
@@ -381,7 +395,7 @@ function DraftFeedback() {
                             feedbackIntro={feedbackIntro}
                             feedbackBody={feedbackBody}
                             feedbackConclusion={feedbackConclusion}
-                            saveToLocal={saveFeedbackEntryToDatabase}
+                            saveToDatabase={saveFeedbackEntryToDatabase}
                             setTitleForSaving={feedbackActions.setTitleForSaving}
                             error={feedbackError}
                         /><br/>

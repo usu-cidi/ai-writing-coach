@@ -11,7 +11,7 @@ import {
 import { DEFAULT_FEEDBACK_MESSAGE, LOADING_MESSAGE } from "../../constants";
 import { useDispatch } from "react-redux";
 
-function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveToLocal, setTitleForSaving, error}) {
+function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveToDatabase, setTitleForSaving, error}) {
 
     const dispatch = useDispatch();
 
@@ -54,10 +54,14 @@ function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveT
     }
 
     let saveButton = <Button margin="x-small" color="primary" display="inline-block" size="small"
-                             onClick={() => saveToLocal()}>Save</Button>;
+                             onClick={() => saveToDatabase()}>Save</Button>;
     if (feedbackIntro === LOADING_MESSAGE || feedbackBody === LOADING_MESSAGE || feedbackConclusion === LOADING_MESSAGE) {
         saveButton = <Button margin="x-small" color="primary" display="inline-block" size="small"
-                             onClick={() => saveToLocal()} disabled>Save</Button>;
+                             onClick={() => saveToDatabase()} disabled>Save</Button>;
+    }
+
+    function nothingNeededToBeDone() {
+        return undefined;
     }
 
     return (
@@ -75,13 +79,13 @@ function FeedbackDisplay({feedbackIntro, feedbackBody, feedbackConclusion, saveT
 
                 {feedbackIntro ? (
                     <GeneratedFeedback title={"Introduction"} text={feedbackIntro}/>
-                ) : console.log("no intro")}
+                ) : nothingNeededToBeDone()}
                 {feedbackBody ? (
                     <GeneratedFeedback title={"Body"} text={feedbackBody}/>
-                ) : console.log("no body")}
+                ) : nothingNeededToBeDone()}
                 {feedbackConclusion ? (
                     <GeneratedFeedback title={"Conclusion"} text={feedbackConclusion}/>
-                ) : console.log("no conclusion")}
+                ) : nothingNeededToBeDone()}
 
                 <br/><Text
                     display="inline-block"
