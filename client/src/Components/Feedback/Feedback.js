@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
     Heading,
     View,
-    Alert
+    Alert, Text
 } from '@instructure/ui';
 import instance from "../../axios";
 import devInstance from "../../dev-axios";
@@ -19,7 +19,7 @@ import {
     fetchAssns
 } from "../../store/feedback-actions";
 import { feedbackActions } from '../../store/feedback-slice'
-import { LOADING_MESSAGE } from '../../constants.js';
+import {LOADING_MESSAGE, NO_ASSN_INDICATOR} from '../../constants.js';
 
 function getUserId() {
     return '123';
@@ -69,7 +69,13 @@ function DraftFeedback() {
         dispatch(fetchAssns(getCourseId()));
     }, [dispatch]);
 
-    console.log(selectedAssn);
+    if (courseAssns === undefined) {
+        return (
+            <>
+                <Text>Loading...</Text>
+            </>
+        );
+    }
 
     if (!selectedAssn) {
         return (
@@ -399,6 +405,7 @@ function DraftFeedback() {
                 <div className="item1">
                     <SaveSession
                         transcript={transcript}
+                        selectedAssn={selectedAssn}
                     />
                     <ApplicationFeedback/>
                 </div>

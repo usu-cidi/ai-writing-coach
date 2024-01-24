@@ -1,6 +1,7 @@
 import { feedbackActions } from "./feedback-slice";
 import instance from "../axios";
 import devInstance from "../dev-axios";
+import {NO_ASSN_INDICATOR} from "../constants";
 
 
 export const fetchAssns = (courseId) => {
@@ -18,13 +19,17 @@ export const fetchAssns = (courseId) => {
 
         try {
             const assignments = await fetchData();
-            console.log(assignments);
 
-            dispatch( feedbackActions.setCourseAssns([]) );
-            //dispatch( feedbackActions.setCourseAssns(assignments) );
+            dispatch( feedbackActions.setCourseAssns(assignments) );
+
+            if (assignments.length === 0) {
+                dispatch(feedbackActions.setSelectedAssn(NO_ASSN_INDICATOR));
+            }
 
         } catch (error) {
             console.log(`Error getting course assignments: ${error}`);
+            dispatch( feedbackActions.setCourseAssns([]) );
+            dispatch(feedbackActions.setSelectedAssn(NO_ASSN_INDICATOR));
         }
     };
 };

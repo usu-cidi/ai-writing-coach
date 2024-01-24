@@ -6,7 +6,7 @@ import {
 import generatePDF from 'react-to-pdf';
 
 
-function SaveSession({transcript}) {
+function SaveSession({transcript, selectedAssn}) {
 
     const targetRef = useRef();
 

@@ -14,7 +14,7 @@ const initialState = {
     feedbackError: '',
     transcript: [],
     courseAssns: undefined,
-    selectedAssn: ''
+    selectedAssn: undefined
 };
 
 export const feedbackSlice = createSlice({

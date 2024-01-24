@@ -1,51 +1,34 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     Button,
-    Text,
-    Select,
-    Alert
+    Select
 } from "@instructure/ui";
-import { TICKET_LINK } from "../../constants";
+import {NO_ASSN_INDICATOR} from "../../constants";
+import {useDispatch} from "react-redux";
 
 function SelectAssignment({setSelectedAssn, selectedAssn, courseAssns}) {
 
-    if (courseAssns === undefined) {
-        setSelectedAssn("No assignment selected");
+    const [theSelected, setTheSelected] = useState(undefined);
 
-        return (
-            <>
-                <Text>Loading...</Text>
-            </>
-        );
-    }
+    const dispatch = useDispatch();
 
-    if (courseAssns.length === 0) {
-        return (
-            <>
-                <Text>Loading...</Text>
-            </>
-        );
-    }
-
-    let theOptions = courseAssns.map((item) => ({id: item.id, label: item.name}));
-    console.log(theOptions);
+    let theOptions = courseAssns.map((item) => ({id: item.id.toString(), label: item.name}));
 
     return (
         <>
             <SingleSelectExample
                 options={theOptions}
+                setTheSelected={setTheSelected}
             />
             <Button
                 color="primary"
                 margin="small"
-                onClick={() => {window.open(
-                    TICKET_LINK, "_blank");}}
+                onClick={() => {dispatch(setSelectedAssn(theSelected))}}
             >Continue</Button>
             <Button
                 color="secondary"
                 margin="small"
-                onClick={() => {window.open(
-                    TICKET_LINK, "_blank");}}
+                onClick={() => {dispatch(setSelectedAssn(NO_ASSN_INDICATOR))}}
             >Use without an assignment</Button>
         </>
     );
@@ -53,10 +36,10 @@ function SelectAssignment({setSelectedAssn, selectedAssn, courseAssns}) {
 
 class SingleSelectExample extends React.Component {
     state = {
-        inputValue: this.props.options[0].label,
+        inputValue: "",
         isShowingOptions: false,
         highlightedOptionId: null,
-        selectedOptionId: this.props.options[0].id,
+        selectedOptionId: 0,
     }
 
     getOptionById (queryId) {
@@ -103,8 +86,8 @@ class SingleSelectExample extends React.Component {
             inputValue: option,
             isShowingOptions: false,
         })
-        console.log(this.state.selectedOptionId);
-        console.log(this.state.inputValue);
+        console.log(option);
+        this.props.setTheSelected({id: id, name: option});
     }
 
     render () {
