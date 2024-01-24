@@ -19,7 +19,7 @@ import {
     fetchAssns
 } from "../../store/feedback-actions";
 import { feedbackActions } from '../../store/feedback-slice'
-import {LOADING_MESSAGE, NO_ASSN_INDICATOR} from '../../constants.js';
+import {LOADING_MESSAGE} from '../../constants.js';
 
 function getUserId() {
     return '123';
@@ -206,13 +206,12 @@ function DraftFeedback() {
             }
         }
 
-        console.log(newClean);
         return newClean;
     }
 
     async function handleSection(text, section, feedbackType) {
         if (text) {
-            return fetchFeedback({input: text, section: section, feedbackType: feedbackType})
+            return fetchFeedback({input: text, section: section, feedbackType: feedbackType, assignment: selectedAssn})
                 .then(theFeedback => {
                     let validated = validateResponse(theFeedback);
                     if (section === "intro") {
@@ -291,13 +290,13 @@ function DraftFeedback() {
     }
 
     async function fetchFeedback(params) {
-        console.log(`Getting feedback on ${JSON.stringify(params)}`);
         return devInstance.post(
             '?task=receivePost',
             JSON.stringify({
                 section: params.section,
                 input: params.input,
-                feedbackType: `"${params.feedbackType}"`
+                feedbackType: `"${params.feedbackType}"`,
+                assignment: params.assignment
             })
         )
             .then(response => {
@@ -373,7 +372,7 @@ function DraftFeedback() {
                             handleButton={handleButton}
                             buttonText={buttonText}
                             handleReset={handleReset}
-                            feedbackType={feedbackType}
+                            selectedAssn={selectedAssn}
                             className="column"
                         />
                     </div>

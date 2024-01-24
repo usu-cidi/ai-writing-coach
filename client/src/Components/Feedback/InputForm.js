@@ -6,12 +6,12 @@ import {
     TextArea,
     View
 } from "@instructure/ui";
-import { INPUT_TEXT_MAX_LENGTH } from "../../constants";
+import {INPUT_TEXT_MAX_LENGTH, NO_ASSN_INDICATOR} from "../../constants";
 import { useDispatch } from "react-redux";
 
 
 function InputForm({introText, bodyText, setFeedbackType, errorMessage, conclusionText,
-                       handleChange, handleButton, buttonText, handleReset, feedbackType}) {
+                       handleChange, handleButton, buttonText, handleReset, selectedAssn}) {
 
     const dispatch = useDispatch();
 
@@ -24,17 +24,11 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage, conclusi
 
                 <View display="block" margin="small 0 0">
 
-                    <CheckboxGroup name="sports" size="small"
-                                   layout="columns"
-                                   onChange={function (value) {
-                                       dispatch(setFeedbackType(value));
-                                   }}
-                                   description="Select type(s) of feedback to receive:"
-                    >
-                        <Checkbox label="Assignment Specific" value="assn"/>
-                        <Checkbox label="General Best Practices" value="standards"/>
-                        <Checkbox label="Grammatical" value="grammatical"/>
-                    </CheckboxGroup><br/>
+                    <FeedbackTypeOptions
+                        selectedAssn={selectedAssn}
+                        setFeedbackType={setFeedbackType}
+                        dispatch={dispatch}
+                    />
 
                     <Button margin="small" color="primary"
                             onClick={() => handleButton()}>{buttonText}</Button>
@@ -45,6 +39,41 @@ function InputForm({introText, bodyText, setFeedbackType, errorMessage, conclusi
             <Text color="danger" weight="bold">{errorMessage}</Text>
         </>
     );
+}
+
+function FeedbackTypeOptions({selectedAssn, setFeedbackType, dispatch}) {
+    if (selectedAssn === NO_ASSN_INDICATOR) {
+        return (
+            <>
+                <CheckboxGroup name="sports" size="small"
+                               layout="columns"
+                               onChange={function (value) {
+                                   dispatch(setFeedbackType(value));
+                               }}
+                               description="Select type(s) of feedback to receive:"
+                >
+                    <Checkbox label="General Best Practices" value="standards"/>
+                    <Checkbox label="Grammatical" value="grammatical"/>
+                </CheckboxGroup><br/>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <CheckboxGroup name="sports" size="small"
+                               layout="columns"
+                               onChange={function (value) {
+                                   dispatch(setFeedbackType(value));
+                               }}
+                               description="Select type(s) of feedback to receive:"
+                >
+                    <Checkbox label="Assignment Specific" value="assn"/>
+                    <Checkbox label="General Best Practices" value="standards"/>
+                    <Checkbox label="Grammatical" value="grammatical"/>
+                </CheckboxGroup><br/>
+            </>
+        );
+    }
 }
 
 function InputSection({sectionType, text, handleChange}) {

@@ -82,9 +82,10 @@ class ClassTemplate
         $section = $data->section;
         $input = $data->input;
         $feedbackType = $data->feedbackType;
+        $assignment = $data->assignment;
 
         //obtain response
-        $result = getFeedback($section, $input, $feedbackType);
+        $result = getFeedback($section, $input, $feedbackType, $assignment);
 
         //send response back to client
         print json_encode($result);

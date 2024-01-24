@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {
     Button,
-    Select
+    Select,
 } from "@instructure/ui";
 import {NO_ASSN_INDICATOR} from "../../constants";
 import {useDispatch} from "react-redux";
@@ -36,10 +36,10 @@ function SelectAssignment({setSelectedAssn, selectedAssn, courseAssns}) {
 
 class SingleSelectExample extends React.Component {
     state = {
-        inputValue: "",
+        inputValue: "Select an assignment",
         isShowingOptions: false,
         highlightedOptionId: null,
-        selectedOptionId: 0,
+        selectedOptionId: this.props.options[0].id,
     }
 
     getOptionById (queryId) {
@@ -70,8 +70,6 @@ class SingleSelectExample extends React.Component {
 
     handleHighlightOption = (event, { id }) => {
         event.persist()
-        const optionsAvailable = `${this.props.options.length} options available.`
-        const nowOpen = !this.state.isShowingOptions ? `List expanded. ${optionsAvailable}` : ''
         const option = this.getOptionById(id).label
         this.setState((state) => ({
             highlightedOptionId: id,
