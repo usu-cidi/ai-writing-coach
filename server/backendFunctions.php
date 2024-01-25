@@ -22,7 +22,7 @@ function getFeedback($section, $input, $feedbackType, $assignment) {
     }
 
     //send request to OpenAI
-    return requestCompletion($prompt, 400, .3);
+    return requestCompletion($prompt, 1500, .3);
 }
 
 function getAssignmentPrompt($assn) {
