@@ -4,7 +4,6 @@ include 'db_connection.php';
 
 const TABLE_NAME = "wc_feedback";
 
-//Add to database
 function addFeedbackRecord($data): string {
     $conn = OpenCon();
 
@@ -40,17 +39,6 @@ function getSavedEntries(): string|bool {
     CloseCon($conn);
     return $result;
 }
-
-
-//Edit record in database
-/*$data = [
-    "Address" => "Here",
-];
-$identifier = [
-    "key" => "UserID",
-    "value" => "0",
-];
-echo updateRecord($conn, "Customer", $data, $identifier);*/
 
 
 function readDatabase($conn, $tableName, $fields) {

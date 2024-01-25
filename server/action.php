@@ -79,10 +79,10 @@ class ClassTemplate
         $json = file_get_contents('php://input');
         $data = json_decode($json);
 
-        $section = $data->section;
-        $input = $data->input;
-        $feedbackType = $data->feedbackType;
-        $assignment = $data->assignment;
+        $section = filter_var($data->section, FILTER_SANITIZE_STRING);
+        $input = filter_var($data->input, FILTER_SANITIZE_STRING);
+        $feedbackType = filter_var($data->feedbackType, FILTER_SANITIZE_STRING);
+        $assignment = filter_var($data->assignment, FILTER_SANITIZE_STRING);
 
         //obtain response
         $result = getFeedback($section, $input, $feedbackType, $assignment);

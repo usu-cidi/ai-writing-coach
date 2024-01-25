@@ -55,6 +55,9 @@ function Feedback() {
 }
 
 function DraftFeedback() {
+
+    //----- state -----
+
     const introText = useSelector((state) => state.feedback.introText);
     const bodyText = useSelector((state) => state.feedback.bodyText);
     const conclusionText = useSelector((state) => state.feedback.conclusionText);
@@ -72,30 +75,19 @@ function DraftFeedback() {
 
     const dispatch = useDispatch();
 
+    //----- effects -----
+
     useEffect(() => {
         dispatch(fetchSaved(getUserId(), filterSavedItemsByUser));
         dispatch(fetchAssns(getCourseId()));
     }, [dispatch]);
 
-    if (courseAssns === undefined) {
-        return (
-            <>
-                <Text>Loading...</Text>
-            </>
-        );
+    let buttonText = 'Submit for Feedback';
+    if (feedbackIntro !== '' || feedbackBody !== '' || feedbackConclusion !== '') {
+        buttonText = 'Resubmit for Feedback';
     }
 
-    if (!selectedAssn) {
-        return (
-            <>
-                <SelectAssignment
-                    setSelectedAssn={feedbackActions.setSelectedAssn}
-                    selectedAssn={selectedAssn}
-                    courseAssns={courseAssns}
-                />
-            </>
-        );
-    }
+    //----- ui functions -----
 
     function handleChange(type, newVal) {
         if (type === "Introduction") {
@@ -106,6 +98,57 @@ function DraftFeedback() {
             dispatch(feedbackActions.setConclusionText(newVal));
         }
     }
+
+    function updateTranscript(intro, body, conclusion) {
+        let toAdd = [];
+        if (intro) {
+            toAdd.push(intro);
+        }
+        if (body) {
+            toAdd.push(body);
+        }
+        if (conclusion) {
+            toAdd.push(conclusion);
+        }
+        dispatch(feedbackActions.setTranscript(transcript.concat(toAdd)));
+    }
+
+    function handleButton() {
+
+        dispatch(feedbackActions.setErrorMessage(''));
+        dispatch(feedbackActions.setIntroFeedback(''));
+        dispatch(feedbackActions.setBodyFeedback(''));
+        dispatch(feedbackActions.setConclusionFeedback(''));
+        dispatch(feedbackActions.setFeedbackError(''));
+
+        let error = "";
+
+        if (!introText && !bodyText && !conclusionText) {
+            error = "You must provide at least one section " +
+                "(introduction, body, or conclusion) of your draft for feedback. "
+        }
+        if (feedbackType.length === 0) {
+            error += "You must select at least one type of feedback. "
+        }
+
+        if (error) {
+            dispatch(feedbackActions.setErrorMessage(error));
+            return;
+        }
+
+        getFeedback();
+    }
+
+    function handleReset() {
+        dispatch(feedbackActions.setIntroText(""));
+        dispatch(feedbackActions.setBodyText(""));
+        dispatch(feedbackActions.setConclusionText(""));
+        dispatch(feedbackActions.setIntroFeedback(""));
+        dispatch(feedbackActions.setBodyFeedback(""));
+        dispatch(feedbackActions.setConclusionFeedback(""));
+    }
+
+    //----- database functions -----
 
     function saveFeedbackEntryToDatabase() {
         let id = Math.floor(Date.now() / 1000);
@@ -135,31 +178,36 @@ function DraftFeedback() {
             });
     }
 
-    function handleButton() {
-
-        dispatch(feedbackActions.setErrorMessage(''));
-        dispatch(feedbackActions.setIntroFeedback(''));
-        dispatch(feedbackActions.setBodyFeedback(''));
-        dispatch(feedbackActions.setConclusionFeedback(''));
-        dispatch(feedbackActions.setFeedbackError(''));
-
-        let error = "";
-
-        if (!introText && !bodyText && !conclusionText) {
-            error = "You must provide at least one section " +
-                "(introduction, body, or conclusion) of your draft for feedback. "
-        }
-        if (feedbackType.length === 0) {
-            error += "You must select at least one type of feedback. "
-        }
-
-        if (error) {
-            dispatch(feedbackActions.setErrorMessage(error));
-            return;
-        }
-
-        getFeedback();
+    function filterSavedItemsByUser(saved, userId) {
+        return saved.filter((item) => item.user_id === userId);
     }
+
+    function updateSavedItems(updated=undefined) {
+        if (updated) {
+            if (updated.message === "0 results") {
+                dispatch(feedbackActions.setAllSaved([]));
+            } else {
+                dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(updated, getUserId())));
+            }
+        } else {
+            devInstance.get('?task=getSavedEntries')
+                .then(response => {
+                    return response.data;
+                })
+                .then(resp => {
+                    if (resp.message === "0 results") {
+                        dispatch(feedbackActions.setAllSaved([]));
+                    } else {
+                        dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(resp, getUserId())));
+                    }
+                })
+                .catch(err => {
+                    console.log(`Unexpected item found: ${err}`);
+                });
+        }
+    }
+
+    //----- logic functions -----
 
     function validateResponse(response) {
 
@@ -281,20 +329,6 @@ function DraftFeedback() {
 
     }
 
-    function updateTranscript(intro, body, conclusion) {
-        let toAdd = [];
-        if (intro) {
-            toAdd.push(intro);
-        }
-        if (body) {
-            toAdd.push(body);
-        }
-        if (conclusion) {
-            toAdd.push(conclusion);
-        }
-        dispatch(feedbackActions.setTranscript(transcript.concat(toAdd)));
-    }
-
     async function fetchFeedback(params) {
         return devInstance.post(
             '?task=receivePost',
@@ -316,47 +350,26 @@ function DraftFeedback() {
             });
     }
 
-    let buttonText = 'Submit for Feedback';
-    if (feedbackIntro !== '' || feedbackBody !== '' || feedbackConclusion !== '') {
-        buttonText = 'Resubmit for Feedback';
+    //----- ui -----
+
+    if (courseAssns === undefined) {
+        return (
+            <>
+                <Text>Loading...</Text>
+            </>
+        );
     }
 
-    function filterSavedItemsByUser(saved, userId) {
-        return saved.filter((item) => item.user_id === userId);
-    }
-
-    function updateSavedItems(updated=undefined) {
-        if (updated) {
-            if (updated.message === "0 results") {
-                dispatch(feedbackActions.setAllSaved([]));
-            } else {
-                dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(updated, getUserId())));
-            }
-        } else {
-            devInstance.get('?task=getSavedEntries')
-                .then(response => {
-                    return response.data;
-                })
-                .then(resp => {
-                    if (resp.message === "0 results") {
-                        dispatch(feedbackActions.setAllSaved([]));
-                    } else {
-                        dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(resp, getUserId())));
-                    }
-                })
-                .catch(err => {
-                    console.log(`Unexpected item found: ${err}`);
-                });
-        }
-    }
-
-    function handleReset() {
-        dispatch(feedbackActions.setIntroText(""));
-        dispatch(feedbackActions.setBodyText(""));
-        dispatch(feedbackActions.setConclusionText(""));
-        dispatch(feedbackActions.setIntroFeedback(""));
-        dispatch(feedbackActions.setBodyFeedback(""));
-        dispatch(feedbackActions.setConclusionFeedback(""));
+    if (!selectedAssn) {
+        return (
+            <>
+                <SelectAssignment
+                    setSelectedAssn={feedbackActions.setSelectedAssn}
+                    selectedAssn={selectedAssn}
+                    courseAssns={courseAssns}
+                />
+            </>
+        );
     }
 
     return (
