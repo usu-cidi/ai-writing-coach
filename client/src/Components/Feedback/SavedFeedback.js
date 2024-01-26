@@ -7,7 +7,7 @@ import {
     Text
 } from "@instructure/ui";
 import instance from "../../axios";
-import devInstance from "../../dev-axios";
+import instance1 from "../../dev-axios";
 import { LOADING_MESSAGE, SAVED_TITLE_MAX_LENGTH } from "../../constants";
 import { useDispatch } from "react-redux";
 
@@ -48,7 +48,7 @@ function SavedFeedback({setIntroFeedback, setBodyFeedback, setConclusionFeedback
 
     function handleDelete(id) {
         if (window.confirm("Are you sure you want to delete your saved feedback?")) {
-            return devInstance.post('?task=deleteSavedEntry', JSON.stringify({id: id}))
+            return instance1.post('?task=deleteSavedEntry', JSON.stringify({id: id}))
                 .then(response => {
                     return response.data;
                 })

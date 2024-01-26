@@ -1,6 +1,6 @@
 import { feedbackActions } from "./feedback-slice";
 import instance from "../axios";
-import devInstance from "../dev-axios";
+import instance1 from "../dev-axios";
 import {NO_ASSN_INDICATOR} from "../constants";
 
 
@@ -19,6 +19,10 @@ export const fetchAssns = (courseId) => {
 
         try {
             const assignments = await fetchData();
+
+            console.log(assignments);
+
+            let testOptions = assignments.map((item) => ({id: item.id.toString(), label: item.name}));
 
             dispatch( feedbackActions.setCourseAssns(assignments) );
 
@@ -39,7 +43,7 @@ export const fetchSaved = (userId, filterSavedItemsByUser) => {
     return async (dispatch) => {
         const fetchData = async () => {
             try {
-                const response = await devInstance.get("?task=getSavedEntries");
+                const response = await instance1.get("?task=getSavedEntries");
 
                 return response.data;
             } catch (error) {

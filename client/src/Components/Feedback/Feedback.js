@@ -5,7 +5,7 @@ import {
     Alert, Text
 } from '@instructure/ui';
 import instance from "../../axios";
-import devInstance from "../../dev-axios";
+import instance1 from "../../dev-axios";
 import InputForm from "./InputForm";
 import FeedbackDisplay from "./FeedbackDisplay";
 import SavedFeedback from "./SavedFeedback";
@@ -22,36 +22,30 @@ import { feedbackActions } from '../../store/feedback-slice'
 import {LOADING_MESSAGE} from '../../constants.js';
 
 function getUserId() {
+    //TODO: get & return userId from session information
     return '123';
 }
 
 function getCourseId() {
+    //TODO: get & return courseId from session information
     return '742803';
 }
 
 function Feedback() {
 
-    /*window.addEventListener('beforeunload', function (event) {
+    window.addEventListener('beforeunload', function (event) {
         event.preventDefault();
         return (event.returnValue = "");
-    });*/
+    });
 
     return (
-        <>
-            <View as="div" margin="small">
-                <DraftFeedback />
-            </View>
-        </>
-    );
-
-    /*return (
         <>
             <ToolNavBar />
             <View as="div" margin="small">
                 <DraftFeedback />
             </View>
         </>
-    );*/
+    );
 }
 
 function DraftFeedback() {
@@ -166,7 +160,7 @@ function DraftFeedback() {
 
         dispatch(feedbackActions.setTitleForSaving(""));
 
-        return devInstance.post('?task=addSavedEntry', JSON.stringify(dataToSave))
+        return instance1.post('?task=addSavedEntry', JSON.stringify(dataToSave))
             .then(response => {
                 return response.data;
             })
@@ -190,7 +184,7 @@ function DraftFeedback() {
                 dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(updated, getUserId())));
             }
         } else {
-            devInstance.get('?task=getSavedEntries')
+            instance1.get('?task=getSavedEntries')
                 .then(response => {
                     return response.data;
                 })
@@ -330,7 +324,7 @@ function DraftFeedback() {
     }
 
     async function fetchFeedback(params) {
-        return devInstance.post(
+        return instance1.post(
             '?task=receivePost',
             JSON.stringify({
                 section: params.section,
@@ -381,6 +375,7 @@ function DraftFeedback() {
                 margin="small"
                 timeout={12000}>
                 Paste your draft into the corresponding box. You can also submit a partial draft.
+                Assignment Specific (if available) will give you feedback based on criteria set by your instructor.
                 General Best Practices will give you feedback relating to the strength of the argument or structure of your paper.
                 Grammatical will give you feedback on your spelling and grammar.
             </Alert>
