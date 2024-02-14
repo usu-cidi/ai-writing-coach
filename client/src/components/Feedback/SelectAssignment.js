@@ -14,6 +14,14 @@ function SelectAssignment({setSelectedAssn, selectedAssn, courseAssns}) {
 
     let theOptions = courseAssns.map((item) => ({id: item.id.toString(), label: item.name}));
 
+    function select() {
+        if (!theSelected) {
+            alert('Select an assignment or choose Use Without an Assignment.');
+        } else {
+            dispatch(setSelectedAssn(theSelected));
+        }
+    }
+
     return (
         <>
             <SingleSelectExample
@@ -23,13 +31,13 @@ function SelectAssignment({setSelectedAssn, selectedAssn, courseAssns}) {
             <Button
                 color="primary"
                 margin="small"
-                onClick={() => {dispatch(setSelectedAssn(theSelected))}}
+                onClick={select}
             >Continue</Button>
             <Button
                 color="secondary"
                 margin="small"
                 onClick={() => {dispatch(setSelectedAssn(NO_ASSN_INDICATOR))}}
-            >Use without an assignment</Button>
+            >Use Without an Assignment</Button>
         </>
     );
 }

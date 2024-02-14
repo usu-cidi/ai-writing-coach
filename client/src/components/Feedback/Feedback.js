@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Heading,
     View,
-    Alert, Text
+    Alert, Text, Button
 } from '@instructure/ui';
 import instance from "../../axios";
-import instance1 from "../../dev-axios";
+import devInstance from "../../dev-axios";
 import InputForm from "./InputForm";
 import FeedbackDisplay from "./FeedbackDisplay";
 import SavedFeedback from "./SavedFeedback";
-import ToolNavBar from "./ToolNavBar";
 import ApplicationFeedback from "./ApplicationFeedback";
 import SaveSession from "./SaveSession";
 import SelectAssignment from "./SelectAssignment";
@@ -18,12 +17,12 @@ import {
     fetchSaved,
     fetchAssns
 } from "../../store/feedback-actions";
-import { feedbackActions } from '../../store/feedback-slice'
-import {LOADING_MESSAGE} from '../../constants.js';
+import { feedbackActions } from '../../store/feedback-slice.js'
+import {LOADING_MESSAGE, NO_ASSN_INDICATOR} from '../../constants.js';
 
 function getUserId() {
     //TODO: get & return userId from session information
-    return '123';
+    return '1234';
 }
 
 function getCourseId() {
@@ -40,8 +39,8 @@ function Feedback() {
 
     return (
         <>
-            <ToolNavBar />
             <View as="div" margin="small">
+                <Heading level="h2" margin="0 0 small" border="bottom">Draft Feedback</Heading>
                 <DraftFeedback />
             </View>
         </>
@@ -51,12 +50,11 @@ function Feedback() {
 function DraftFeedback() {
 
     //----- state -----
-
-    const introText = useSelector((state) => state.feedback.introText);
+    const introText = useSelector((state) => state.feedback.introText || '');
     const bodyText = useSelector((state) => state.feedback.bodyText);
     const conclusionText = useSelector((state) => state.feedback.conclusionText);
     const feedbackType = useSelector((state) => state.feedback.feedbackType);
-    const feedbackIntro = useSelector((state) => state.feedback.feedbackIntro);
+    const feedbackIntro = useSelector((state) => state.feedback.feedbackIntro || '');
     const feedbackBody = useSelector((state) => state.feedback.feedbackBody);
     const feedbackConclusion = useSelector((state) => state.feedback.feedbackConclusion);
     const errorMessage = useSelector((state) => state.feedback.errorMessage);
@@ -69,6 +67,8 @@ function DraftFeedback() {
 
     const dispatch = useDispatch();
 
+    const [assnIndicator, setAssnIndicator] = useState(<></>);
+
     //----- effects -----
 
     useEffect(() => {
@@ -76,12 +76,29 @@ function DraftFeedback() {
         dispatch(fetchAssns(getCourseId()));
     }, [dispatch]);
 
+    useEffect(() => {
+        if (selectedAssn && selectedAssn !== NO_ASSN_INDICATOR) {
+            setAssnIndicator(<Text>Selected Assignment: {selectedAssn.name}</Text>);
+        }
+        if (selectedAssn === NO_ASSN_INDICATOR) {
+            setAssnIndicator(<></>);
+        }
+    }, [selectedAssn]);
+
     let buttonText = 'Submit for Feedback';
     if (feedbackIntro !== '' || feedbackBody !== '' || feedbackConclusion !== '') {
         buttonText = 'Resubmit for Feedback';
     }
 
     //----- ui functions -----
+
+    function changeSelectedAssignment() {
+        dispatch(feedbackActions.setSelectedAssn(null));
+    }
+
+    function backToMainTool() {
+        dispatch(feedbackActions.setSelectedAssn(null));
+    }
 
     function handleChange(type, newVal) {
         if (type === "Introduction") {
@@ -160,7 +177,7 @@ function DraftFeedback() {
 
         dispatch(feedbackActions.setTitleForSaving(""));
 
-        return instance1.post('?task=addSavedEntry', JSON.stringify(dataToSave))
+        return devInstance.post('?task=addSavedEntry', JSON.stringify(dataToSave))
             .then(response => {
                 return response.data;
             })
@@ -184,7 +201,7 @@ function DraftFeedback() {
                 dispatch(feedbackActions.setAllSaved(filterSavedItemsByUser(updated, getUserId())));
             }
         } else {
-            instance1.get('?task=getSavedEntries')
+            devInstance.get('?task=getSavedEntries')
                 .then(response => {
                     return response.data;
                 })
@@ -324,7 +341,7 @@ function DraftFeedback() {
     }
 
     async function fetchFeedback(params) {
-        return instance1.post(
+        return devInstance.post(
             '?task=receivePost',
             JSON.stringify({
                 section: params.section,
@@ -362,13 +379,18 @@ function DraftFeedback() {
                     selectedAssn={selectedAssn}
                     courseAssns={courseAssns}
                 />
+
+                <Button
+                    color="secondary"
+                    margin="small"
+                    onClick={backToMainTool}
+                >Back to Main Tool</Button>
             </>
         );
     }
 
     return (
         <>
-            <Heading level="h2" margin="0 0 small" border="bottom">Draft Feedback</Heading>
             <Alert
                 variant="info"
                 renderCloseButtonLabel="Close"
@@ -379,6 +401,8 @@ function DraftFeedback() {
                 General Best Practices will give you feedback relating to the strength of the argument or structure of your paper.
                 Grammatical will give you feedback on your spelling and grammar.
             </Alert>
+
+            {assnIndicator}
 
             <div className="grid-container">
                 <div className="item0">
@@ -431,6 +455,17 @@ function DraftFeedback() {
                     <ApplicationFeedback/>
                 </div>
             </div>
+
+            <Button
+                color="secondary"
+                margin="small"
+                onClick={backToMainTool}
+            >Back to Main Tool</Button>
+            <Button
+                color="secondary"
+                margin="small"
+                onClick={changeSelectedAssignment}
+            >Change Selected Assignment</Button>
         </>
     );
 }

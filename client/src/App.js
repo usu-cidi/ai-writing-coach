@@ -1,5 +1,5 @@
 
-import Feedback from "./Components/Feedback/Feedback";
+import Feedback from "./components/Feedback/Feedback";
 
 function App() {
 

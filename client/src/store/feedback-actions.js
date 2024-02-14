@@ -22,7 +22,7 @@ export const fetchAssns = (courseId) => {
 
             console.log(assignments);
 
-            let testOptions = assignments.map((item) => ({id: item.id.toString(), label: item.name}));
+            assignments.map((item) => ({id: item.id.toString(), label: item.name}));
 
             dispatch( feedbackActions.setCourseAssns(assignments) );
 
